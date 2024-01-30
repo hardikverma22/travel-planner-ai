@@ -12,6 +12,7 @@ const useAuth = () => {
   const pathname = usePathname();
 
   const isCurrentPathDashboard = pathname === DASHBOARD_URL;
+  const isCurrentPathHome = pathname === "/";
 
   const router = useRouter()
 
@@ -24,7 +25,7 @@ const useAuth = () => {
     }
     router.push("/dashboard")
   };
-  return { isCurrentPathDashboard, openSignInPopupOrDirect };
+  return { isCurrentPathDashboard, isCurrentPathHome, openSignInPopupOrDirect };
 };
 
 export default useAuth;

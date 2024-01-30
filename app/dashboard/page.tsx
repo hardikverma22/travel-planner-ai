@@ -1,4 +1,4 @@
-import {GeneratePlanDialog} from "@/components/GeneratePlanDialog";
+import DrawerDialog from "@/components/DrawerDialog";
 import {Loading} from "@/components/Laoding";
 import PlanList from "@/components/PlanList";
 import {Suspense} from "react";
@@ -11,7 +11,7 @@ export default function Dashboard() {
     >
       <div className="flex justify-between bg-white items-center shadow-lg lg:px-20 px-7 py-4 border-b">
         <span className="font-bold text-xl">Your Plans</span>
-        <GeneratePlanDialog />
+        <DrawerDialog shouldOpenForCreatePlan={true} />
       </div>
       <div className="flex h-full w-full px-4 lg:px-20 flex-1">
         <div

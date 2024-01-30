@@ -3,12 +3,12 @@ import {Lightbulb} from "lucide-react";
 
 const Prompt = ({content}: {content: string | undefined}) => {
   return (
-    <SectionWrapper id="prompt">
+    <SectionWrapper id="imagination">
       <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">
         <Lightbulb className="mr-2" />
         Your Imagination
       </h2>
-      <div className="p-2 bg-stone-100 rounded-md">{content}</div>
+      <div className="p-2 bg-stone-100 rounded-md w-fit ml-8">"{content}"</div>
     </SectionWrapper>
   );
 };

@@ -13,7 +13,7 @@ export default function TopActivities({
         <Sailboat className="mr-2" /> Top activities to look for
       </h2>
       {activities && activities?.length > 0 ? (
-        <div>
+        <div className="ml-8">
           <ol className="max-w-xl space-y-1 text-gray-500 list-decimal list-inside dark:text-gray-400">
             {activities.map((activity) => (
               <li key={activity}>

@@ -25,8 +25,6 @@ export const formSchema = z.object({
   promptText: z
     .string()
     .min(1, "I can't use my AI powers without your imagination"),
-  budget: z.coerce.number().optional(),
-  season: z.string().optional(),
 });
 
 export type formSchemaType = z.infer<typeof formSchema>;
@@ -41,13 +39,17 @@ const NewPlanForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       promptText: "",
-      budget: 0,
-      season: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    startTransaction(() => generatePlanAction(values));
+    startTransaction(async () => {
+      const planId = await generatePlanAction(values);
+
+      if (planId === null) {
+        console.log("Error received from server action");
+      }
+    });
     // const planId = await generatePlanAction(values);
     // if (planId === null) {
     //   console.log("error recived from server action");
@@ -69,37 +71,6 @@ const NewPlanForm = () => {
                   {...field}
                   disabled={pending}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="budget"
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>Budget($) (Optional)</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="e.g. $100"
-                  {...field}
-                  type="number"
-                  disabled={pending}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="season"
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>Preffered Season (Optional)</FormLabel>
-              <FormControl>
-                <Input placeholder="Winter" {...field} disabled={pending} />
               </FormControl>
               <FormMessage />
             </FormItem>

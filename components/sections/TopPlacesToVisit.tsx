@@ -1,3 +1,4 @@
+"use client";
 import SectionWrapper from "@/components/sections/SectionWrapper";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Doc} from "@/convex/_generated/dataModel";
@@ -14,7 +15,7 @@ const TopPlacesToVisit = ({
         <MapPin className="mr-2" /> Top places to visit
       </h2>
       {topPlacesToVisit && topPlacesToVisit.length > 0 ? (
-        <div>
+        <div className="ml-8">
           <ol className="max-w-xl space-y-1 text-gray-500 list-decimal list-inside dark:text-gray-400">
             {topPlacesToVisit.map((place) => (
               <li key={place.name}>

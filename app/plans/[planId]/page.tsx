@@ -1,18 +1,15 @@
-import {getAuthToken} from "@/app/auth";
-import {api} from "@/convex/_generated/api";
-import {Id} from "@/convex/_generated/dataModel";
-import {fetchQuery} from "convex/nextjs";
 import Plan from "@/components/Plan";
+import {SearchSlash} from "lucide-react";
 
-export default async function PlanPage({params}: {params: {planId: string}}) {
-  // const token = await getAuthToken();
-  // const plan = await fetchQuery(
-  //   api.plan.getSinglePlan,
-  //   {
-  //     id: params.planId as Id<"plan">,
-  //   },
-  //   {token}
-  // );
-
-  return <Plan planId={params.planId} />;
+export default async function PlanPage({
+  params,
+  searchParams,
+}: {
+  params: {planId: string};
+  searchParams?: {isNewPlan: string};
+}) {
+  const isNewPlan = searchParams && searchParams?.isNewPlan;
+  return (
+    <Plan planId={params.planId} isNewPlan={Boolean(isNewPlan) ?? false} />
+  );
 }

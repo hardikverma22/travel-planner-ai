@@ -20,7 +20,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     <ConvexClientProvider>
       <html lang="en">
         <body className={inter.className}>
-          <main className="flex min-h-screen flex-col items-center">
+          <main className="flex min-h-[100svh] flex-col items-center">
             <Header />
             {children}
             <Progress />

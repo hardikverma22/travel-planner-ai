@@ -3,6 +3,7 @@ import { v } from "convex/values";
 
 export default defineSchema({
   plan: defineTable({
+    storageId: v.union(v.id("_storage"), v.null()),
     nameoftheplace: v.string(),
     userPrompt: v.string(),
     abouttheplace: v.string(),
@@ -26,8 +27,13 @@ export default defineSchema({
     }))
   }),
   users: defineTable({
-    // this is UserJSON from @clerk/backend
-    clerkUser: v.any(),
-    credit: v.number(),
-  }).index("by_clerk_id", ["clerkUser.id"]),
+    userId: v.string(),
+    email: v.string(),
+    credits: v.number(),
+  }).index("by_clerk_id", ["userId"]),
+  payments: defineTable({
+    userId: v.string(),
+    stripeId: v.string(),
+    status: v.string()
+  }).index("by_stripe_id", ["stripeId"]),
 });

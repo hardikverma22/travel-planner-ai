@@ -5,14 +5,8 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function generateTravelPlan(
   promptText: string,
-  budget: number,
-  season: string
 ) {
-  const prompt = `${promptText}, ${season != "" &&
-    `and the season is ${season} ${budget > 0 && `along with my budget ${budget}`
-    }`
-    } do not return anything in your response outside of curly braces,`;
-
+  const prompt = `${promptText}, generate travel data according to the schema and in json format, do not return anything in your response outside of curly braces,`;
   const schema = {
     type: "object",
     properties: {
@@ -31,7 +25,7 @@ export async function generateTravelPlan(
       },
       topplacestovisit: {
         type: "array",
-        description: "Top places to visit along with their coordinates",
+        description: "Top places to visit along with their coordinates, atelast top 5, can be more",
         items: {
           type: "object",
           properties: {

@@ -14,7 +14,7 @@ const Timeline = ({
   });
 
   return (
-    <ol className="relative border-s border-gray-200 dark:border-gray-700">
+    <ol className="relative border-s border-gray-200 dark:border-gray-700 ml-10 mt-5">
       {filteredItinerary?.map((day) => (
         <li className="mb-10 ms-6" key={day.title}>
           <span className="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">

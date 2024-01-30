@@ -11,12 +11,14 @@ import {SignInButton, UserButton} from "@clerk/nextjs";
 
 import {AuthLoading, Authenticated, Unauthenticated} from "convex/react";
 import useAuth from "@/hooks/useAuth";
+import CheckoutButton from "@/components/CheckoutButton";
+import Credits from "@/components/DrawerDialog";
 
 const Header = () => {
-  const {isCurrentPathDashboard} = useAuth();
+  const {isCurrentPathDashboard, isCurrentPathHome} = useAuth();
 
   return (
-    <header className="sticky w-full border-b bottom-2 border-gray-200">
+    <header className="sticky w-full border-b bottom-2 border-gray-200 z-50">
       <nav className="lg:px-20 px-5 py-5 mx-auto">
         <div className="flex justify-between ">
           <div className="hidden md:flex gap-10 items-center">
@@ -25,21 +27,37 @@ const Header = () => {
                 <span>Travel</span>
                 <span>
                   Planner
-                  <span className="text-blue-500">AI</span>
+                  <span className="text-blue-500 ml-0.5">AI</span>
                 </span>
               </div>
             </Link>
             <ul className="flex gap-8 items-center text-sm">
-              {!isCurrentPathDashboard &&
-                navlinks.map((link) => (
-                  <li key={link} className="hover:underline cursor-pointer">
-                    {link}
-                  </li>
-                ))}
+              {isCurrentPathHome && (
+                <>
+                  {navlinks.map((link) => (
+                    <li
+                      key={link.id}
+                      className="hover:underline cursor-pointer"
+                    >
+                      <Link href={`/#${link.id}`} scroll>
+                        {link.text}
+                      </Link>
+                    </li>
+                  ))}
+                </>
+              )}
+              {!isCurrentPathDashboard && (
+                <li className="hover:underline cursor-pointer">
+                  <Link href="/dashboard">Dashboard</Link>
+                </li>
+              )}
             </ul>
           </div>
           <div className="md:hidden flex gap-6">
-            <MobileMenu />
+            <MobileMenu
+              isCurrentPathHome={isCurrentPathHome}
+              isCurrentPathDashboard={isCurrentPathDashboard}
+            />
           </div>
           <div className="flex gap-4 justify-center items-center">
             <AuthLoading>
@@ -48,17 +66,9 @@ const Header = () => {
             <Unauthenticated>
               <SignInButton mode="modal" afterSignInUrl="/dashboard" />
             </Unauthenticated>
-            {!isCurrentPathDashboard && (
-              <Authenticated>
-                <Link
-                  href="/dashboard"
-                  className="bg-blue-500 text-white inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-blue-700 h-10 px-4 py-2"
-                >
-                  Dashboard
-                </Link>
-              </Authenticated>
-            )}
             <Authenticated>
+              {<Credits />}
+
               <UserButton afterSignOutUrl="/" />
             </Authenticated>
           </div>

@@ -1,4 +1,4 @@
-import { action, internalMutation, mutation, query } from "./_generated/server";
+import { action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { Doc } from "./_generated/dataModel";
 
@@ -18,11 +18,34 @@ export const getPlanForAUser = query({
       .filter((q) => q.eq(q.field("userId"), subject))
       .order("desc")
       .take(100);
-    return plans;
+    // return plans;
+    return Promise.all(
+      plans.map(async (plan) => ({
+        ...plan,
+        // If the message is an "image" its `body` is an `Id<"_storage">`
+        ...(plan.storageId === null
+          ? { url: null }
+          : { url: await ctx.storage.getUrl(plan.storageId) }),
+      }))
+    );
   },
 });
 
 export const getSinglePlan = query({
+  args: { id: v.id("plan") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return null;
+    }
+
+    const plan = await ctx.db.get(args.id);
+    // return plan;
+    return { ...plan, url: (plan && plan.storageId) ? await ctx.storage.getUrl(plan.storageId) : null };
+  },
+});
+
+export const readPlanData = internalQuery({
   args: { id: v.id("plan") },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -37,14 +60,12 @@ export const getSinglePlan = query({
 
 export const preparePlan = action({
   args: {
-    promptText: v.string(),
-    budget: v.number(),
-    season: v.string(),
+    planId: v.string(),
   },
   handler: async (
     ctx,
-    { promptText, budget, season }
-  ): Promise<string | null> => {
+    { planId }
+  ) => {
     try {
       const identity = await ctx.auth.getUserIdentity();
       if (identity === null) {
@@ -52,12 +73,17 @@ export const preparePlan = action({
         return null;
       }
 
-      console.log({ subject: identity.subject });
+      const emptyPlan = await ctx.runQuery(internal.plan.readPlanData, {
+        id: planId as Doc<"plan">["_id"]
+      });
+
+      if (!emptyPlan) {
+        console.error("Unable to find the empty plan while preparing a new one");
+        return null;
+      };
 
       const completion = await generateTravelPlan(
-        promptText,
-        budget,
-        season
+        emptyPlan.userPrompt,
       );
 
       const msg = completion?.choices[0]?.message?.function_call
@@ -65,26 +91,32 @@ export const preparePlan = action({
 
       const model = JSON.parse(msg) as Doc<"plan">;
 
-      const newPlanId = await ctx.runMutation(internal.plan.createPlan, {
+      ctx.runAction(internal.images.generateAndStore, {
+        prompt: model.nameoftheplace,
+        planId: emptyPlan._id
+      })
+
+      await ctx.runMutation(internal.plan.updatePlanWithAIData, {
         nameoftheplace: model.nameoftheplace,
         abouttheplace: model.abouttheplace,
         thingstodo: model.thingstodo,
-        userId: identity.subject,
         topplacestovisit: model.topplacestovisit,
-        userPrompt: promptText,
         besttimetovisit: model.besttimetovisit,
-        itinerary: model.itinerary
+        itinerary: model.itinerary,
+        planId: emptyPlan._id,
       });
 
-      return newPlanId || null;
+      await ctx.runMutation(internal.users.reduceUserCreditsByOne);
+
     } catch (error) {
       throw new Error(`Error occured in prepare Plan Convex action: ${error}`);
     }
   },
 });
 
-export const createPlan = internalMutation({
+export const updatePlanWithAIData = internalMutation({
   args: {
+    planId: v.id("plan"),
     nameoftheplace: v.string(),
     abouttheplace: v.string(),
     thingstodo: v.array(v.string()),
@@ -95,8 +127,6 @@ export const createPlan = internalMutation({
         lng: v.float64()
       })
     })),
-    userId: v.string(),
-    userPrompt: v.string(),
     itinerary: v.array(v.object({
       title: v.string(),
       activities: v.object({
@@ -108,17 +138,14 @@ export const createPlan = internalMutation({
     besttimetovisit: v.string(),
   },
   handler: async (ctx, args) => {
-    const newPlan = await ctx.db.insert("plan", {
+    await ctx.db.patch(args.planId, {
       nameoftheplace: args.nameoftheplace,
       abouttheplace: args.abouttheplace,
       thingstodo: args.thingstodo,
       topplacestovisit: args.topplacestovisit,
-      userId: args.userId,
-      userPrompt: args.userPrompt,
       besttimetovisit: args.besttimetovisit,
       itinerary: args.itinerary
     });
-    return newPlan;
   },
 });
 
@@ -142,7 +169,8 @@ export const createEmptyPlan = mutation({
       userId: identity.subject,
       userPrompt: args.userPrompt,
       besttimetovisit: "",
-      itinerary: []
+      itinerary: [],
+      storageId: null
     });
     return newPlan;
   },

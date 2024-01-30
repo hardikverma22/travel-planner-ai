@@ -1,8 +1,8 @@
-import {httpRouter} from "convex/server";
-import {httpAction} from "./_generated/server";
-import {internal} from "./_generated/api";
-import type {WebhookEvent} from "@clerk/backend";
-import {Webhook} from "svix";
+import { httpRouter } from "convex/server";
+import { httpAction } from "./_generated/server";
+import { internal } from "./_generated/api";
+import type { WebhookEvent } from "@clerk/backend";
+import { Webhook } from "svix";
 
 function ensureEnvironmentVariable(name: string): string {
   const value = process.env[name];
@@ -22,18 +22,10 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
     });
   }
   switch (event.type) {
-    case "user.created": // intentional fallthrough
-    case "user.updated": {
-      console.log(event);
-      const existingUser = await ctx.runQuery(internal.users.getUser, {
-        subject: event.data.id,
-      });
-      if (existingUser && event.type === "user.created") {
-        console.warn("Overwriting user", event.data.id, "with", event.data);
-      }
-      console.log("creating/updating user", event.data.id);
-      await ctx.runMutation(internal.users.updateOrCreateUser, {
-        clerkUser: event.data,
+    case "user.created": {
+      await ctx.runMutation(internal.users.createUser, {
+        userId: event.data.id,
+        email: event.data.email_addresses[0]?.email_address
       });
       break;
     }
@@ -74,5 +66,34 @@ async function validateRequest(
 
   return evt as unknown as WebhookEvent;
 }
+
+http.route({
+  path: "/stripe",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    // Getting the stripe-signature header
+    const signature: string = request.headers.get("stripe-signature") as string;
+    // Calling the action that will perform our fulfillment
+    const result = await ctx.runAction(internal.stripe.fulfill, {
+      signature,
+      payload: await request.text(),
+    });
+
+    if (result.success) {
+      // We make sure to confirm the successful processing
+      // so that Stripe can stop sending us the confirmation
+      // of this payment.
+      return new Response(null, {
+        status: 200,
+      });
+    } else {
+      // If something goes wrong Stripe will continue repeating
+      // the same webhook request until we confirm it.
+      return new Response("Webhook Error", {
+        status: 400,
+      });
+    }
+  }),
+});
 
 export default http;

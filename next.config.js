@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  images: {
+    domains: ["quixotic-impala-265.convex.cloud"],
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

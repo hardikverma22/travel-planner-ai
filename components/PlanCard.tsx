@@ -11,7 +11,7 @@ import Image from "next/image";
 import {MapPin} from "lucide-react";
 
 type PlanCardProps = {
-  plan: Doc<"plan">;
+  plan: Doc<"plan"> & {url: string | null};
 };
 
 const PlanCard = ({plan}: PlanCardProps) => {
@@ -24,13 +24,13 @@ const PlanCard = ({plan}: PlanCardProps) => {
         className="w-64 md:w-72 flex-1
                        h-[250px] rounded-lg cursor-pointer overflow-hidden group/card hover:shadow-md"
       >
-        <CardContent className="w-full flex flex-col gap-4 h-full overflow-hidden p-2">
+        <CardContent className="w-full flex flex-col gap-4 h-full overflow-hidden">
           <div className="relative h-1/2 w-full">
             <Image
               alt="travelpic"
-              src={navigationSvg}
+              src={plan.url ?? navigationSvg}
               fill={true}
-              className="bg-contain rounded-t-lg w-full group-hover/card:scale-105 transition-all duration-150"
+              className="relative -z-1 bg-contain rounded-t-lg w-full group-hover/card:scale-105 transition-all duration-150"
               priority={true}
             />
           </div>
@@ -52,7 +52,7 @@ const PlanCard = ({plan}: PlanCardProps) => {
                 <MapPin className="h-4 w-4 -ml-1" />
                 {plan.nameoftheplace}
               </div>
-              <CardTitle className="line-clamp-2 text-md">
+              <CardTitle className="line-clamp-1 text-md">
                 {plan.userPrompt}
               </CardTitle>
             </div>

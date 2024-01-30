@@ -5,8 +5,17 @@ import {navlinks} from "@/lib/constants";
 import clsx from "clsx";
 import {useState} from "react";
 import {AiOutlineClose, AiOutlineMenu} from "react-icons/ai";
+import Link from "next/link";
 
-const MobileMenu = () => {
+type MobileMenuProps = {
+  isCurrentPathHome: boolean;
+  isCurrentPathDashboard: boolean;
+};
+
+const MobileMenu = ({
+  isCurrentPathHome,
+  isCurrentPathDashboard,
+}: MobileMenuProps) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -16,55 +25,49 @@ const MobileMenu = () => {
       </Button>
       <div
         className={clsx(
-          "fixed top-0 bg-teal-500 w-[40%] h-full text-white ease-in-out duration-700",
-          open ? "left-0" : "left-[-100%]"
+          "fixed top-0 bg-white w-[40%] border-r-2 border-neutral-200 h-full ease-in-out duration-700",
+          open ? "left-0 z-50" : "left-[-100%]"
         )}
       >
-        <div className="flex justify-end p-2">
+        <div className="flex justify-between p-2">
+          <Link href="/">
+            <div
+              className="flex flex-col leading-5
+                             font-bold text-xl p-2"
+            >
+              <span>Travel</span>
+              <span>
+                Planner
+                <span className="text-blue-500 ml-0.5">AI</span>
+              </span>
+            </div>
+          </Link>
           <Button
             onClick={() => setOpen(false)}
             variant="link"
             className="text-xl"
           >
-            <AiOutlineClose className="text-white" />
+            <AiOutlineClose />
           </Button>
         </div>
         <ul
-          className="w-full flex flex-col gap-7 justify-center items-center
-                        text-xl font-medium"
+          className="w-full flex flex-col gap-7 justify-center items-start
+                      p-5  text-md font-medium"
         >
-          {navlinks.map((link) => (
-            <li key={link} className="cursor-pointer">
-              {link}
+          {isCurrentPathHome &&
+            navlinks.map((link) => (
+              <li key={link.id} className="hover:underline cursor-pointer">
+                <Link href={`/#${link.id}`} scroll>
+                  {link.text}
+                </Link>
+              </li>
+            ))}
+          {!isCurrentPathDashboard && (
+            <li className="hover:underline cursor-pointer">
+              <Link href="/dashboard">Dashboard</Link>
             </li>
-          ))}
+          )}
         </ul>
-        {/*
-        <li
-          onClick={() => handleScroll(skillRef)}
-          className="flex gap-2 items-center p-4 border-b border-b-primary  dark:border-b-white cursor-pointer hover:bg-white hover:text-black duration-500"
-        >
-          <FcDiploma2 className="text-xl" />
-          <span>Skills</span>
-        </li>
-        <li
-          onClick={() => handleScroll(aboutMeRef)}
-          className="flex gap-2 items-center p-4 border-b border-b-primary  dark:border-b-white cursor-pointer hover:bg-white hover:text-black duration-500"
-        >
-          <FcBusinessman className="text-xl" />
-          <span>About Me</span>
-        </li>
-        <li
-          onClick={() => handleScroll(projectsRef)}
-          className="flex gap-2 items-center p-4 border-b border-b-primary  dark:border-b-white cursor-pointer hover:bg-white hover:text-black duration-500"
-        >
-          <FcList className="text-xl" />
-          <span>Projects</span>
-        </li>
-        <li className="flex gap-2 items-center p-4 border-b border-b-primary  dark:border-b-white cursor-pointer hover:bg-white hover:text-black duration-500">
-          <FcCellPhone className="text-xl" />
-          <span>Contact</span>
-        </li> */}
       </div>
     </div>
   );
