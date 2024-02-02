@@ -51,7 +51,7 @@ const Pricing = () => {
             ))}
           </ul>
 
-          <p className="text-xs text-base-content-secondary/80 font-medium mt-1">
+          <p className="text-xs text-base-content-secondary/80 font-medium mt-2">
             One-time payment. No subscription
           </p>
         </div>
