@@ -1,4 +1,6 @@
 import {Doc} from "@/convex/_generated/dataModel";
+import {Sun, Sunrise, Sunset} from "lucide-react";
+import {ReactNode} from "react";
 
 const Timeline = ({
   itinerary,
@@ -14,7 +16,7 @@ const Timeline = ({
   });
 
   return (
-    <ol className="relative border-s border-gray-200 dark:border-gray-700 ml-10 mt-5">
+    <ol className="relative border-s border-gray-200 ml-10 mt-5">
       {filteredItinerary?.map((day) => (
         <li className="mb-10 ms-6" key={day.title}>
           <span className="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
@@ -33,9 +35,21 @@ const Timeline = ({
           </div>
 
           <div className="flex flex-col gap-5">
-            <Activity activity={day.activities.morning} heading="Morning" />
-            <Activity activity={day.activities.afternoon} heading="Afternoon" />
-            <Activity activity={day.activities.evening} heading="Evening" />
+            <Activity
+              activity={day.activities.morning}
+              heading="Morning"
+              icon={<Sunrise className="w-4 h-4 text-blue-500" />}
+            />
+            <Activity
+              activity={day.activities.afternoon}
+              heading="Afternoon"
+              icon={<Sun className="w-4 h-4 text-yellow-500" />}
+            />
+            <Activity
+              activity={day.activities.evening}
+              heading="Evening"
+              icon={<Sunset className="w-4 h-4 text-gray-600" />}
+            />
           </div>
         </li>
       ))}
@@ -46,22 +60,34 @@ const Timeline = ({
 const Activity = ({
   activity,
   heading,
+  icon,
 }: {
-  activity: string[];
+  activity: {itineraryItem: string; briefDescription: string}[];
   heading: string;
+  icon: ReactNode;
 }) => {
   if (activity.length == 0) return null;
   return (
-    <div className="flex flex-col gap-2">
-      <h3 className="text-sm font-normal leading-none text-gray-600">
+    <div className="flex flex-col gap-2 shadow-md p-2 bg-slate-50">
+      <h3
+        className="text-sm leading-none
+                  text-gray-600  w-max p-2 font-semibold
+                  flex justify-center gap-2 items-center capitalize"
+      >
+        {icon}
         {heading}
       </h3>
-      <ul className="max-w-xl space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+      <ul className="space-y-1 text-gray-500 pl-2">
         {activity.map((act, index) => (
           <li key={index}>
-            <span className="font-normal text-gray-900 dark:text-white">
-              {act}
-            </span>
+            <div className="w-full p-1 overflow-hidden">
+              <span className=" text-black font-semibold">
+                {act.itineraryItem}
+              </span>
+              <p className="max-w-md md:max-w-full text-wrap whitespace-pre-line">
+                {act.briefDescription}
+              </p>
+            </div>
           </li>
         ))}
       </ul>

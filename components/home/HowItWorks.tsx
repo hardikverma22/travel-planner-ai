@@ -1,4 +1,7 @@
+import {cn} from "@/lib/utils";
+import arrow from "@/public/arrow.png";
 import {Lightbulb, LogIn, PlaneTakeoff} from "lucide-react";
+import Image from "next/image";
 import {ReactNode} from "react";
 
 const HowItWorks = () => {
@@ -25,17 +28,20 @@ const HowItWorks = () => {
             text="Login"
             description="Log in to start your journey."
             icon={<LogIn className="h-8 w-8 text-blue-500" />}
+            className="rotate-[202deg] hidden md:block"
           />
           <Item
             text="Key in the travel idea"
             description="Tell us about your ideal trip"
             icon={<Lightbulb className="h-8 w-8 text-blue-500" />}
+            className="transform rotate-[350deg] -scale-x-100 hidden md:block"
           />
 
           <Item
             text="Get AI Plan"
-            description="Get your tailored AI-driven travel plan"
+            description="Get your AI-driven tailored travel plan"
             icon={<PlaneTakeoff className="h-8 w-8 text-blue-500" />}
+            className="hidden"
           />
         </div>
       </div>
@@ -47,18 +53,33 @@ const Item = ({
   text,
   icon,
   description,
+  className,
 }: {
   text: string;
   icon: ReactNode;
   description: string;
+  className?: string;
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-5">
+    <div className="flex flex-col items-center justify-center gap-5 relative">
       <div className="bg-gray-100 w-24 h-24 rounded-2xl shadow-2xl items-center flex justify-center">
         {icon}
       </div>
       <span className="font-bold tracking-wide text-lg mt-5">{text}</span>
-      <span className="text-sm w-2/3 text-center">{description}</span>
+      <span className="text-sm w-2/3 text-center text-gray-500">
+        {description}
+      </span>
+
+      <Image
+        src={arrow}
+        width={100}
+        height={100}
+        alt="arrow"
+        className={cn(
+          "absolute -right-[120px] top-[15%] opacity-40",
+          className
+        )}
+      />
     </div>
   );
 };

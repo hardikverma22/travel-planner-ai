@@ -43,8 +43,8 @@ const Pricing = () => {
             role="list"
             className="mt-8 space-y-3 text-sm leading-6 text-gray-600 xl:mt-10"
           >
-            {features.map((faature) => (
-              <li className="flex gap-x-3 text-base">
+            {features.map((faature, index) => (
+              <li className="flex gap-x-3 text-base" key={index}>
                 <CheckCircle2 className="h-6 w-5 flex-none text-blue-600" />
                 {faature}
               </li>

@@ -11,14 +11,19 @@ import {SignInButton, UserButton} from "@clerk/nextjs";
 
 import {AuthLoading, Authenticated, Unauthenticated} from "convex/react";
 import useAuth from "@/hooks/useAuth";
-import CheckoutButton from "@/components/CheckoutButton";
 import Credits from "@/components/DrawerDialog";
+import {cn} from "@/lib/utils";
 
 const Header = () => {
   const {isCurrentPathDashboard, isCurrentPathHome} = useAuth();
 
   return (
-    <header className="sticky w-full border-b bottom-2 border-gray-200 z-50">
+    <header
+      className={cn(
+        "w-full border-b bottom-2 border-gray-200 z-50 bg-white/90",
+        isCurrentPathHome && "sticky top-0"
+      )}
+    >
       <nav className="lg:px-20 px-5 py-5 mx-auto">
         <div className="flex justify-between ">
           <div className="hidden md:flex gap-10 items-center">
@@ -46,11 +51,13 @@ const Header = () => {
                   ))}
                 </>
               )}
-              {!isCurrentPathDashboard && (
-                <li className="hover:underline cursor-pointer">
-                  <Link href="/dashboard">Dashboard</Link>
-                </li>
-              )}
+              <Authenticated>
+                {!isCurrentPathDashboard && (
+                  <li className="hover:underline cursor-pointer">
+                    <Link href="/dashboard">Dashboard</Link>
+                  </li>
+                )}
+              </Authenticated>
             </ul>
           </div>
           <div className="md:hidden flex gap-6">
@@ -67,8 +74,7 @@ const Header = () => {
               <SignInButton mode="modal" afterSignInUrl="/dashboard" />
             </Unauthenticated>
             <Authenticated>
-              {<Credits />}
-
+              <Credits />
               <UserButton afterSignOutUrl="/" />
             </Authenticated>
           </div>

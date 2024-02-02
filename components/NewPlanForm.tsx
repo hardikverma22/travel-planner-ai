@@ -34,7 +34,7 @@ const NewPlanForm = () => {
   if (!isSignedIn) return null;
 
   const [pending, startTransaction] = useTransition();
-  console.log({pending: pending});
+
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,10 +50,6 @@ const NewPlanForm = () => {
         console.log("Error received from server action");
       }
     });
-    // const planId = await generatePlanAction(values);
-    // if (planId === null) {
-    //   console.log("error recived from server action");
-    // }
   }
 
   return (

@@ -103,6 +103,8 @@ export const preparePlan = action({
         topplacestovisit: model.topplacestovisit,
         besttimetovisit: model.besttimetovisit,
         itinerary: model.itinerary,
+        packingchecklist: model.packingchecklist,
+        localcuisinerecommendations: model.localcuisinerecommendations,
         planId: emptyPlan._id,
       });
 
@@ -130,12 +132,23 @@ export const updatePlanWithAIData = internalMutation({
     itinerary: v.array(v.object({
       title: v.string(),
       activities: v.object({
-        morning: v.array(v.string()),
-        afternoon: v.array(v.string()),
-        evening: v.array(v.string())
+        morning: v.array(v.object({
+          itineraryItem: v.string(),
+          briefDescription: v.string()
+        })),
+        afternoon: v.array(v.object({
+          itineraryItem: v.string(),
+          briefDescription: v.string()
+        })),
+        evening: v.array(v.object({
+          itineraryItem: v.string(),
+          briefDescription: v.string()
+        })),
       })
     })),
     besttimetovisit: v.string(),
+    packingchecklist: v.array(v.string()),
+    localcuisinerecommendations: v.array(v.string())
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.planId, {
@@ -144,7 +157,9 @@ export const updatePlanWithAIData = internalMutation({
       thingstodo: args.thingstodo,
       topplacestovisit: args.topplacestovisit,
       besttimetovisit: args.besttimetovisit,
-      itinerary: args.itinerary
+      itinerary: args.itinerary,
+      packingchecklist: args.packingchecklist,
+      localcuisinerecommendations: args.localcuisinerecommendations
     });
   },
 });
@@ -170,7 +185,9 @@ export const createEmptyPlan = mutation({
       userPrompt: args.userPrompt,
       besttimetovisit: "",
       itinerary: [],
-      storageId: null
+      storageId: null,
+      localcuisinerecommendations: [],
+      packingchecklist: []
     });
     return newPlan;
   },

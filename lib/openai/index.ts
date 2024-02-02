@@ -1,5 +1,4 @@
 import OpenAI from "openai";
-import { array } from "zod";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -7,6 +6,7 @@ export async function generateTravelPlan(
   promptText: string,
 ) {
   const prompt = `${promptText}, generate travel data according to the schema and in json format, do not return anything in your response outside of curly braces,`;
+
   const schema = {
     type: "object",
     properties: {
@@ -16,7 +16,7 @@ export async function generateTravelPlan(
       },
       abouttheplace: {
         type: "string",
-        description: "about the place in few lines",
+        description: "about the place in atleast 50 words",
       },
       thingstodo: {
         type: "array",
@@ -58,7 +58,7 @@ export async function generateTravelPlan(
       },
       itinerary: {
         type: "array",
-        description: "Itinerary for the specified number of days",
+        description: "Itinerary for the specified number of days in array format",
         items: {
           type: "object",
           properties: {
@@ -68,15 +68,36 @@ export async function generateTravelPlan(
               properties: {
                 morning: {
                   type: "array",
-                  items: { type: "string" },
+                  items: {
+                    type: "object",
+                    properties: {
+                      itineraryItem: { type: "string", description: "About the itinerary item" },
+                      briefDescription: { type: "string", description: "Elaborate about the place suggested" }
+                    },
+                    required: ["itineraryItem", "briefDescription"],
+                  },
                 },
                 afternoon: {
                   type: "array",
-                  items: { type: "string" },
+                  items: {
+                    type: "object",
+                    properties: {
+                      itineraryItem: { type: "string", description: "About the itinerary item" },
+                      briefDescription: { type: "string", description: "Elaborate about the place suggested" }
+                    },
+                    required: ["itineraryItem", "briefDescription"],
+                  },
                 },
                 evening: {
                   type: "array",
-                  items: { type: "string" },
+                  items: {
+                    type: "object",
+                    properties: {
+                      itineraryItem: { type: "string", description: "About the itinerary item" },
+                      briefDescription: { type: "string", description: "Elaborate about the place suggested" }
+                    },
+                    required: ["itineraryItem", "briefDescription"],
+                  },
                 },
               },
               required: ["morning", "afternoon", "evening"],
@@ -94,8 +115,10 @@ export async function generateTravelPlan(
       "besttimetovisit",
       "localcuisinerecommendations",
       "packingchecklist",
-      "itinerary",],
+      "itinerary",
+    ],
   };
+
   return openai.chat.completions.create({
     model: "gpt-3.5-turbo-0613",
     messages: [

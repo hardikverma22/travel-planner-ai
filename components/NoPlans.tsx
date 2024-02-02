@@ -5,7 +5,7 @@ export function NoPlans() {
   return (
     <div
       className="flex flex-col justify-center items-center flex-1 mt-10 py-40
-                         mx-auto bg-white shadow-xl rounded-sm"
+                         mx-auto bg-white rounded-sm"
     >
       <p className="font-bold text-lg capitalize leading-10">
         No plans created yet!

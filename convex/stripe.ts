@@ -74,7 +74,6 @@ export const fulfill = internalAction({
                 const id = (event.data.object as { id: string }).id;
 
                 const status = (event.data.object as { payment_status: string }).payment_status;
-                console.log({ status: status });
                 if (status === "paid")
                     await ctx.runMutation(internal.payments.fulfill, { stripeId: id, status });
             }

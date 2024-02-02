@@ -60,9 +60,7 @@ export const updateUserCredits = async (ctx: MutationCtx, userId: string) => {
 export async function userQuery(
   ctx: QueryCtx,
   clerkUserId: string
-)
-// : Promise<(Omit<Doc<"users">, "clerkUser"> & { clerkUser: UserJSON }) | null> 
-{
+) {
   return await ctx.db
     .query("users")
     .withIndex("by_clerk_id", (q) => q.eq("userId", clerkUserId))

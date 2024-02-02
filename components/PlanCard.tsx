@@ -30,7 +30,7 @@ const PlanCard = ({plan}: PlanCardProps) => {
               alt="travelpic"
               src={plan.url ?? navigationSvg}
               fill={true}
-              className="relative -z-1 bg-contain rounded-t-lg w-full group-hover/card:scale-105 transition-all duration-150"
+              className="relative -z-1 object-cover rounded-t-lg w-full group-hover/card:scale-105 transition ease-in-out duration-500"
               priority={true}
             />
           </div>

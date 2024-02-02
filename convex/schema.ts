@@ -15,16 +15,28 @@ export default defineSchema({
         lng: v.float64()
       })
     })),
+    packingchecklist: v.array(v.string()),
+    localcuisinerecommendations: v.array(v.string()),
     userId: v.string(),
     besttimetovisit: v.string(),
     itinerary: v.array(v.object({
       title: v.string(),
       activities: v.object({
-        morning: v.array(v.string()),
-        afternoon: v.array(v.string()),
-        evening: v.array(v.string())
+        morning: v.array(v.object({
+          itineraryItem: v.string(),
+          briefDescription: v.string()
+        })),
+        afternoon: v.array(v.object({
+          itineraryItem: v.string(),
+          briefDescription: v.string()
+        })),
+        evening: v.array(v.object({
+          itineraryItem: v.string(),
+          briefDescription: v.string()
+        })),
       })
-    }))
+    })
+    )
   }),
   users: defineTable({
     userId: v.string(),

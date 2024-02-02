@@ -4,6 +4,7 @@ import Itinerary from './Itinerary';
 import Prompt from './Prompt';
 import TopActivities from './TopActivities';
 import TopPlacesToVisit from './TopPlacesToVisit';
+import LocalCuisineRecommendations from './LocalCuisineRecommendations';
 
 export {
     AboutThePlace,
@@ -11,5 +12,6 @@ export {
     Itinerary,
     Prompt,
     TopActivities,
-    TopPlacesToVisit
+    TopPlacesToVisit,
+    LocalCuisineRecommendations
 }

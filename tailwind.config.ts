@@ -86,7 +86,6 @@ const config = {
         "wiggle1-left-right": "wiggle1 12s infinite ease-in-out forwards",
         "wiggle2-left-right": "wiggle2 12s infinite ease-in-out forwards",
         "wiggle3-left-right": "wiggle3 12s infinite ease-in-out forwards"
-
       },
 
     },
