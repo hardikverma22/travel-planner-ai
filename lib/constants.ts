@@ -1,2 +1,0 @@
-export const navlinks = [{ text: "How it works", id: "how-it-works" }, { text: "Pricing", id: "pricing" }];
-export const features = ["Top Spots Unveiled", "Tailored Itineraries", "Optimal Timing", "Foodie Hotspots", "Prime Experiences"]

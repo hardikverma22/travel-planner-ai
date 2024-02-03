@@ -14,13 +14,9 @@ export async function generatePlanAction(formData: formSchemaType) {
   if (planId === null)
     return null;
 
-  fetchAction(
-    api.plan.preparePlan,
-    {
-      planId: planId,
-    },
-    { token }
-  );
+  fetchAction(api.plan.prepareBatch1, { planId: planId }, { token });
+  fetchAction(api.plan.prepareBatch2, { planId: planId }, { token });
+  fetchAction(api.plan.prepareBatch3, { planId: planId }, { token });
 
   redirect(`/plans/${planId}?isNewPlan=true`);
   return planId;

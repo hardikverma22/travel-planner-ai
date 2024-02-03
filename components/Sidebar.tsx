@@ -1,21 +1,27 @@
 "use client";
 
+import Pulse from "@/components/shared/Pulse";
 import {Button} from "@/components/ui/button";
+import {Doc} from "@/convex/_generated/dataModel";
+import {planSections} from "@/lib/constants";
 import {cn} from "@/lib/utils";
-import {
-  Backpack,
-  Clock3,
-  Info,
-  Lightbulb,
-  MapPin,
-  Navigation,
-  Sailboat,
-  Utensils,
-} from "lucide-react";
+
 import Link from "next/link";
 
 import {usePathname} from "next/navigation";
-const Sidebar = () => {
+
+export type SidebarProps = {
+  imagination: boolean;
+  abouttheplace: boolean;
+  topactivities: boolean;
+  topplacestovisit: boolean;
+  itinerary: boolean;
+  localcuisines: boolean;
+  packingchecklist: boolean;
+  besttimetovisit: boolean;
+};
+
+const Sidebar = ({planState}: {planState: SidebarProps}) => {
   const pathname = usePathname();
 
   return (
@@ -26,55 +32,18 @@ const Sidebar = () => {
             Discover
           </h2>
           <div className="space-y-1">
-            <Link href={`${pathname}#imagination`}>
-              <Button variant="ghost" className="w-full justify-start">
-                <Lightbulb className="mr-2 h-4 w-4" />
-                Your Imagination
-              </Button>
-            </Link>
-            <Link href={`${pathname}#abouttheplace`}>
-              <Button variant="ghost" className="w-full justify-start">
-                <Info className="mr-2 h-4 w-4" />
-                About the Place
-              </Button>
-            </Link>
-
-            <Link href={`${pathname}#topactivities`}>
-              <Button variant="ghost" className="w-full justify-start">
-                <Sailboat className="mr-2 h-4 w-4" />
-                Top Activities
-              </Button>
-            </Link>
-            <Link href={`${pathname}#topplacestovisit`}>
-              <Button variant="ghost" className="w-full justify-start">
-                <MapPin className="mr-2 h-4 w-4" />
-                Top places to visit
-              </Button>
-            </Link>
-            <Link href={`${pathname}#itinerary`}>
-              <Button variant="ghost" className="w-full justify-start">
-                <Navigation className="mr-2 h-4 w-4" />
-                Itinerary
-              </Button>
-            </Link>
-            <Link href={`${pathname}#localcuisines`}>
-              <Button variant="ghost" className="w-full justify-start">
-                <Utensils className="mr-2 h-4 w-4" />
-                Local Cuisines
-              </Button>
-            </Link>
-            <Link href={`${pathname}#packingchecklist`}>
-              <Button variant="ghost" className="w-full justify-start">
-                <Backpack className="mr-2 h-4 w-4" />
-                Packing Checklist
-              </Button>
-            </Link>
-            <Link href={`${pathname}#besttimetovisit`}>
-              <Button variant="ghost" className="w-full justify-start">
-                <Clock3 className="mr-2 h-4 w-4" />
-                Best time to visit
-              </Button>
-            </Link>
+            {planSections.map((section) => (
+              <Link href={`${pathname}#${section.id}`} key={section.id}>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start items-center gap-2"
+                >
+                  {section.icon}
+                  <span>{section.name}</span>
+                  {planState && !planState[section.id] && <Pulse />}
+                </Button>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

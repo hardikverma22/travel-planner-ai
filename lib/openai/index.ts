@@ -1,124 +1,16 @@
+import {
+  batch1Schema,
+  batch2Schema,
+  batch3Schema
+} from "./schemas";
+
 import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export async function generateTravelPlan(
-  promptText: string,
-) {
-  const prompt = `${promptText}, generate travel data according to the schema and in json format, do not return anything in your response outside of curly braces,`;
+const promptSuffix = "generate travel data according to the schema and in json format, do not return anything in your response outside of curly braces,";
 
-  const schema = {
-    type: "object",
-    properties: {
-      nameoftheplace: {
-        type: "string",
-        description: "Name of the user input place or location",
-      },
-      abouttheplace: {
-        type: "string",
-        description: "about the place in atleast 50 words",
-      },
-      thingstodo: {
-        type: "array",
-        description: "Different activities to do",
-        items: { type: "string" },
-      },
-      topplacestovisit: {
-        type: "array",
-        description: "Top places to visit along with their coordinates, atelast top 5, can be more",
-        items: {
-          type: "object",
-          properties: {
-            name: { type: "string", description: "Name of the place" },
-            coordinates: {
-              type: "object",
-              properties: {
-                lat: { type: "number", description: "Latitude" },
-                lng: { type: "number", description: "Longitude" },
-              },
-              required: ["lat", "lng"],
-            },
-          },
-          required: ["name", "coordinates"],
-        },
-      },
-      besttimetovisit: {
-        type: "string",
-        description: "Best time to visit",
-      },
-      localcuisinerecommendations: {
-        type: "array",
-        description: "Local Cuisine Recommendations",
-        items: { type: "string" },
-      },
-      packingchecklist: {
-        type: "array",
-        description: "Packing Checklist",
-        items: { type: "string" },
-      },
-      itinerary: {
-        type: "array",
-        description: "Itinerary for the specified number of days in array format",
-        items: {
-          type: "object",
-          properties: {
-            title: { type: "string", description: "Day title" },
-            activities: {
-              type: "object",
-              properties: {
-                morning: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      itineraryItem: { type: "string", description: "About the itinerary item" },
-                      briefDescription: { type: "string", description: "Elaborate about the place suggested" }
-                    },
-                    required: ["itineraryItem", "briefDescription"],
-                  },
-                },
-                afternoon: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      itineraryItem: { type: "string", description: "About the itinerary item" },
-                      briefDescription: { type: "string", description: "Elaborate about the place suggested" }
-                    },
-                    required: ["itineraryItem", "briefDescription"],
-                  },
-                },
-                evening: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      itineraryItem: { type: "string", description: "About the itinerary item" },
-                      briefDescription: { type: "string", description: "Elaborate about the place suggested" }
-                    },
-                    required: ["itineraryItem", "briefDescription"],
-                  },
-                },
-              },
-              required: ["morning", "afternoon", "evening"],
-            },
-          },
-          required: ["title", "activities"],
-        },
-      }
-    },
-    "required": [
-      "nameoftheplace",
-      "abouttheplace",
-      "thingstodo",
-      "topplacestovisit",
-      "besttimetovisit",
-      "localcuisinerecommendations",
-      "packingchecklist",
-      "itinerary",
-    ],
-  };
-
+const callOpenAIApi = (prompt: string, schema: any) => {
   return openai.chat.completions.create({
     model: "gpt-3.5-turbo-0613",
     messages: [
@@ -128,4 +20,19 @@ export async function generateTravelPlan(
     functions: [{ name: "set_travel_details", parameters: schema }],
     function_call: { name: "set_travel_details" },
   });
+}
+
+export const generatebatch1 = (promptText: string) => {
+  const prompt = `${promptText}, ${promptSuffix}`;
+  return callOpenAIApi(prompt, batch1Schema);
+}
+
+export const generatebatch2 = (promptText: string) => {
+  const prompt = `${promptText}, ${promptSuffix}`;
+  return callOpenAIApi(prompt, batch2Schema);
+}
+
+export const generatebatch3 = (promptText: string) => {
+  const prompt = `${promptText}, ${promptSuffix}`;
+  return callOpenAIApi(prompt, batch3Schema);
 }

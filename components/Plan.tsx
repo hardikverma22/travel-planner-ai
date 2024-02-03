@@ -1,7 +1,4 @@
 "use client";
-import {Doc} from "@/convex/_generated/dataModel";
-import {useQuery} from "convex/react";
-import {api} from "@/convex/_generated/api";
 
 import AlertForAI from "@/components/AlertForAI";
 import Sidebar from "@/components/Sidebar";
@@ -16,6 +13,7 @@ import {
   LocalCuisineRecommendations,
 } from "@/components/sections";
 import PackingChecklist from "@/components/sections/PackingChecklist";
+import usePlan from "@/hooks/usePlan";
 
 type PlanProps = {
   planId: string;
@@ -23,17 +21,12 @@ type PlanProps = {
 };
 
 const Plan = ({planId, isNewPlan}: PlanProps) => {
-  const plan = useQuery(api.plan.getSinglePlan, {
-    id: planId as Doc<"plan">["_id"],
-  });
-
-  const shouldShowAlert =
-    isNewPlan && plan != null && plan.besttimetovisit?.length == 0;
+  const {shouldShowAlert, planState, plan} = usePlan(planId, isNewPlan);
 
   return (
     <div className="bg-background">
       <div className="grid lg:grid-cols-5 min-h-screen lg:px-10 px-5">
-        <Sidebar />
+        <Sidebar planState={planState} />
         <div className="lg:col-span-4 lg:border-l">
           <div className="h-full px-4 py-6 lg:px-8 flex flex-col gap-10">
             <AlertForAI show={shouldShowAlert} />

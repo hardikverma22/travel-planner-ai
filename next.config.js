@@ -1,7 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["quixotic-impala-265.convex.cloud"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "quixotic-impala-265.convex.cloud",
+        port: "",
+      },
+    ],
   },
 };
 
