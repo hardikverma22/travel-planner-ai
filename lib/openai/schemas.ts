@@ -27,7 +27,7 @@ export const batch2Schema = {
     properties: {
         thingstodo: {
             type: "array",
-            description: "Different adventure or other activities to do",
+            description: "Different adventure activities to do",
             items: { type: "string" },
         },
         localcuisinerecommendations: {

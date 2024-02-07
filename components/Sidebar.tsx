@@ -2,7 +2,6 @@
 
 import Pulse from "@/components/shared/Pulse";
 import {Button} from "@/components/ui/button";
-import {Doc} from "@/convex/_generated/dataModel";
 import {planSections} from "@/lib/constants";
 import {cn} from "@/lib/utils";
 
@@ -27,7 +26,7 @@ const Sidebar = ({planState}: {planState: SidebarProps}) => {
   return (
     <div className={cn("pb-12 lg:col-span-1 col-span-full")}>
       <div className="space-y-4 py-4 sticky top-2">
-        <div className="px-3 py-2">
+        <div className="py-2">
           <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
             Discover
           </h2>
@@ -36,7 +35,7 @@ const Sidebar = ({planState}: {planState: SidebarProps}) => {
               <Link href={`${pathname}#${section.id}`} key={section.id}>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start items-center gap-2"
+                  className="w-full justify-start items-center gap-2 whitespace-break-spaces"
                 >
                   {section.icon}
                   <span>{section.name}</span>

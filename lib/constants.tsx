@@ -70,3 +70,12 @@ export const planSections: {
     icon: <Clock3 className="mr-2 h-4 w-4" />,
   },
 ];
+
+export const colors = [
+  "#ef4444",
+  "#14b8a6",
+  "#f59e0b",
+  "#06b6d4",
+  "#a855f7",
+  "#ec4899",
+];
