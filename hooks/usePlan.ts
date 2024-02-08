@@ -12,8 +12,8 @@ const usePlan = (planId: string, isNewPlan: boolean) => {
 
     const nameLoaded = plan && plan?.nameoftheplace ? true : false;
     const aboutThePlaceLoaded = plan && plan?.abouttheplace ? true : false;
-    const thingsToDoLoaded =
-        plan && plan?.thingstodo && plan?.thingstodo.length > 0 ? true : false;
+    const adventuresActivitiesToDoLoaded =
+        plan && plan?.adventuresactivitiestodo && plan?.adventuresactivitiestodo.length > 0 ? true : false;
     const topPlacesToVisitLoaded =
         plan && plan?.topplacestovisit && plan && plan?.topplacestovisit.length > 0
             ? true
@@ -36,7 +36,7 @@ const usePlan = (planId: string, isNewPlan: boolean) => {
     const planState = {
         imagination: nameLoaded,
         abouttheplace: aboutThePlaceLoaded,
-        topactivities: thingsToDoLoaded,
+        topactivities: adventuresActivitiesToDoLoaded,
         topplacestovisit: topPlacesToVisitLoaded,
         itinerary: itineraryLoaded,
         localcuisines: localCuisineRecommendationsLoaded,

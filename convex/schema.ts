@@ -7,7 +7,7 @@ export default defineSchema({
     nameoftheplace: v.string(),
     userPrompt: v.string(),
     abouttheplace: v.string(),
-    thingstodo: v.array(v.string()),
+    adventuresactivitiestodo: v.array(v.string()),
     topplacestovisit: v.array(v.object({
       name: v.string(),
       coordinates: v.object({

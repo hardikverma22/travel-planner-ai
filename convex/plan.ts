@@ -157,12 +157,12 @@ export const prepareBatch2 = action({
         ?.arguments as string;
 
       const modelName = JSON.parse(nameMsg) as
-        Pick<Doc<"plan">, "thingstodo" |
+        Pick<Doc<"plan">, "adventuresactivitiestodo" |
           "localcuisinerecommendations" |
           "packingchecklist">;
 
-      await ctx.runMutation(internal.plan.updateThingsToDoPackingChecklistLocalCuisineRecommendations, {
-        thingstodo: modelName.thingstodo,
+      await ctx.runMutation(internal.plan.updateActivitiesToDoPackingChecklistLocalCuisineRecommendations, {
+        adventuresactivitiestodo: modelName.adventuresactivitiestodo,
         localcuisinerecommendations: modelName.localcuisinerecommendations,
         packingchecklist: modelName.packingchecklist,
         planId: emptyPlan._id,
@@ -232,16 +232,16 @@ export const updatePlaceNameAboutThePlaceBestTimeToVisit = internalMutation({
   },
 });
 
-export const updateThingsToDoPackingChecklistLocalCuisineRecommendations = internalMutation({
+export const updateActivitiesToDoPackingChecklistLocalCuisineRecommendations = internalMutation({
   args: {
     planId: v.id("plan"),
-    thingstodo: v.array(v.string()),
+    adventuresactivitiestodo: v.array(v.string()),
     packingchecklist: v.array(v.string()),
     localcuisinerecommendations: v.array(v.string())
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.planId, {
-      thingstodo: args.thingstodo,
+      adventuresactivitiestodo: args.adventuresactivitiestodo,
       packingchecklist: args.packingchecklist,
       localcuisinerecommendations: args.localcuisinerecommendations
     });
@@ -298,7 +298,7 @@ export const createEmptyPlan = mutation({
     const newPlan = await ctx.db.insert("plan", {
       nameoftheplace: "",
       abouttheplace: "",
-      thingstodo: [],
+      adventuresactivitiestodo: [],
       topplacestovisit: [],
       userId: identity.subject,
       userPrompt: args.userPrompt,

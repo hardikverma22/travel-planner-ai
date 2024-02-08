@@ -36,7 +36,7 @@ const Plan = ({planId, isNewPlan}: PlanProps) => {
               imageUrl={plan?.url}
             />
             <AboutThePlace content={plan?.abouttheplace} />
-            <TopActivities activities={plan?.thingstodo} />
+            <TopActivities activities={plan?.adventuresactivitiestodo} />
             <TopPlacesToVisit topPlacesToVisit={plan?.topplacestovisit} />
             <Itinerary itinerary={plan?.itinerary} />
             <LocalCuisineRecommendations

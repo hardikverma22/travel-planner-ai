@@ -25,9 +25,9 @@ export const batch1Schema = {
 export const batch2Schema = {
     type: "object",
     properties: {
-        thingstodo: {
+        adventuresactivitiestodo: {
             type: "array",
-            description: "Different adventure activities to do",
+            description: "Top adventures activities to do for example sky diving, para gliding, river rafting",
             items: { type: "string" },
         },
         localcuisinerecommendations: {
@@ -42,7 +42,7 @@ export const batch2Schema = {
         },
     },
     "required": [
-        "thingstodo",
+        "adventuresactivitiestodo",
         "localcuisinerecommendations",
         "packingchecklist"
     ],
