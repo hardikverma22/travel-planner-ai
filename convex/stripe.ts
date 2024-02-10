@@ -1,6 +1,5 @@
 import { action, internalAction } from "./_generated/server";
 import { internal } from "./_generated/api";
-// import stripe from "../config/stripe";
 import Stripe from 'stripe';
 import { v } from "convex/values";
 

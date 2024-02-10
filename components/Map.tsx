@@ -11,13 +11,12 @@ import {
 } from "@react-google-maps/api";
 import {useEffect, useState} from "react";
 
-export default function Map({
-  topPlacesToVisit,
-  selectedPlace,
-}: {
+type MapProps = {
   topPlacesToVisit: Doc<"plan">["topplacestovisit"] | undefined;
   selectedPlace: {lat: number; lng: number} | undefined;
-}) {
+};
+
+export default function Map({topPlacesToVisit, selectedPlace}: MapProps) {
   const {isLoaded} = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,

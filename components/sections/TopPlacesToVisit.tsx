@@ -37,21 +37,7 @@ const TopPlacesToVisit = ({
     setSelectedPlace(coordinates);
   };
 
-  const tags = Array.from({length: 50}).map(
-    (_, i, a) => `v1.2.0-beta.${a.length - i}`
-  );
-
   return (
-    // <ScrollArea className="h-96 w-48 rounded-md border bg-pink-500">
-    //   <div className="p-4">
-    //     <h4 className="mb-4 text-sm font-medium leading-none">Tags</h4>
-    //     {tags.map((tag) => (
-    //       <div key={tag} className="text-sm">
-    //         {tag}
-    //       </div>
-    //     ))}
-    //   </div>
-    // </ScrollArea>
     <SectionWrapper id="topplacestovisit">
       <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">
         <MapPin className="mr-2" /> Top places to visit
@@ -69,7 +55,6 @@ const TopPlacesToVisit = ({
                       className="p-5 bg-white text-black font-bold cursor-pointer
                               flex-1 shadow-md hover:shadow-lg
                               hover:ring-2 hover:ring-blue-300 duration-500"
-                      //
                       onClick={(e) => onClickPlace(e, place.coordinates)}
                     >
                       <span

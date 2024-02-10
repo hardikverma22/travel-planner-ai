@@ -23,11 +23,9 @@ export const getPlanForAUser = query({
       .filter((q) => q.eq(q.field("userId"), subject))
       .order("desc")
       .take(100);
-    // return plans;
     return Promise.all(
       plans.map(async (plan) => ({
         ...plan,
-        // If the message is an "image" its `body` is an `Id<"_storage">`
         ...(plan.storageId === null
           ? { url: null }
           : { url: await ctx.storage.getUrl(plan.storageId) }),
@@ -45,7 +43,6 @@ export const getSinglePlan = query({
     }
 
     const plan = await ctx.db.get(args.id);
-    // return plan;
     return { ...plan!, url: (plan && plan.storageId) ? await ctx.storage.getUrl(plan.storageId) : null };
   },
 });
