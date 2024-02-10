@@ -20,7 +20,7 @@ Check out the live demo [here](https://travel-plannerai.vercel.app/).
 
 ## Architecture
 
-https://app.eraser.io/workspace/xVReAZiFdsjiwklrjNNW
+![diagram-export-10-02-2024-23_36_06](https://github.com/hardikverma22/travel-planner-ai/assets/26103679/4117c93e-0d90-4c00-a0fe-ccf6128eda7b)
 
 ## Installation
 
