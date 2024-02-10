@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Travel Planner AI - Gateway to Seamless Smart Travel Plan
 
-## Getting Started
+Welcome to Travel Planner AI, your ultimate travel companion designed to simplify the process of planning your next adventure.
+Whether you're dreaming of a weekend getaway or a month-long expedition, Travel Planner AI is here to help you meticulously craft your next travel itinerary.
 
-First, run the development server:
+## Overview
+Travel Planner AI is a Software as a Service (SaaS) product that leverages cutting-edge technologies to streamline the travel planning process.
+By simply providing a prompt such as "2 days trip to London with budget $1000," our AI-powered tool generates comprehensive travel plans tailored to your preferences.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Demo
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Check out the live demo [here](https://travel-plannerai.vercel.app/).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Key Functional Features
+- **Top Spots Unveiled:** Discover hidden gems and popular attractions effortlessly.
+- **Tailored Itineraries:** Plan your days seamlessly with custom-tailored schedules.
+- **Optimal Timing:** Learn the best time to visit your destinations for an unparalleled experience.
+- **Foodie Hotspots:** Indulge in culinary delights with recommendations from local experts.
+- **Prime Experiences:** Immerse yourself in unforgettable moments curated just for you.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Architecture
 
-## Learn More
+https://app.eraser.io/workspace/xVReAZiFdsjiwklrjNNW
 
-To learn more about Next.js, take a look at the following resources:
+## Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To run the Travel Planner AI, follow these steps:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. Clone the repository:
 
-## Deploy on Vercel
+   ```
+   git clone https://github.com/hardikverma22/travel-planner-ai
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Navigate to the project directory:
+ 
+   ```
+   cd travel-planner-ai
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3. Install the dependencies:
+
+    ```
+    npm install
+    ```
+  
+4. Start the development server:
+  
+    ```
+    npm run dev
+    ```
+  
+ 5. Open your browser and visit http://localhost:3000 to see the app in action.
+
+
+## Technologies Used
+- Travel Planner AI is built using cutting-edge technologies to ensure a seamless user experience.
+
+- **Next.js 14:** Leveraging the latest advancements in Next.js for efficient web application development.
+- **Tailwind CSS with Shadcn-UI:** Utilizing Tailwind CSS with Shadcn-UI for responsive and visually stunning user interfaces.
+- **Convex Backend Platform:** Powering our backend infrastructure for robust performance and scalability.
+- **OpenAI APIs:** Harnessing the power of OpenAI's APIs for intelligent content generation and natural language processing.
+- **Clerk:** Providing secure authentication solutions to safeguard user accounts and data.
+- **Stripe:** Facilitating seamless payment processing for premium features and subscriptions.
+
+
+## Contributing
+  Contributions are welcome! If you'd like to contribute to Shoe Forge, please follow these steps:
+  1. Fork the repository.
+  2. Create a new branch for your feature or bug fix.
+  3. Make your changes and commit them.
+  4. Push your changes to your fork.
+  5. Submit a pull request to the main branch of the original repository.
