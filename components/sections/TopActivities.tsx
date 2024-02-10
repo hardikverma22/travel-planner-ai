@@ -2,11 +2,11 @@ import SectionWrapper from "@/components/sections/SectionWrapper";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Sailboat} from "lucide-react";
 
-export default function TopActivities({
-  activities,
-}: {
+type TopActivitiesProps = {
   activities: string[] | undefined;
-}) {
+};
+
+export default function TopActivities({activities}: TopActivitiesProps) {
   return (
     <SectionWrapper id="topactivities">
       <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">

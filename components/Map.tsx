@@ -1,14 +1,7 @@
 "use client";
 import {Doc} from "@/convex/_generated/dataModel";
 import {colors} from "@/lib/constants";
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Marker,
-  InfoWindow,
-  useGoogleMap,
-  OverlayView,
-} from "@react-google-maps/api";
+import {GoogleMap, useJsApiLoader, OverlayView} from "@react-google-maps/api";
 import {useEffect, useState} from "react";
 
 type MapProps = {

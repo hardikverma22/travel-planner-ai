@@ -2,11 +2,11 @@ import {Doc} from "@/convex/_generated/dataModel";
 import {Sun, Sunrise, Sunset} from "lucide-react";
 import {ReactNode} from "react";
 
-const Timeline = ({
-  itinerary,
-}: {
+type TimelineProps = {
   itinerary: Doc<"plan">["itinerary"] | undefined;
-}) => {
+};
+
+const Timeline = ({itinerary}: TimelineProps) => {
   const filteredItinerary = itinerary?.filter((day) => {
     const isMorningEmpty = day.activities.morning.length === 0;
     const isAfternoonEmpty = day.activities.afternoon.length === 0;

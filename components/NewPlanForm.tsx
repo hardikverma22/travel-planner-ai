@@ -3,7 +3,7 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {useAuth} from "@clerk/nextjs";
-import {useState, useTransition} from "react";
+import {useTransition} from "react";
 import * as z from "zod";
 
 import {Button} from "@/components/ui/button";
@@ -16,10 +16,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
-import {Loader, Loader2} from "lucide-react";
+import {Loader2} from "lucide-react";
 import {generatePlanAction} from "@/lib/actions/generateplanAction";
-import {useFormStatus} from "react-dom";
-import GeneratePlanButton from "@/components/GeneratePlanButton";
 
 export const formSchema = z.object({
   promptText: z

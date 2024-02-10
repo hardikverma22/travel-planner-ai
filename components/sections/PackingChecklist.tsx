@@ -2,11 +2,11 @@ import SectionWrapper from "@/components/sections/SectionWrapper";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Backpack} from "lucide-react";
 
-export default function PackingChecklist({
-  checklist,
-}: {
+type PackingChecklistProps = {
   checklist: string[] | undefined;
-}) {
+};
+
+export default function PackingChecklist({checklist}: PackingChecklistProps) {
   return (
     <SectionWrapper id="packingchecklist">
       <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">

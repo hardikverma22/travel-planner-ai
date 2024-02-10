@@ -8,17 +8,18 @@ import {colors} from "@/lib/constants";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {MapPin} from "lucide-react";
 import {useEffect, useState} from "react";
+import {Loading} from "@/components/Laoding";
 
 type location = {
   lat: number;
   lng: number;
 };
 
-const TopPlacesToVisit = ({
-  topPlacesToVisit,
-}: {
+type TopPlacesToVisitProps = {
   topPlacesToVisit: Doc<"plan">["topplacestovisit"] | undefined;
-}) => {
+};
+
+const TopPlacesToVisit = ({topPlacesToVisit}: TopPlacesToVisitProps) => {
   const doesTopPlacesToVisitExist =
     topPlacesToVisit != null && topPlacesToVisit.length > 0;
 
@@ -70,19 +71,41 @@ const TopPlacesToVisit = ({
               </ScrollArea>
             </div>
           ) : (
-            <Skeleton className="h-full" />
+            <SkeletonForTopPlacesToVisit />
           )}
         </div>
         <div className="w-full p-2 h-[30rem]">
-          {doesTopPlacesToVisitExist && (
+          {doesTopPlacesToVisitExist ? (
             <Map
               topPlacesToVisit={topPlacesToVisit}
               selectedPlace={selectedPlace ?? undefined}
             />
+          ) : (
+            <SkeletonForTopPlacesToVisit isMaps />
           )}
         </div>
       </div>
     </SectionWrapper>
+  );
+};
+
+const SkeletonForTopPlacesToVisit = ({isMaps = false}: {isMaps?: boolean}) => {
+  return (
+    <div className="flex flex-col gap-1 justify-center items-center h-full">
+      {isMaps ? (
+        <div className="flex gap-2 justify-center items-center">
+          <Loading />
+          <p className="font-bold text-blue-500">Loading Maps</p>
+        </div>
+      ) : (
+        <>
+          <Skeleton className="h-full" />
+          <Skeleton className="h-full" />
+          <Skeleton className="h-full" />
+          <Skeleton className="h-full" />
+        </>
+      )}
+    </div>
   );
 };
 

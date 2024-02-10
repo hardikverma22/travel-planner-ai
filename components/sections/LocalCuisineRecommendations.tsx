@@ -2,11 +2,13 @@ import SectionWrapper from "@/components/sections/SectionWrapper";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Utensils} from "lucide-react";
 
+type LocalCuisineRecommendationsProps = {
+  places: string[] | undefined;
+};
+
 export default function LocalCuisineRecommendations({
   places,
-}: {
-  places: string[] | undefined;
-}) {
+}: LocalCuisineRecommendationsProps) {
   return (
     <SectionWrapper id="localcuisines">
       <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">

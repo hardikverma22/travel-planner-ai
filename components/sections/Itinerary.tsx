@@ -4,11 +4,11 @@ import {Skeleton} from "@/components/ui/skeleton";
 import {Doc} from "@/convex/_generated/dataModel";
 import {Navigation} from "lucide-react";
 
-const Itinerary = ({
-  itinerary,
-}: {
+type ItineraryProps = {
   itinerary: Doc<"plan">["itinerary"] | undefined;
-}) => {
+};
+
+const Itinerary = ({itinerary}: ItineraryProps) => {
   return (
     <SectionWrapper id="itinerary">
       <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">

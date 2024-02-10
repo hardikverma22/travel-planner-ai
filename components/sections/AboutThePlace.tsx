@@ -2,11 +2,11 @@ import SectionWrapper from "@/components/sections/SectionWrapper";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Info} from "lucide-react";
 
-export default function AboutThePlace({
-  content,
-}: {
+type AboutThePlaceProps = {
   content: string | undefined;
-}) {
+};
+
+export default function AboutThePlace({content}: AboutThePlaceProps) {
   return (
     <SectionWrapper id="abouttheplace">
       <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">

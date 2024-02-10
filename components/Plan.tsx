@@ -1,9 +1,9 @@
 "use client";
 
-import AlertForAI from "@/components/AlertForAI";
 import Sidebar from "@/components/Sidebar";
 
 import {
+  AlertForAI,
   AboutThePlace,
   BestTimeToVisit,
   Itinerary,
@@ -11,8 +11,9 @@ import {
   TopActivities,
   TopPlacesToVisit,
   LocalCuisineRecommendations,
+  PackingChecklist,
 } from "@/components/sections";
-import PackingChecklist from "@/components/sections/PackingChecklist";
+
 import usePlan from "@/hooks/usePlan";
 
 type PlanProps = {

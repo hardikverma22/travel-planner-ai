@@ -1,16 +1,12 @@
-import SectionWrapper from "@/components/sections/SectionWrapper";
-import {Lightbulb} from "lucide-react";
 import Image from "next/image";
 
-const Prompt = ({
-  content,
-  imageUrl,
-  placeName,
-}: {
+type PromptProps = {
   content: string | undefined;
   imageUrl: string | null | undefined;
   placeName: string | undefined;
-}) => {
+};
+
+const Prompt = ({content, imageUrl, placeName}: PromptProps) => {
   return (
     <div
       id="imagination"

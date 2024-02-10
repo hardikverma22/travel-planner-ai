@@ -1,10 +1,8 @@
-export default function SectionWrapper({
-  children,
-  id,
-}: {
+type SectionWrapperProps = {
   children: React.ReactNode;
   id: string;
-}) {
+};
+export default function SectionWrapper({children, id}: SectionWrapperProps) {
   return (
     <div
       id={id}

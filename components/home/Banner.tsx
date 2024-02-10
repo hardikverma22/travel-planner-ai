@@ -1,7 +1,6 @@
 import GeneratePlanButton from "@/components/GeneratePlanButton";
-import {Button} from "@/components/ui/button";
 import {Lightbulb} from "lucide-react";
-import TravelHero from "@/components/TravelHero";
+import TravelHero from "@/components/home/TravelHero";
 
 const Banner = () => {
   return (

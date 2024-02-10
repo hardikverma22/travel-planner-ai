@@ -108,7 +108,6 @@ export const batch3Schema = {
                 type: "object",
                 properties: {
                     name: { type: "string", description: "Name of the place" },
-                    address: { type: "string", description: "Address of the place which can be used in google maps to get lat lng" },
                     coordinates: {
                         type: "object",
                         properties: {
