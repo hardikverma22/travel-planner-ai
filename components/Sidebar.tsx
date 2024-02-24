@@ -24,16 +24,15 @@ const Sidebar = ({planState}: {planState: SidebarProps}) => {
   const pathname = usePathname();
 
   return (
-    <div className={cn("pb-12 lg:col-span-1 col-span-full")}>
+    <aside className={cn("pb-12 lg:col-span-1 col-span-full")}>
       <div className="space-y-4 py-4 sticky top-2">
         <div className="py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Discover
-          </h2>
+          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">Discover</h2>
           <div className="space-y-1">
             {planSections.map((section) => (
               <Link href={`${pathname}#${section.id}`} key={section.id}>
                 <Button
+                  aria-label={section.name}
                   variant="ghost"
                   className="w-full justify-start items-center gap-2 whitespace-break-spaces"
                 >
@@ -46,7 +45,7 @@ const Sidebar = ({planState}: {planState: SidebarProps}) => {
           </div>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 

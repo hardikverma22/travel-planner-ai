@@ -11,7 +11,7 @@ export async function PlanList() {
   if (!plans || plans.length == 0) return <NoPlans />;
 
   return (
-    <div
+    <section
       className="grid grid-cols-1 
                       md:grid-cols-2 lg:grid-cols-3
                       2xl:grid-cols-4 4xl:grid-cols-6
@@ -22,7 +22,7 @@ export async function PlanList() {
       ) : (
         plans.map((plan) => <PlanCard key={plan._id} plan={plan} />)
       )}
-    </div>
+    </section>
   );
 }
 

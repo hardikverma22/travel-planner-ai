@@ -12,15 +12,17 @@ type MobileMenuProps = {
   isCurrentPathDashboard: boolean;
 };
 
-const MobileMenu = ({
-  isCurrentPathHome,
-  isCurrentPathDashboard,
-}: MobileMenuProps) => {
+const MobileMenu = ({isCurrentPathHome, isCurrentPathDashboard}: MobileMenuProps) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div>
-      <Button onClick={() => setOpen(!open)} variant="link" className="text-xl">
+    <aside>
+      <Button
+        aria-label="open side menu"
+        onClick={() => setOpen(!open)}
+        variant="link"
+        className="text-xl"
+      >
         <AiOutlineMenu />
       </Button>
       <div
@@ -43,6 +45,7 @@ const MobileMenu = ({
             </div>
           </Link>
           <Button
+            aria-label="close menu"
             onClick={() => setOpen(false)}
             variant="link"
             className="text-xl"
@@ -69,7 +72,7 @@ const MobileMenu = ({
           )}
         </ul>
       </div>
-    </div>
+    </aside>
   );
 };
 

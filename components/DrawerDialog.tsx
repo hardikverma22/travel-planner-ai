@@ -2,12 +2,7 @@
 
 import {api} from "@/convex/_generated/api";
 import {useAction, useQuery} from "convex/react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import Image from "next/image";
 import empty_cart from "@/public/empty_cart.svg";
 import {Button} from "@/components/ui/button";
@@ -23,9 +18,7 @@ const DrawerDialog = ({shouldOpenForCreatePlan = false}) => {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  const btnText = shouldOpenForCreatePlan
-    ? "Create Travel Plan"
-    : `Credits ${credits ?? 0}`;
+  const btnText = shouldOpenForCreatePlan ? "Create Travel Plan" : `Credits ${credits ?? 0}`;
 
   const shouldShowCreatePlanForm = credits && shouldOpenForCreatePlan;
 
@@ -44,11 +37,9 @@ const DrawerDialog = ({shouldOpenForCreatePlan = false}) => {
     return (
       <>
         <Button
+          aria-label={`open dialog button for ${btnText}`}
           variant={`${!shouldOpenForCreatePlan ? "link" : "default"}`}
-          className={`${
-            shouldOpenForCreatePlan &&
-            "bg-blue-500 text-white hover:bg-blue-600"
-          }`}
+          className={`${shouldOpenForCreatePlan && "bg-blue-500 text-white hover:bg-blue-600"}`}
           onClick={() => {
             setOpen(true);
           }}
@@ -65,11 +56,11 @@ const DrawerDialog = ({shouldOpenForCreatePlan = false}) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">{btnText}</Button>
+        <Button variant="outline" aria-label={`open drawer for ${btnText}`}>
+          {btnText}
+        </Button>
       </DrawerTrigger>
-      <DrawerContent className="flex flex-col gap-10 p-5">
-        {content}
-      </DrawerContent>
+      <DrawerContent className="flex flex-col gap-10 p-5">{content}</DrawerContent>
     </Drawer>
   );
 };
@@ -106,6 +97,7 @@ export const CreditContent = ({credits}: {credits: number | undefined}) => {
         </div>
       )}
       <Button
+        aria-label="buy credits"
         className="bg-blue-500 text-white hover:bg-blue-600"
         onClick={handleBuyCredits}
         disabled={startBuying}

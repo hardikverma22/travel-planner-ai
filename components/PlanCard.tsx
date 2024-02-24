@@ -1,11 +1,6 @@
 import {Doc} from "@/convex/_generated/dataModel";
 import navigationSvg from "@/public/card-navigation.svg";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "@/components/ui/card";
+import {Card, CardContent, CardDescription, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
 import {MapPin} from "lucide-react";
@@ -17,6 +12,7 @@ type PlanCardProps = {
 const PlanCard = ({plan}: PlanCardProps) => {
   return (
     <Link
+      role="article"
       href={`/plans/${plan._id}`}
       className="flex justify-center items-center shadow-lg"
     >
@@ -27,6 +23,7 @@ const PlanCard = ({plan}: PlanCardProps) => {
         <CardContent className="w-full flex flex-col gap-4 h-full overflow-hidden">
           <div className="relative h-1/2 w-full">
             <Image
+              role="figure"
               alt="travelpic"
               src={plan.url ?? navigationSvg}
               fill={true}
@@ -52,9 +49,7 @@ const PlanCard = ({plan}: PlanCardProps) => {
                 <MapPin className="h-4 w-4 -ml-1" />
                 {plan.nameoftheplace}
               </div>
-              <CardTitle className="line-clamp-1 text-md">
-                {plan.userPrompt}
-              </CardTitle>
+              <CardTitle className="line-clamp-1 text-md">{plan.userPrompt}</CardTitle>
             </div>
           </div>
         </CardContent>

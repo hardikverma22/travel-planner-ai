@@ -12,7 +12,7 @@ const Banner = () => {
                 gap-5
                 min-h-[calc(100vh-5.25rem)]"
     >
-      <div className="flex flex-col h-full justify-start items-center lg:flex-1 ">
+      <article className="flex flex-col h-full justify-start items-center lg:flex-1 ">
         <h1
           className="font-extrabold lg:text-7xl md:text-5xl text-4xl font-sans
       text-left w-full"
@@ -24,9 +24,7 @@ const Banner = () => {
         <div className="mt-5 lg:mt-10 rounded-md w-full text-left">
           <div className="flex justify-start  items-center">
             <Lightbulb className="mr-1 text-yellow-600" />
-            <span className="text-center">
-              Imagine telling your travel planner,
-            </span>
+            <span className="text-center">Imagine telling your travel planner,</span>
           </div>
           <div className="p-2">
             <p className="text-blue-500 font-bold tracking-normal">
@@ -40,19 +38,19 @@ const Banner = () => {
                       md:max-w-xl 
                       text-left"
             >
-              Our AI not only understands but crafts a personalized adventure.
-              Discover local secrets, savor culinary delights, and explore
-              iconic landmarks with an itinerary designed just for you.
+              Our AI not only understands but crafts a personalized adventure. Discover local
+              secrets, savor culinary delights, and explore iconic landmarks with an itinerary
+              designed just for you.
             </p>
           </div>
         </div>
         <div className="w-full ml-2 flex justify-start">
           <GeneratePlanButton />
         </div>
-      </div>
-      <div className="h-full lg:flex-1 flex-1 overflow-hidden">
+      </article>
+      <figure className="h-full lg:flex-1 flex-1 overflow-hidden">
         <TravelHero />
-      </div>
+      </figure>
     </section>
   );
 };

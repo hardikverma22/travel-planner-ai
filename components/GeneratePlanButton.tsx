@@ -6,6 +6,7 @@ const GeneratePlanButton = () => {
   const {openSignInPopupOrDirect} = useAuth();
   return (
     <Button
+      aria-label="generate plan"
       onClick={openSignInPopupOrDirect}
       variant="default"
       size="lg"

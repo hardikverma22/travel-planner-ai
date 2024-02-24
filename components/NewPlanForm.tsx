@@ -7,22 +7,13 @@ import {useTransition} from "react";
 import * as z from "zod";
 
 import {Button} from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Loader2} from "lucide-react";
 import {generatePlanAction} from "@/lib/actions/generateplanAction";
 
 export const formSchema = z.object({
-  promptText: z
-    .string()
-    .min(1, "I can't use my AI powers without your imagination"),
+  promptText: z.string().min(1, "I can't use my AI powers without your imagination"),
 });
 
 export type formSchemaType = z.infer<typeof formSchema>;
@@ -70,7 +61,7 @@ const NewPlanForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={pending}>
+        <Button aria-label="generate plan" type="submit" disabled={pending}>
           {pending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

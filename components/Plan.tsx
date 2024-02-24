@@ -28,7 +28,7 @@ const Plan = ({planId, isNewPlan}: PlanProps) => {
     <div className="bg-background">
       <div className="grid lg:grid-cols-5 min-h-screen lg:px-10 px-5">
         <Sidebar planState={planState} />
-        <div className="lg:col-span-4 lg:border-l">
+        <section className="lg:col-span-4 lg:border-l">
           <div className="h-full px-4 py-6 lg:px-8 flex flex-col gap-10">
             <AlertForAI show={shouldShowAlert} />
             <Prompt
@@ -40,13 +40,11 @@ const Plan = ({planId, isNewPlan}: PlanProps) => {
             <TopActivities activities={plan?.adventuresactivitiestodo} />
             <TopPlacesToVisit topPlacesToVisit={plan?.topplacestovisit} />
             <Itinerary itinerary={plan?.itinerary} />
-            <LocalCuisineRecommendations
-              places={plan?.localcuisinerecommendations}
-            />
+            <LocalCuisineRecommendations places={plan?.localcuisinerecommendations} />
             <PackingChecklist checklist={plan?.packingchecklist} />
             <BestTimeToVisit content={plan?.besttimetovisit} />
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );
