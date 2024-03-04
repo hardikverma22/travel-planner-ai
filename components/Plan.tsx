@@ -22,7 +22,7 @@ type PlanProps = {
 };
 
 const Plan = ({planId, isNewPlan}: PlanProps) => {
-  const {shouldShowAlert, planState, plan} = usePlan(planId, isNewPlan);
+  const {shouldShowAlert, planState, plan, isLoading} = usePlan(planId, isNewPlan);
 
   return (
     <div className="bg-background">
@@ -37,11 +37,23 @@ const Plan = ({planId, isNewPlan}: PlanProps) => {
               imageUrl={plan?.url}
             />
             <AboutThePlace content={plan?.abouttheplace} />
-            <TopActivities activities={plan?.adventuresactivitiestodo} />
+            <TopActivities
+              activities={plan?.adventuresactivitiestodo}
+              planId={planId}
+              isLoading={isLoading}
+            />
             <TopPlacesToVisit topPlacesToVisit={plan?.topplacestovisit} />
             <Itinerary itinerary={plan?.itinerary} />
-            <LocalCuisineRecommendations places={plan?.localcuisinerecommendations} />
-            <PackingChecklist checklist={plan?.packingchecklist} />
+            <LocalCuisineRecommendations
+              recommendations={plan?.localcuisinerecommendations}
+              isLoading={isLoading}
+              planId={planId}
+            />
+            <PackingChecklist
+              checklist={plan?.packingchecklist}
+              isLoading={isLoading}
+              planId={planId}
+            />
             <BestTimeToVisit content={plan?.besttimetovisit} />
           </div>
         </section>

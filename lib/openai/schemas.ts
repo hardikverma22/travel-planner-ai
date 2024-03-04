@@ -27,7 +27,7 @@ export const batch2Schema = {
     properties: {
         adventuresactivitiestodo: {
             type: "array",
-            description: "Top adventures activities to do for example sky diving, para gliding, river rafting",
+            description: "Top adventures activities, atleast 5, like trekking, water sports, specify the place also",
             items: { type: "string" },
         },
         localcuisinerecommendations: {

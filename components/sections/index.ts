@@ -1,12 +1,12 @@
 import AlertForAI from '@/components/sections/AlertForAI';
 import PackingChecklist from '@/components/sections/PackingChecklist';
-import AboutThePlace from './AboutThePlace';
-import BestTimeToVisit from './BestTimeToVisit';
+import AboutThePlace from '@/components/sections/AboutThePlace';
+import BestTimeToVisit from '@/components/sections/BestTimeToVisit';
 import Itinerary from './Itinerary';
-import LocalCuisineRecommendations from './LocalCuisineRecommendations';
-import Prompt from './Prompt';
-import TopActivities from './TopActivities';
-import TopPlacesToVisit from './TopPlacesToVisit';
+import LocalCuisineRecommendations from '@/components/sections/LocalCuisineRecommendations';
+import Prompt from '@/components/sections/Prompt';
+import TopActivities from '@/components/sections/TopActivities';
+import TopPlacesToVisit from '@/components/sections/TopPlacesToVisit';
 
 export {
     AboutThePlace, AlertForAI, BestTimeToVisit,

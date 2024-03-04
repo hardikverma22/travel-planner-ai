@@ -1,30 +1,64 @@
+"use client";
 import SectionWrapper from "@/components/sections/SectionWrapper";
+import EditList from "@/components/shared/EditList";
+import HeaderWithEditIcon from "@/components/shared/HeaderWithEditIcon";
+import List from "@/components/shared/List";
 import {Skeleton} from "@/components/ui/skeleton";
+import {api} from "@/convex/_generated/api";
+import {Doc} from "@/convex/_generated/dataModel";
+import {useMutation} from "convex/react";
 import {Utensils} from "lucide-react";
+import {useState} from "react";
 
 type LocalCuisineRecommendationsProps = {
-  places: string[] | undefined;
+  recommendations: string[] | undefined;
+  planId: string;
+  isLoading: boolean;
 };
 
 export default function LocalCuisineRecommendations({
-  places,
+  recommendations,
+  isLoading,
+  planId,
 }: LocalCuisineRecommendationsProps) {
+  const [editMode, setEditMode] = useState(false);
+
+  const updateLocalCuisineRecommendations = useMutation(api.plan.updateLocalCuisineRecommendations);
+
+  const handleToggleEditMode = () => {
+    setEditMode(!editMode);
+  };
+
+  const updateLocalCuisines = (updatedArray: string[]) => {
+    updateLocalCuisineRecommendations({
+      planId: planId as Doc<"plan">["_id"],
+      localcuisinerecommendations: updatedArray,
+    }).then(() => {
+      handleToggleEditMode();
+    });
+  };
+
   return (
     <SectionWrapper id="localcuisines">
-      <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">
-        <Utensils className="mr-2" /> Local Cuisine Recommendations
-      </h2>
-      {places && places?.length > 0 ? (
+      <HeaderWithEditIcon
+        editMode={editMode}
+        handleToggleEditMode={handleToggleEditMode}
+        hasData={recommendations != null && recommendations.length != 0}
+        icon={<Utensils className="mr-2" />}
+        title="Local Cuisine Recommendations"
+      />
+
+      {!isLoading && recommendations ? (
         <div className="ml-8">
-          <ol className="max-w-xl space-y-1 text-gray-500 list-decimal list-inside dark:text-gray-400">
-            {places.map((place) => (
-              <li key={place}>
-                <span className="font-normal text-gray-900 dark:text-white">
-                  {place}
-                </span>
-              </li>
-            ))}
-          </ol>
+          {editMode ? (
+            <EditList
+              arrayData={recommendations}
+              handleToggleEditMode={handleToggleEditMode}
+              updateData={updateLocalCuisines}
+            />
+          ) : (
+            <List list={recommendations} />
+          )}
         </div>
       ) : (
         <Skeleton className="w-full h-full" />

@@ -281,6 +281,43 @@ export const updateItineraryTopPlacesToVisit = internalMutation({
   },
 });
 
+
+export const updateActivitiesToDo = mutation({
+  args: {
+    planId: v.id("plan"),
+    adventuresactivitiestodo: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.planId, {
+      adventuresactivitiestodo: args.adventuresactivitiestodo,
+    });
+  },
+});
+
+export const updateLocalCuisineRecommendations = mutation({
+  args: {
+    planId: v.id("plan"),
+    localcuisinerecommendations: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.planId, {
+      localcuisinerecommendations: args.localcuisinerecommendations,
+    });
+  },
+});
+
+export const updatePackingChecklist = mutation({
+  args: {
+    planId: v.id("plan"),
+    packingchecklist: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.planId, {
+      packingchecklist: args.packingchecklist,
+    });
+  },
+});
+
 export const createEmptyPlan = mutation({
   args: {
     userPrompt: v.string()

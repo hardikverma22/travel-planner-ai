@@ -1,28 +1,60 @@
+"use client";
 import SectionWrapper from "@/components/sections/SectionWrapper";
+import EditList from "@/components/shared/EditList";
+import HeaderWithEditIcon from "@/components/shared/HeaderWithEditIcon";
+import List from "@/components/shared/List";
 import {Skeleton} from "@/components/ui/skeleton";
+import {api} from "@/convex/_generated/api";
+import {Doc} from "@/convex/_generated/dataModel";
+import {useMutation} from "convex/react";
 import {Backpack} from "lucide-react";
+import {useState} from "react";
 
 type PackingChecklistProps = {
   checklist: string[] | undefined;
+  planId: string;
+  isLoading: boolean;
 };
 
-export default function PackingChecklist({checklist}: PackingChecklistProps) {
+export default function PackingChecklist({checklist, isLoading, planId}: PackingChecklistProps) {
+  const [editMode, setEditMode] = useState(false);
+
+  const updatePackingChecklist = useMutation(api.plan.updatePackingChecklist);
+
+  const handleToggleEditMode = () => {
+    setEditMode(!editMode);
+  };
+
+  const updateChecklist = (updatedArray: string[]) => {
+    updatePackingChecklist({
+      planId: planId as Doc<"plan">["_id"],
+      packingchecklist: updatedArray,
+    }).then(() => {
+      handleToggleEditMode();
+    });
+  };
+
   return (
     <SectionWrapper id="packingchecklist">
-      <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">
-        <Backpack className="mr-2" /> Packing Checklist
-      </h2>
-      {checklist && checklist?.length > 0 ? (
+      <HeaderWithEditIcon
+        editMode={editMode}
+        handleToggleEditMode={handleToggleEditMode}
+        hasData={checklist != null && checklist.length != 0}
+        icon={<Backpack className="mr-2" />}
+        title="Packing Checklist"
+      />
+
+      {!isLoading && checklist ? (
         <div className="ml-8">
-          <ol className="max-w-xl space-y-1 text-gray-500 list-decimal list-inside dark:text-gray-400">
-            {checklist.map((item) => (
-              <li key={item}>
-                <span className="font-normal text-gray-900 dark:text-white">
-                  {item}
-                </span>
-              </li>
-            ))}
-          </ol>
+          {editMode ? (
+            <EditList
+              arrayData={checklist}
+              handleToggleEditMode={handleToggleEditMode}
+              updateData={updateChecklist}
+            />
+          ) : (
+            <List list={checklist} />
+          )}
         </div>
       ) : (
         <Skeleton className="w-full h-full" />

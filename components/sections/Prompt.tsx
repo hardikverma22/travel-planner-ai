@@ -21,11 +21,10 @@ const Prompt = ({content, imageUrl, placeName}: PromptProps) => {
             sizes="100vw"
             className="w-full rounded-t-md object-cover z-0"
             fill
+            priority={true}
           />
           <div className="px-5 py-2 z-10 relative flex justify-between w-full bg-black/40">
-            <h2 className="text-2xl text-white font-bold tracking-wide">
-              {placeName}
-            </h2>
+            <h2 className="text-2xl text-white font-bold tracking-wide">{placeName}</h2>
             <div className="rounded-md w-fit ml-8">
               <p className="text-white">"{content}"</p>
             </div>

@@ -1,28 +1,60 @@
+"use client";
+
 import SectionWrapper from "@/components/sections/SectionWrapper";
+import EditList from "@/components/shared/EditList";
+import HeaderWithEditIcon from "@/components/shared/HeaderWithEditIcon";
+import List from "@/components/shared/List";
+import {Button} from "@/components/ui/button";
 import {Skeleton} from "@/components/ui/skeleton";
-import {Sailboat} from "lucide-react";
+import {api} from "@/convex/_generated/api";
+import {Doc} from "@/convex/_generated/dataModel";
+import {useMutation} from "convex/react";
+import {PencilIcon, PlusIcon, Sailboat} from "lucide-react";
+import {useState} from "react";
 
 type TopActivitiesProps = {
   activities: string[] | undefined;
+  planId: string;
+  isLoading: boolean;
 };
 
-export default function TopActivities({activities}: TopActivitiesProps) {
+export default function TopActivities({activities, planId, isLoading}: TopActivitiesProps) {
+  const [editMode, setEditMode] = useState(false);
+  const updateActivities = useMutation(api.plan.updateActivitiesToDo);
+
+  const handleToggleEditMode = () => {
+    setEditMode(!editMode);
+  };
+
+  const updateActivitiesToDo = (updatedArray: string[]) => {
+    updateActivities({
+      planId: planId as Doc<"plan">["_id"],
+      adventuresactivitiestodo: updatedArray,
+    }).then(() => {
+      handleToggleEditMode();
+    });
+  };
+
   return (
     <SectionWrapper id="topactivities">
-      <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">
-        <Sailboat className="mr-2" /> Top activities to look for
-      </h2>
-      {activities && activities?.length > 0 ? (
+      <HeaderWithEditIcon
+        editMode={editMode}
+        handleToggleEditMode={handleToggleEditMode}
+        hasData={activities != null && activities.length != 0}
+        icon={<Sailboat className="mr-2" />}
+        title="Top activities to look for"
+      />
+      {!isLoading && activities ? (
         <div className="ml-8">
-          <ol className="max-w-xl space-y-1 text-gray-500 list-decimal list-inside dark:text-gray-400">
-            {activities.map((activity) => (
-              <li key={activity}>
-                <span className="font-normal text-gray-900 dark:text-white">
-                  {activity}
-                </span>
-              </li>
-            ))}
-          </ol>
+          {editMode ? (
+            <EditList
+              arrayData={activities}
+              handleToggleEditMode={handleToggleEditMode}
+              updateData={updateActivitiesToDo}
+            />
+          ) : (
+            <List list={activities} />
+          )}
         </div>
       ) : (
         <Skeleton className="w-full h-full" />
