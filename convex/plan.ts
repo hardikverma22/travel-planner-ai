@@ -1,8 +1,8 @@
-import { ActionCtx, action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { ActionCtx, MutationCtx, QueryCtx, action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { Doc } from "./_generated/dataModel";
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 
 import {
   generatebatch1,
@@ -60,7 +60,7 @@ export const readPlanData = internalQuery({
   },
 });
 
-export const IsAuthenticated = async (ctx: ActionCtx) => {
+export const IsAuthenticated = async (ctx: ActionCtx | QueryCtx | MutationCtx) => {
   const identity = await ctx.auth.getUserIdentity();
   if (identity === null) {
     console.log("no identity");
@@ -207,12 +207,12 @@ export const prepareBatch3 = action({
       });
 
     } catch (error) {
-      throw new Error(`Error occured in prepare Plan Convex action: ${error}`);
+      throw new ConvexError(`Error occured in prepare Plan Convex action: ${error}`);
     }
   },
 });
 
-//Mutation Patches
+//Mutation Patches after openAi responds
 export const updatePlaceNameAboutThePlaceBestTimeToVisit = internalMutation({
   args: {
     planId: v.id("plan"),
@@ -281,7 +281,7 @@ export const updateItineraryTopPlacesToVisit = internalMutation({
   },
 });
 
-
+//edit in UI
 export const updateActivitiesToDo = mutation({
   args: {
     planId: v.id("plan"),
@@ -314,6 +314,52 @@ export const updatePackingChecklist = mutation({
   handler: async (ctx, args) => {
     await ctx.db.patch(args.planId, {
       packingchecklist: args.packingchecklist,
+    });
+  },
+});
+
+
+export const deleteDayInItinerary = mutation({
+  args: { dayName: v.string(), planId: v.id("plan"), },
+  handler: async (ctx, args) => {
+    if (!IsAuthenticated(ctx)) { return null }
+    const data = await ctx.db.get(args.planId);
+    if (!data)
+      return;
+    await ctx.db.patch(args.planId, {
+      itinerary: data.itinerary.filter(d => !d.title.includes(args.dayName)),
+    });
+  }
+})
+
+export const addDayInItinerary = mutation({
+  args: {
+    planId: v.id("plan"),
+    itineraryDay: v.object({
+      title: v.string(),
+      activities: v.object({
+        morning: v.array(v.object({
+          itineraryItem: v.string(),
+          briefDescription: v.string()
+        })),
+        afternoon: v.array(v.object({
+          itineraryItem: v.string(),
+          briefDescription: v.string()
+        })),
+        evening: v.array(v.object({
+          itineraryItem: v.string(),
+          briefDescription: v.string()
+        })),
+      })
+    }),
+  },
+  handler: async (ctx, { planId, itineraryDay }) => {
+    const data = await ctx.db.get(planId);
+    if (!data)
+      return;
+
+    await ctx.db.patch(planId, {
+      itinerary: [...data.itinerary, { ...itineraryDay, title: `Day ${data.itinerary.length + 1}` }],
     });
   },
 });

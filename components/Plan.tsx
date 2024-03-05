@@ -43,7 +43,7 @@ const Plan = ({planId, isNewPlan}: PlanProps) => {
               isLoading={isLoading}
             />
             <TopPlacesToVisit topPlacesToVisit={plan?.topplacestovisit} />
-            <Itinerary itinerary={plan?.itinerary} />
+            <Itinerary itinerary={plan?.itinerary} planId={planId} />
             <LocalCuisineRecommendations
               recommendations={plan?.localcuisinerecommendations}
               isLoading={isLoading}

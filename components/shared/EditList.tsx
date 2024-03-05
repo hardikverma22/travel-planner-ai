@@ -68,7 +68,6 @@ const EditList = ({arrayData, handleToggleEditMode, updateData}: EditListProps) 
   const isSubmittable = !!isDirty && !!isValid;
 
   const onSaveEditList = (data: {items: ItemType[]}) => {
-    console.log("submit called");
     const updatedArray = data.items.map((item) => item.text);
     updateData(updatedArray);
   };

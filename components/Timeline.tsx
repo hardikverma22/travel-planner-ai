@@ -1,12 +1,15 @@
+import ItineraryDayHeader from "@/components/ItineraryDayHeader";
+import {Button} from "@/components/ui/button";
 import {Doc} from "@/convex/_generated/dataModel";
-import {Sun, Sunrise, Sunset} from "lucide-react";
+import {Sun, Sunrise, Sunset, TrashIcon} from "lucide-react";
 import {ReactNode} from "react";
 
 type TimelineProps = {
   itinerary: Doc<"plan">["itinerary"] | undefined;
+  planId: string;
 };
 
-const Timeline = ({itinerary}: TimelineProps) => {
+const Timeline = ({itinerary, planId}: TimelineProps) => {
   const filteredItinerary = itinerary?.filter((day) => {
     const isMorningEmpty = day.activities.morning.length === 0;
     const isAfternoonEmpty = day.activities.afternoon.length === 0;
@@ -30,10 +33,7 @@ const Timeline = ({itinerary}: TimelineProps) => {
               <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
             </svg>
           </span>
-          <div className="mb-2 text-lg font-bold leading-2 text-gray-900 ">
-            {day.title}
-          </div>
-
+          <ItineraryDayHeader planId={planId} title={day.title} />
           <div className="flex flex-col gap-5">
             <Activity
               activity={day.activities.morning}
@@ -81,9 +81,7 @@ const Activity = ({
         {activity.map((act, index) => (
           <li key={index}>
             <div className="w-full p-1 overflow-hidden">
-              <span className=" text-black font-semibold">
-                {act.itineraryItem}
-              </span>
+              <span className=" text-black font-semibold">{act.itineraryItem}</span>
               <p className="max-w-md md:max-w-full text-wrap whitespace-pre-line">
                 {act.briefDescription}
               </p>
