@@ -27,7 +27,7 @@ const Banner = () => {
             <span className="text-center">Imagine telling your travel planner,</span>
           </div>
           <div className="p-2">
-            <p className="text-blue-500 font-bold tracking-normal">
+            <p className="text-blue-500 font-bold tracking-normal text-sm">
               'Weekend escape to a vibrant city, <br className="lg:hidden" />
               with mid-range budget in summer.'
             </p>

@@ -12,7 +12,7 @@ const GeneratePlanButton = () => {
       size="lg"
       className="bg-blue-500 text-white hover:bg-blue-700 text-md uppercase font-sans"
     >
-      Generate Plan
+      Try Now
     </Button>
   );
 };

@@ -10,17 +10,21 @@ import {useState} from "react";
 import {useMediaQuery} from "@/hooks/useMediaQuery";
 import {Drawer, DrawerContent, DrawerTrigger} from "@/components/ui/drawer";
 import NewPlanForm from "@/components/NewPlanForm";
-import {Loader} from "lucide-react";
+import {Backpack, Loader} from "lucide-react";
 
 const DrawerDialog = ({shouldOpenForCreatePlan = false}) => {
-  const credits = useQuery(api.users.currentUser)?.credits;
+  const user = useQuery(api.users.currentUser);
+  const boughtCredits = user?.credits ?? 0;
+  const freeCredits = user?.freeCredits ?? 0;
+  const totalCredits = freeCredits + boughtCredits;
 
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  const btnText = shouldOpenForCreatePlan ? "Create Travel Plan" : `Credits ${credits ?? 0}`;
+  const btnText = shouldOpenForCreatePlan ? "Create Travel Plan" : `Credits ${totalCredits ?? 0}`;
 
-  const shouldShowCreatePlanForm = credits && shouldOpenForCreatePlan;
+  const shouldShowCreatePlanForm =
+    (freeCredits > 0 || boughtCredits > 0) && shouldOpenForCreatePlan;
 
   const content = shouldShowCreatePlanForm ? (
     <>
@@ -30,7 +34,7 @@ const DrawerDialog = ({shouldOpenForCreatePlan = false}) => {
       <NewPlanForm />
     </>
   ) : (
-    <CreditContent credits={credits} />
+    <CreditContent boughtCredits={boughtCredits} freeCredits={freeCredits} />
   );
 
   if (isDesktop) {
@@ -39,12 +43,15 @@ const DrawerDialog = ({shouldOpenForCreatePlan = false}) => {
         <Button
           aria-label={`open dialog button for ${btnText}`}
           variant={`${!shouldOpenForCreatePlan ? "link" : "default"}`}
-          className={`${shouldOpenForCreatePlan && "bg-blue-500 text-white hover:bg-blue-600"}`}
+          className={`${
+            shouldOpenForCreatePlan && "bg-blue-500 text-white hover:bg-blue-600 flex gap-1"
+          }`}
           onClick={() => {
             setOpen(true);
           }}
         >
-          {btnText}
+          {shouldOpenForCreatePlan && <Backpack className="h-4 w-4" />}
+          <span>{btnText}</span>
         </Button>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent>{content}</DialogContent>
@@ -65,7 +72,13 @@ const DrawerDialog = ({shouldOpenForCreatePlan = false}) => {
   );
 };
 
-export const CreditContent = ({credits}: {credits: number | undefined}) => {
+export const CreditContent = ({
+  boughtCredits,
+  freeCredits,
+}: {
+  boughtCredits: number;
+  freeCredits: number;
+}) => {
   const buyCredits = useAction(api.stripe.pay);
   const [startBuying, setStartBuying] = useState(false);
 
@@ -79,10 +92,16 @@ export const CreditContent = ({credits}: {credits: number | undefined}) => {
 
   return (
     <>
-      {credits ? (
-        <div className="flex flex-col gap-2 justify-center items-center">
-          <h1>Your Credits</h1>
-          <span className="font-bold text-7xl">{credits}</span>
+      {boughtCredits > 0 || freeCredits > 0 ? (
+        <div className="flex gap-2 justify-between items-center p-2">
+          <div className="flex flex-col gap-1 justify-center items-center p-10 rounded-lg border-2 flex-1">
+            <span>Free Credits</span>
+            <span className="font-bold text-7xl">{freeCredits}</span>
+          </div>
+          <div className="flex flex-col gap-1 justify-center items-center p-10 rounded-lg border-2 flex-1">
+            <span>Bought Credits</span>
+            <span className="font-bold text-7xl">{boughtCredits}</span>
+          </div>
         </div>
       ) : (
         <div className="flex flex-col gap-10 justify-center items-center">

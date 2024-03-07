@@ -4,7 +4,7 @@ export default function List({list}: {list: string[]}) {
       Click + to add a new item.
     </div>
   ) : (
-    <ol className="max-w-xl space-y-1 text-gray-500 list-decimal list-inside ">
+    <ol className="max-w-[90%] space-y-1 text-gray-500 list-decimal list-inside ">
       {list.map((item) => (
         <li key={item}>
           <span className="font-normal text-gray-900 dark:text-white">{item}</span>

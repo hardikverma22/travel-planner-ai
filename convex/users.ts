@@ -7,8 +7,7 @@ import {
 } from "./_generated/server";
 
 import { v } from "convex/values";
-import { Doc, Id } from "./_generated/dataModel";
-
+import { Doc } from "./_generated/dataModel";
 
 /** Get user by Clerk use id (AKA "subject" on auth)  */
 export const getUser = internalQuery({
@@ -25,7 +24,7 @@ export const createUser = internalMutation({
     const userRecord = await userQuery(ctx, userId);
 
     if (userRecord === null) {
-      await ctx.db.insert("users", { userId, credits: 0, email });
+      await ctx.db.insert("users", { userId, credits: 0, email, freeCredits: 2 });
     }
   },
 });
@@ -39,9 +38,12 @@ export const reduceUserCreditsByOne = internalMutation({
     const userRecord = await userQuery(ctx, identity.subject);
 
     if (userRecord != null) {
-      const existingCredits = (userRecord?.credits ?? 0);
-      if (existingCredits > 0)
-        await ctx.db.patch(userRecord._id, { credits: existingCredits - 1 });
+      if (userRecord.freeCredits > 0) {
+        await ctx.db.patch(userRecord._id, { freeCredits: userRecord.freeCredits - 1 });
+      } else {
+        await ctx.db.patch(userRecord._id, { credits: userRecord.credits - 1 });
+
+      }
     }
   },
 });

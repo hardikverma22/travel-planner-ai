@@ -42,6 +42,7 @@ export default defineSchema({
     userId: v.string(),
     email: v.string(),
     credits: v.number(),
+    freeCredits: v.number(),
   }).index("by_clerk_id", ["userId"]),
   payments: defineTable({
     userId: v.string(),

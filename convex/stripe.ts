@@ -20,7 +20,7 @@ export const pay = action({
             return null;
         }
         // We need to tell Stripe where to redirect to
-        const domain = process.env.HOSTING_URL ?? "http://localhost:3000";
+        const domain = process.env.HOSTING_URL ?? "https://travel-plannerai.vercel.app/";
         // Here we create a document in the "payments" table
         const paymentId = await ctx.runMutation(internal.payments.createEmptyPaymentRecord);
         if (!paymentId)
@@ -33,6 +33,7 @@ export const pay = action({
                         currency: 'INR',
                         product_data: {
                             name: "Credits",
+                            description: "Stripe is in test mode, contact hardikverma22@gmail.com for more credits",
                         },
                         unit_amount: 1600,
                     },
@@ -45,7 +46,10 @@ export const pay = action({
             // This is how our web page will know which message we paid for
             success_url: `${domain}/dashboard`,
             cancel_url: `${domain}`,
-            client_reference_id: identity.subject
+            client_reference_id: identity.subject,
+            custom_text: {
+
+            }
         });
 
         // Keep track of the checkout session ID for fulfillment
