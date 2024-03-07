@@ -51,17 +51,18 @@ const NewPlanForm = () => {
             <FormItem>
               <FormLabel>Put your imagination</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="e.g. 3-day Nainital itinerary for family vacation"
-                  {...field}
-                  disabled={pending}
-                />
+                <Input placeholder="e.g. 3 days trip to Mathura" {...field} disabled={pending} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button aria-label="generate plan" type="submit" disabled={pending}>
+        <Button
+          aria-label="generate plan"
+          type="submit"
+          disabled={pending}
+          className="bg-blue-500 text-white hover:bg-blue-600"
+        >
           {pending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

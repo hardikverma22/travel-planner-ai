@@ -20,6 +20,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@react-google-maps/api": "^2.19.2",
     "@stripe/stripe-js": "^2.3.0",
+    "@vercel/analytics": "^1.2.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "convex": "^1.8.0",

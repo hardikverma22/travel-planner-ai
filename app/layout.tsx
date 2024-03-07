@@ -1,5 +1,6 @@
 import type {Metadata} from "next";
 import {Montserrat_Alternates} from "next/font/google";
+import {Analytics} from "@vercel/analytics/react";
 
 import Header from "@/components/Header";
 
@@ -24,6 +25,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
           <main className="flex min-h-[100svh] flex-col items-center">
             {children}
             <Progress />
+            <Analytics />
           </main>
         </body>
       </html>

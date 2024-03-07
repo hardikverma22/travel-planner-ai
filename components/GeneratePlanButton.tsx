@@ -9,10 +9,9 @@ const GeneratePlanButton = () => {
       aria-label="generate plan"
       onClick={openSignInPopupOrDirect}
       variant="default"
-      size="lg"
-      className="bg-blue-500 text-white hover:bg-blue-700 text-md uppercase font-sans"
+      className="bg-blue-500 text-white hover:bg-blue-700 text-md font-semibold"
     >
-      Try Now
+      Try Now - 2 Free Credits
     </Button>
   );
 };
