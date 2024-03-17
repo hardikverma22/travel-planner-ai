@@ -3,7 +3,7 @@ export const batch1Schema = {
     properties: {
         nameoftheplace: {
             type: "string",
-            description: "Name of the user input place or location",
+            description: "Comma separated names of the user input places or locations",
         },
         abouttheplace: {
             type: "string",

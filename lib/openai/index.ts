@@ -28,8 +28,8 @@ export const generatebatch1 = (promptText: string) => {
   const prompt = `${promptText}, ${promptSuffix}`;
   const description = `Generate a description of information about a place or location according to the following schema:
 
-  - Name of the Place:
-    - A string indicating the name of the user-input place or location.
+  - Name of the Places:
+    - A comma separaed string indicating the names of the user-input places or locations.
   
   - About the Place:
     - A string containing information about the place, comprising at least 50 words.

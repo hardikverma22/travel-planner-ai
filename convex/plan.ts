@@ -1,6 +1,6 @@
 import { ActionCtx, MutationCtx, QueryCtx, action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import { internal } from "./_generated/api";
-import { Doc } from "./_generated/dataModel";
+import { Doc, Id } from "./_generated/dataModel";
 
 import { ConvexError, v } from "convex/values";
 
@@ -9,6 +9,7 @@ import {
   generatebatch2,
   generatebatch3
 } from "../lib/openai";
+import { Query } from "convex/server";
 
 export const getPlanForAUser = query({
   handler: async (ctx, args) => {
@@ -50,11 +51,6 @@ export const getSinglePlan = query({
 export const readPlanData = internalQuery({
   args: { id: v.id("plan") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return null;
-    }
-
     const plan = await ctx.db.get(args.id);
     return plan;
   },
@@ -63,8 +59,7 @@ export const readPlanData = internalQuery({
 export const IsAuthenticated = async (ctx: ActionCtx | QueryCtx | MutationCtx) => {
   const identity = await ctx.auth.getUserIdentity();
   if (identity === null) {
-    console.log("no identity");
-    return false;
+    throw new ConvexError("Could not authenticate the request");
   }
   return true;
 }
@@ -86,13 +81,14 @@ export const prepareBatch1 = action({
   ) => {
     try {
 
-      if (!IsAuthenticated(ctx)) { return null }
+      // if (!IsAuthenticated(ctx)) { return null }
+      console.log({ planId });
 
       const emptyPlan = await fetchEmptyPlan(ctx, planId);
 
       if (!emptyPlan) {
-        console.error("Unable to find the empty plan while preparing a new one");
-        return null;
+        throw new ConvexError("Unable to find the empty plan while preparing a new one");
+        return;
       };
 
       const completion = await generatebatch1(
@@ -136,8 +132,9 @@ export const prepareBatch2 = action({
     { planId }
   ) => {
     try {
+      console.log({ planId });
 
-      if (!IsAuthenticated(ctx)) { return null }
+      // if (!IsAuthenticated(ctx)) { return null }
 
       const emptyPlan = await fetchEmptyPlan(ctx, planId);
 
@@ -180,8 +177,9 @@ export const prepareBatch3 = action({
     { planId }
   ) => {
     try {
+      console.log({ planId });
 
-      if (!IsAuthenticated(ctx)) { return null }
+      // if (!IsAuthenticated(ctx)) { return null }
 
       const emptyPlan = await fetchEmptyPlan(ctx, planId);
 
