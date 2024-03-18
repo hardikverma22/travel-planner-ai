@@ -38,6 +38,7 @@ const PlacesAutoComplete = ({
       apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
       options: {
         types: ["(cities)"],
+        input: field.value,
       },
     });
 
