@@ -36,10 +36,6 @@ export async function generatePlanAction(formData: formSchemaType) {
     }
   }, { token: token });
 
-
-  // fetchAction(api.plan.prepareBatch1, { planId: planId }, { token });
-  // fetchAction(api.plan.prepareBatch2, { planId: planId }, { token });
-  // fetchAction(api.plan.prepareBatch3, { planId: planId }, { token });
-
+  fetchMutation(api.users.reduceUserCreditsByOne, {}, { token: token });
   redirect(`/plans/${planId}?isNewPlan=true`);
 }

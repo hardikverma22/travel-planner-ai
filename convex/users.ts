@@ -1,12 +1,13 @@
 import {
   internalMutation,
   internalQuery,
+  mutation,
   MutationCtx,
   query,
   QueryCtx,
 } from "./_generated/server";
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { Doc } from "./_generated/dataModel";
 
 /** Get user by Clerk use id (AKA "subject" on auth)  */
@@ -29,22 +30,23 @@ export const createUser = internalMutation({
   },
 });
 
-export const reduceUserCreditsByOne = internalMutation({
+export const reduceUserCreditsByOne = mutation({
   async handler(ctx) {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      return null;
+      throw new ConvexError("Not Authrized to perform this action");
     }
-    const userRecord = await userQuery(ctx, identity.subject);
 
+    const userRecord = await userQuery(ctx, identity.subject);
     if (userRecord != null) {
       if (userRecord.freeCredits > 0) {
         await ctx.db.patch(userRecord._id, { freeCredits: userRecord.freeCredits - 1 });
       } else {
         await ctx.db.patch(userRecord._id, { credits: userRecord.credits - 1 });
-
       }
     }
+    else
+      console.log("user Not found while reducing credit");
   },
 });
 

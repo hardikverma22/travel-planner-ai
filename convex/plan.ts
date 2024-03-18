@@ -114,9 +114,6 @@ export const prepareBatch1 = action({
         prompt: modelName.nameoftheplace,
         planId: emptyPlan._id
       })
-
-      await ctx.runMutation(internal.users.reduceUserCreditsByOne);
-
     } catch (error) {
       throw new Error(`Error occured in prepare Plan Convex action: ${error}`);
     }
