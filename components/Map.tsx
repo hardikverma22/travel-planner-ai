@@ -13,6 +13,7 @@ export default function Map({topPlacesToVisit, selectedPlace}: MapProps) {
   const {isLoaded} = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+    libraries: ["maps", "marker", "places"],
   });
 
   const [mapCenter, setMapCenter] = useState(selectedPlace);
@@ -75,9 +76,7 @@ export const MapPinMarker = ({index}: {index: number}) => {
           className="absolute flex h-[32px] w-[32px] rotate-[-45deg] items-center justify-center rounded-full !rounded-bl-none border-4 border-solid border-white p-1 shadow-[2px_2px_2px_-1px_rgba(0,0,0,0.43)]"
           style={{backgroundColor: colors[index % 6]}}
         >
-          <p className="w-[10px] rotate-[45deg] text-base font-bold text-white">
-            {index + 1}
-          </p>
+          <p className="w-[10px] rotate-[45deg] text-base font-bold text-white">{index + 1}</p>
         </div>
       </div>
     </div>

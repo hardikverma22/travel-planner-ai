@@ -8,8 +8,10 @@ import { useAction } from "convex/react";
 
 export async function generatePlanAction(formData: formSchemaType) {
   const token = await getAuthToken();
+  const { placeName, noOfDays } = formData;
+
   const planId = await fetchMutation(api.plan.createEmptyPlan,
-    { userPrompt: formData.promptText },
+    { userPrompt: `${noOfDays} days trip to ${placeName}` },
     { token });
 
   if (planId === null)
