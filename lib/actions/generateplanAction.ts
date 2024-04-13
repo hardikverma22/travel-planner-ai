@@ -18,6 +18,14 @@ export async function generatePlanAction(formData: formSchemaType) {
     return null;
 
   fetchMutation(api.retrier.runAction, {
+    action: "images:generateAndStore",
+    actionArgs: {
+      prompt: placeName,
+      planId: planId
+    }
+  }, { token: token });
+
+  fetchMutation(api.retrier.runAction, {
     action: "plan:prepareBatch1",
     actionArgs: {
       planId: planId

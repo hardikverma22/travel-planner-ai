@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
-import { internalAction, internalMutation, query } from "./_generated/server";
+import { action, internalAction, internalMutation, query } from "./_generated/server";
 import { createApi } from "unsplash-js";
 import { Id } from "./_generated/dataModel";
 
@@ -10,11 +10,13 @@ const unsplashApi = createApi({
     accessKey: process.env.UNSPLASH_ACCESS_KEY!
 });
 
-export const generateAndStore = internalAction({
+export const generateAndStore = action({
     args: { prompt: v.string(), planId: v.id("plan") },
     handler: async (ctx, args) => {
+        const name = args.prompt.split(",")[0] ?? args.prompt;
+
         // Not shown: generate imageUrl from `prompt`
-        const imageObject = await unsplashApi.search.getPhotos({ query: args.prompt, page: 1, perPage: 1 });
+        const imageObject = await unsplashApi.search.getPhotos({ query: name, page: 1, perPage: 1 });
         const imageUrlExist = imageObject?.response?.results && imageObject?.response?.results.length > 0;
         if (!imageUrlExist) {
             console.log("Error");
