@@ -23,8 +23,7 @@ const DrawerDialog = ({shouldOpenForCreatePlan = false}) => {
 
   const btnText = shouldOpenForCreatePlan ? "Create Travel Plan" : `Credits ${totalCredits ?? 0}`;
 
-  const shouldShowCreatePlanForm =
-    (freeCredits > 0 || boughtCredits > 0) && shouldOpenForCreatePlan;
+  const shouldShowCreatePlanForm = shouldOpenForCreatePlan && totalCredits > 0;
 
   const content = shouldShowCreatePlanForm ? (
     <>

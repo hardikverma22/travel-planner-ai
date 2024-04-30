@@ -17,7 +17,7 @@ export async function generatePlanAction(formData: formSchemaType) {
   if (planId === null)
     return null;
 
-  fetchMutation(api.retrier.runAction, {
+  const promise1 = fetchMutation(api.retrier.runAction, {
     action: "images:generateAndStore",
     actionArgs: {
       prompt: placeName,
@@ -25,27 +25,30 @@ export async function generatePlanAction(formData: formSchemaType) {
     }
   }, { token: token });
 
-  fetchMutation(api.retrier.runAction, {
+  const promise2 = fetchMutation(api.retrier.runAction, {
     action: "plan:prepareBatch1",
     actionArgs: {
       planId: planId
     }
   }, { token: token })
 
-  fetchMutation(api.retrier.runAction, {
+  const promise3 = fetchMutation(api.retrier.runAction, {
     action: "plan:prepareBatch2",
     actionArgs: {
       planId: planId
     }
   }, { token: token });
 
-  fetchMutation(api.retrier.runAction, {
+  const promise4 = fetchMutation(api.retrier.runAction, {
     action: "plan:prepareBatch3",
     actionArgs: {
       planId: planId
     }
   }, { token: token });
 
-  fetchMutation(api.users.reduceUserCreditsByOne, {}, { token: token });
+  Promise.all([promise1, promise2, promise3, promise4]).then(_ => {
+    fetchMutation(api.users.reduceUserCreditsByOne, {}, { token: token });
+  }).catch(e => console.log(e));
+
   redirect(`/plans/${planId}?isNewPlan=true`);
 }

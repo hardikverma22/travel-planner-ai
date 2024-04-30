@@ -25,7 +25,7 @@ export const createUser = internalMutation({
     const userRecord = await userQuery(ctx, userId);
 
     if (userRecord === null) {
-      await ctx.db.insert("users", { userId, credits: 0, email, freeCredits: 2 });
+      await ctx.db.insert("users", { userId, credits: 0, email, freeCredits: 1 });
     }
   },
 });

@@ -11,7 +11,7 @@ const GeneratePlanButton = () => {
       variant="default"
       className="bg-blue-500 text-white hover:bg-blue-700 text-md font-semibold"
     >
-      Try Now - 2 Free Credits
+      Try Now - 1 Free Credits
     </Button>
   );
 };
