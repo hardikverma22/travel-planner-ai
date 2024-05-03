@@ -3,15 +3,18 @@ import {Button} from "@/components/ui/button";
 import useAuth from "@/hooks/useAuth";
 
 const GeneratePlanButton = () => {
-  const {openSignInPopupOrDirect} = useAuth();
+  const {openSignInPopupOrDirect, isAuthenticated} = useAuth();
   return (
     <Button
       aria-label="generate plan"
       onClick={openSignInPopupOrDirect}
       variant="default"
-      className="bg-blue-500 text-white hover:bg-blue-700 text-md font-semibold"
+      className="bg-blue-500 text-white
+                 hover:bg-blue-700
+                  text-sm
+                  font-semibold rounded-3xl"
     >
-      Try Now - 1 Free Credits
+      {isAuthenticated ? "Go to Dashboard" : "Try Now - 1 Free Credits"}
     </Button>
   );
 };

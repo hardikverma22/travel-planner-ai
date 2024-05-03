@@ -19,10 +19,6 @@ export default function Map({topPlacesToVisit, selectedPlace}: MapProps) {
   const [mapCenter, setMapCenter] = useState(selectedPlace);
   const [mapZoom, setMapZoom] = useState(13);
 
-  const handleMarkerClick = (lat: number, lng: number) => {
-    zoomSelecedPlace(lat, lng);
-  };
-
   useEffect(() => {
     if (!selectedPlace) return;
     zoomSelecedPlace(selectedPlace?.lat, selectedPlace?.lng);

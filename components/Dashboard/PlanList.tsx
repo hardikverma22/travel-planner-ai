@@ -1,6 +1,6 @@
 import {getAuthToken} from "@/app/auth";
-import {NoPlans} from "@/components/NoPlans";
-import PlanCard from "@/components/PlanCard";
+import {NoPlans} from "@/components/Dashboard/NoPlans";
+import PlanCard from "@/components/Dashboard/PlanCard";
 import {api} from "@/convex/_generated/api";
 import {fetchQuery} from "convex/nextjs";
 

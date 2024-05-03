@@ -17,6 +17,7 @@ export const getPlanForAUser = query({
     if (!identity) {
       return null;
     }
+
     const { subject } = identity;
 
     const plans = await ctx.db
@@ -32,6 +33,24 @@ export const getPlanForAUser = query({
           : { url: await ctx.storage.getUrl(plan.storageId) }),
       }))
     );
+  },
+});
+
+export const getComboBoxPlansForAUser = query({
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return null;
+    }
+
+    const { subject } = identity;
+
+    const plans = await ctx.db
+      .query("plan")
+      .filter((q) => q.eq(q.field("userId"), subject))
+      .order("desc")
+      .take(100);
+    return plans;
   },
 });
 

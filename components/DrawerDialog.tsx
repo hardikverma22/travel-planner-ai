@@ -62,8 +62,15 @@ const DrawerDialog = ({shouldOpenForCreatePlan = false}) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline" aria-label={`open drawer for ${btnText}`}>
-          {btnText}
+        <Button
+          variant="outline"
+          aria-label={`open drawer for ${btnText}`}
+          className={`${
+            shouldOpenForCreatePlan && "bg-blue-500 text-white hover:bg-blue-600 flex gap-1"
+          }`}
+        >
+          {shouldOpenForCreatePlan && <Backpack className="h-4 w-4" />}
+          <span>{btnText}</span>
         </Button>
       </DrawerTrigger>
       <DrawerContent className="flex flex-col gap-10 p-5">{content}</DrawerContent>

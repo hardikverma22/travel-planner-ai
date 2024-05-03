@@ -13,6 +13,7 @@ import {AuthLoading, Authenticated, Unauthenticated} from "convex/react";
 import useAuth from "@/hooks/useAuth";
 import Credits from "@/components/DrawerDialog";
 import {cn} from "@/lib/utils";
+import PlanComboBox from "@/components/Plan/PlanComboBox";
 
 const Header = () => {
   const {isCurrentPathDashboard, isCurrentPathHome} = useAuth();
@@ -40,10 +41,7 @@ const Header = () => {
               {isCurrentPathHome && (
                 <>
                   {navlinks.map((link) => (
-                    <li
-                      key={link.id}
-                      className="hover:underline cursor-pointer"
-                    >
+                    <li key={link.id} className="hover:underline cursor-pointer">
                       <Link href={`/#${link.id}`} scroll>
                         {link.text}
                       </Link>
@@ -51,13 +49,13 @@ const Header = () => {
                   ))}
                 </>
               )}
-              <Authenticated>
+              {/* <Authenticated>
                 {!isCurrentPathDashboard && (
                   <li className="hover:underline cursor-pointer">
                     <Link href="/dashboard">Dashboard</Link>
                   </li>
                 )}
-              </Authenticated>
+              </Authenticated> */}
             </ul>
           </div>
           <div className="md:hidden flex gap-6">
@@ -74,8 +72,11 @@ const Header = () => {
               <SignInButton mode="modal" afterSignInUrl="/dashboard" />
             </Unauthenticated>
             <Authenticated>
-              <Credits />
-              <UserButton afterSignOutUrl="/" />
+              <div className="flex justify-center items-center gap-2">
+                {!isCurrentPathDashboard && !isCurrentPathHome && <PlanComboBox />}
+                <Credits />
+                <UserButton afterSignOutUrl="/" />
+              </div>
             </Authenticated>
           </div>
         </div>

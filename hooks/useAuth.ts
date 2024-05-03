@@ -25,7 +25,7 @@ const useAuth = () => {
     }
     router.push("/dashboard")
   };
-  return { isCurrentPathDashboard, isCurrentPathHome, openSignInPopupOrDirect };
+  return { isCurrentPathDashboard, isCurrentPathHome, openSignInPopupOrDirect, isAuthenticated };
 };
 
 export default useAuth;
