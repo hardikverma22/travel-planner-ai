@@ -40,7 +40,7 @@ const ExpenseTable = ({planId}: {planId: string}) => {
           <ExpenseSheet planId={planId} />
         </div>
         <div>
-          <DataTable data={data} />
+          <DataTable data={data} planId={planId} />
         </div>
       </div>
     );

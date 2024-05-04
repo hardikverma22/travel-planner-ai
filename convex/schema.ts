@@ -59,6 +59,7 @@ export default defineSchema({
       v.literal('shopping'),
       v.literal('gifts'),
       v.literal('accomodations'),
+      v.literal('others'),
     ),
     date: v.string()
   })

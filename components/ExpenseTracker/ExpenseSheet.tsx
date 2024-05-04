@@ -32,68 +32,105 @@ import {format} from "date-fns";
 import {Calendar} from "@/components/ui/calendar";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {expenseCategories} from "@/lib/constants";
+import {Doc} from "@/convex/_generated/dataModel";
+import Link from "next/link";
 
 const formSchema = z.object({
-  forwhat: z.string().min(2).max(50),
+  purpose: z.string().min(2).max(50),
   category: z.union([
     z.literal("food"),
     z.literal("commute"),
     z.literal("shopping"),
     z.literal("gifts"),
     z.literal("accomodations"),
+    z.literal("others"),
   ]),
   amount: z.coerce.number(),
   date: z.date(),
 });
 
-export function ExpenseSheet({planId}: {planId: string}) {
+export function ExpenseSheet({
+  planId,
+  data,
+  edit,
+}: {
+  planId: string;
+  edit?: boolean;
+  data?: Doc<"expenses">;
+}) {
+  if (edit && !data) return;
+
   const [open, setOpen] = useState(false);
   const {user} = useUser();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: !edit
+      ? {}
+      : {
+          amount: data?.amount,
+          category: data?.category,
+          purpose: data?.purpose,
+          date: new Date(data?.date!),
+        },
   });
 
   const addExpense = useMutation(api.expenses.createExpense);
+  const updateExpense = useMutation(api.expenses.updateExpense);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!user || !user.id) return;
     form.reset();
     setOpen(false);
-    await addExpense({
-      planId: planId,
-      userId: user?.id,
-      amount: values.amount,
-      category: values.category,
-      purpose: values.forwhat,
-      date: values.date.toISOString(),
-    });
+    if (edit) {
+      await updateExpense({
+        id: data?._id!,
+        amount: values.amount,
+        category: values.category,
+        purpose: values.purpose,
+        date: values.date.toISOString(),
+      });
+    } else {
+      await addExpense({
+        planId: planId,
+        userId: user?.id,
+        amount: values.amount,
+        category: values.category,
+        purpose: values.purpose,
+        date: values.date.toISOString(),
+      });
+    }
   };
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button
-          size="sm"
-          variant="default"
-          className="bg-blue-500 text-white hover:bg-blue-700hover:text-white"
-        >
-          Add a New Expense
-        </Button>
+        {edit ? (
+          <span className="hover:underline hover:underline-offset-2 text-blue-600 hover:font-medium cursor-pointer">
+            {data?.purpose}
+          </span>
+        ) : (
+          <Button
+            size="sm"
+            variant="default"
+            className="bg-blue-500 text-white hover:bg-blue-700hover:text-white"
+          >
+            Add a New Expense
+          </Button>
+        )}
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Add Expense</SheetTitle>
+          <SheetTitle>{edit ? "Edit Expense" : "Add Expense"}</SheetTitle>
           <SheetDescription>
-            Add your expenses during the travel to efficiently track it at the end.
+            {edit ? "Edit" : "Add"} your expenses during the travel to efficiently track it at the
+            end.
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 pt-5">
             <FormField
               control={form.control}
-              name="forwhat"
+              name="purpose"
               render={({field}) => (
                 <FormItem>
                   <FormLabel>For</FormLabel>
@@ -185,9 +222,12 @@ export function ExpenseSheet({planId}: {planId: string}) {
             <Button
               type="submit"
               variant="outline"
-              className="bg-blue-500 hover:bg-blue-700 text-white hover:text-white"
+              className={cn("text-white hover:text-white", {
+                "bg-teal-500 hover:bg-teal-700": edit,
+                "bg-blue-500 hover:bg-blue-700": !edit,
+              })}
             >
-              Add Expense
+              {edit ? "Update" : "Add"} Expense
             </Button>
           </form>
         </Form>

@@ -30,6 +30,8 @@ import {Doc} from "@/convex/_generated/dataModel";
 import DropDownActions from "@/components/ExpenseTracker/DropDownActions";
 import {useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
+import {ExpenseSheet} from "@/components/ExpenseTracker/ExpenseSheet";
+import {expenseCategories} from "@/lib/constants";
 
 export const columns: ColumnDef<Doc<"expenses">>[] = [
   {
@@ -56,13 +58,13 @@ export const columns: ColumnDef<Doc<"expenses">>[] = [
   {
     accessorKey: "purpose",
     header: () => <div className="text-left">For</div>,
-    cell: ({row}) => <div className="capitalize text-left">{row.getValue("purpose")}</div>,
+    cell: ({row}) => <ExpenseSheet planId={row.original.planId} edit data={row.original} />,
   },
   {
     accessorKey: "category",
     header: ({column}) => {
       return (
-        <div className="text-center">
+        <div className="text-left">
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -73,7 +75,12 @@ export const columns: ColumnDef<Doc<"expenses">>[] = [
         </div>
       );
     },
-    cell: ({row}) => <div className="lowercase text-center">{row.getValue("category")}</div>,
+    cell: ({row}) => (
+      <div className="lowercase text-left flex gap-1 ml-4">
+        {expenseCategories.find((e) => e.key === row.original.category)?.icon}
+        {row.getValue("category")}
+      </div>
+    ),
   },
   {
     accessorKey: "amount",
@@ -123,7 +130,7 @@ export const columns: ColumnDef<Doc<"expenses">>[] = [
   },
 ];
 
-export default function DataTable({data}: {data: Doc<"expenses">[]}) {
+export default function DataTable({data, planId}: {data: Doc<"expenses">[]; planId: string}) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});

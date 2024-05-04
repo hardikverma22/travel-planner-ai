@@ -13,6 +13,7 @@ export const createExpense = mutation({
             v.literal('shopping'),
             v.literal('gifts'),
             v.literal('accomodations'),
+            v.literal('others'),
         ),
         date: v.string()
     },
@@ -34,6 +35,26 @@ export const deleteExpense = mutation({
     },
     handler: async (ctx, { id }) => {
         await ctx.db.delete(id);
+    },
+});
+
+export const updateExpense = mutation({
+    args: {
+        id: v.id("expenses"),
+        amount: v.number(),
+        purpose: v.string(),
+        category: v.union(v.literal('food'),
+            v.literal('commute'),
+            v.literal('shopping'),
+            v.literal('gifts'),
+            v.literal('accomodations'),
+            v.literal('others'),
+        ),
+        date: v.string()
+
+    },
+    handler: async (ctx, { id, amount, purpose, category, date }) => {
+        await ctx.db.patch(id, { amount, purpose, category, date });
     },
 });
 
