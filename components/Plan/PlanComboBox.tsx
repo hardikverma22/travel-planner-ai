@@ -12,31 +12,11 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {useQuery} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {usePathname, useRouter} from "next/navigation";
-// import {Status} from "@/app/(protected)/actionitems/page";
-
-const statusList: {
-  value: string;
-  label: string;
-}[] = [
-  {
-    value: "done",
-    label: "Done",
-  },
-  {
-    value: "pending",
-    label: "Pending",
-  },
-  {
-    value: "all",
-    label: "Show All",
-  },
-];
 
 export default function PlanComboBox() {
   const [open, setOpen] = React.useState(false);
@@ -44,9 +24,7 @@ export default function PlanComboBox() {
   const pathname = usePathname();
   const router = useRouter();
   const planId = pathname.split("/")[2];
-
   const plans = useQuery(api.plan.getComboBoxPlansForAUser, {});
-  console.log(plans);
 
   if (!plans || !plans.length)
     return <div className="w-[300px] h-8 rounded-md bg-stone-200 animate-pulse" />;
@@ -73,7 +51,7 @@ export default function PlanComboBox() {
         </PopoverTrigger>
         <PopoverContent className="w-[300px] p-0">
           <Command>
-            <CommandInput placeholder="Select Status" />
+            <CommandInput placeholder="Select Travel Plan..." />
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup>

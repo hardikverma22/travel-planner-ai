@@ -12,7 +12,7 @@ const Banner = () => {
                 gap-5
                 min-h-[calc(100vh-5.25rem)]"
     >
-      <article className="flex flex-col h-full justify-start items-center lg:flex-1 ">
+      <article className="flex flex-col h-full justify-center items-center lg:flex-1 ">
         <h1
           className="font-extrabold lg:text-7xl md:text-5xl text-4xl font-sans
       text-left w-full"

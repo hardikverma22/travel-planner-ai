@@ -1,4 +1,4 @@
-import {SidebarProps} from "@/components/Sidebar";
+import {SidebarProps} from "@/components/Plan/Sidebar";
 import {
   Backpack,
   Clock3,
@@ -8,6 +8,12 @@ import {
   Navigation,
   Sailboat,
   Utensils,
+  Bus,
+  Gift,
+  Hotel,
+  Pizza,
+  ShieldQuestion,
+  ShoppingCart,
 } from "lucide-react";
 import {ReactNode} from "react";
 
@@ -71,11 +77,13 @@ export const planSections: {
   },
 ];
 
-export const colors = [
-  "#ef4444",
-  "#14b8a6",
-  "#f59e0b",
-  "#06b6d4",
-  "#a855f7",
-  "#ec4899",
+export const colors = ["#ef4444", "#14b8a6", "#f59e0b", "#06b6d4", "#a855f7", "#ec4899"];
+
+export const expenseCategories = [
+  {key: "food", icon: <Pizza className="h-4 w-4" />, label: "Food"},
+  {key: "commute", icon: <Bus className="h-4 w-4" />, label: "Commute"},
+  {key: "shopping", icon: <ShoppingCart className="h-4 w-4" />, label: "Shopping"},
+  {key: "gifts", icon: <Gift className="h-4 w-4" />, label: "Gifts"},
+  {key: "accomodations", icon: <Hotel className="h-4 w-4" />, label: "Accomodation"},
+  {key: "others", icon: <ShieldQuestion className="h-4 w-4" />, label: "Others"},
 ];

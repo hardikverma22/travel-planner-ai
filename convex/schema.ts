@@ -49,4 +49,17 @@ export default defineSchema({
     stripeId: v.string(),
     status: v.string()
   }).index("by_stripe_id", ["stripeId"]),
+  expenses: defineTable({
+    planId: v.string(),
+    userId: v.string(),
+    amount: v.number(),
+    purpose: v.string(),
+    category: v.union(v.literal('food'),
+      v.literal('commute'),
+      v.literal('shopping'),
+      v.literal('gifts'),
+      v.literal('accomodations'),
+    ),
+    date: v.string()
+  })
 });

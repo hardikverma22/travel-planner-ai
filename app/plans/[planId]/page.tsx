@@ -1,4 +1,4 @@
-import Plan from "@/components/Plan";
+import Plan from "@/components/Plan/Plan";
 
 export default async function PlanPage({
   params,
@@ -7,6 +7,7 @@ export default async function PlanPage({
   params: {planId: string};
   searchParams?: {isNewPlan: string};
 }) {
-  const isNewPlan = searchParams && searchParams?.isNewPlan;
-  return <Plan planId={params.planId} isNewPlan={Boolean(isNewPlan) ?? false} />;
+  const isNewPlan =
+    searchParams && searchParams.isNewPlan ? Boolean(searchParams.isNewPlan) : false;
+  return <Plan planId={params.planId} isNewPlan={isNewPlan} />;
 }

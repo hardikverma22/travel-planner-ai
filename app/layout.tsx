@@ -22,7 +22,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <html lang="en">
         <body className={inter.className}>
           <Header />
-          <main className="flex min-h-[100svh] flex-col items-center">
+          <main className="flex min-h-[calc(100svh-4rem)] flex-col items-center">
             {children}
             <Progress />
             <Analytics />

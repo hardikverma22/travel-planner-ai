@@ -2,6 +2,7 @@
 
 import Pulse from "@/components/shared/Pulse";
 import {Button} from "@/components/ui/button";
+import {usePlanContext} from "@/contexts/PlanContextProvider";
 import {planSections} from "@/lib/constants";
 import {cn} from "@/lib/utils";
 import {DollarSign} from "lucide-react";
@@ -21,8 +22,9 @@ export type SidebarProps = {
   besttimetovisit: boolean;
 };
 
-const Sidebar = ({planState}: {planState: SidebarProps}) => {
-  const pathname = usePathname();
+const Sidebar = ({planId}: {planId: string}) => {
+  const pathname = `/plans/${planId}`;
+  const {planState} = usePlanContext();
 
   return (
     <aside className={cn("pb-12 lg:col-span-1 col-span-full")}>

@@ -1,19 +1,16 @@
 "use client";
 
 import Link from "next/link";
-
-import {Loading} from "@/components/Laoding";
-import MobileMenu from "@/components/MobileMenu";
-
-import {navlinks} from "@/lib/constants";
-
+import {AuthLoading, Authenticated, Unauthenticated} from "convex/react";
 import {SignInButton, UserButton} from "@clerk/nextjs";
 
-import {AuthLoading, Authenticated, Unauthenticated} from "convex/react";
-import useAuth from "@/hooks/useAuth";
-import Credits from "@/components/DrawerDialog";
-import {cn} from "@/lib/utils";
+import {Loading} from "@/components/shared/Laoding";
+import MobileMenu from "@/components/MobileMenu";
+import Credits from "@/components/shared/DrawerDialog";
 import PlanComboBox from "@/components/Plan/PlanComboBox";
+import {navlinks} from "@/lib/constants";
+import {cn} from "@/lib/utils";
+import useAuth from "@/hooks/useAuth";
 
 const Header = () => {
   const {isCurrentPathDashboard, isCurrentPathHome} = useAuth();
@@ -25,7 +22,7 @@ const Header = () => {
         isCurrentPathHome && "sticky top-0"
       )}
     >
-      <nav className="lg:px-20 px-5 py-5 mx-auto">
+      <nav className="lg:px-20 px-5 py-3 mx-auto">
         <div className="flex justify-between ">
           <div className="hidden md:flex gap-10 items-center">
             <Link href="/">
@@ -49,13 +46,6 @@ const Header = () => {
                   ))}
                 </>
               )}
-              {/* <Authenticated>
-                {!isCurrentPathDashboard && (
-                  <li className="hover:underline cursor-pointer">
-                    <Link href="/dashboard">Dashboard</Link>
-                  </li>
-                )}
-              </Authenticated> */}
             </ul>
           </div>
           <div className="md:hidden flex gap-6">

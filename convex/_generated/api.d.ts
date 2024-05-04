@@ -15,6 +15,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as cleanup from "../cleanup.js";
+import type * as expenses from "../expenses.js";
 import type * as http from "../http.js";
 import type * as images from "../images.js";
 import type * as payments from "../payments.js";
@@ -33,6 +34,7 @@ import type * as users from "../users.js";
  */
 declare const fullApi: ApiFromModules<{
   cleanup: typeof cleanup;
+  expenses: typeof expenses;
   http: typeof http;
   images: typeof images;
   payments: typeof payments;

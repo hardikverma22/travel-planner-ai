@@ -2,7 +2,7 @@
 import {Input} from "@/components/ui/input";
 import {ChangeEvent, Dispatch, MouseEvent, SetStateAction, useState} from "react";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
-import {Loading} from "@/components/Laoding";
+import {Loading} from "@/components/shared/Laoding";
 import {ControllerRenderProps, UseFormReturn} from "react-hook-form";
 
 type PlacesAutoCompleteProps = {

@@ -1,13 +1,12 @@
 "use client";
 import {NoPlans} from "@/components/Dashboard/NoPlans";
 import PlanCard from "@/components/Dashboard/PlanCard";
-import DrawerDialog from "@/components/DrawerDialog";
-import {Loading} from "@/components/Laoding";
+import DrawerDialog from "@/components/shared/DrawerDialog";
 import {Input} from "@/components/ui/input";
 import {api} from "@/convex/_generated/api";
 import {useQuery} from "convex/react";
 import {Search} from "lucide-react";
-import {ChangeEvent, Suspense, useState} from "react";
+import {ChangeEvent, useState} from "react";
 
 export default function Dashboard() {
   const [searchPlanText, setSearchPlanText] = useState("");

@@ -1,14 +1,13 @@
 "use client";
-import Map from "@/components/Map";
+import Map from "@/components/Plan/Map";
 import SectionWrapper from "@/components/sections/SectionWrapper";
-import {ScrollBar} from "@/components/ui/scroll-area";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Doc} from "@/convex/_generated/dataModel";
 import {colors} from "@/lib/constants";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {MapPin} from "lucide-react";
 import {useEffect, useState} from "react";
-import {Loading} from "@/components/Laoding";
+import {Loading} from "@/components/shared/Laoding";
 
 type location = {
   lat: number;
@@ -20,8 +19,7 @@ type TopPlacesToVisitProps = {
 };
 
 const TopPlacesToVisit = ({topPlacesToVisit}: TopPlacesToVisitProps) => {
-  const doesTopPlacesToVisitExist =
-    topPlacesToVisit != null && topPlacesToVisit.length > 0;
+  const doesTopPlacesToVisitExist = topPlacesToVisit != null && topPlacesToVisit.length > 0;
 
   const [selectedPlace, setSelectedPlace] = useState<location | undefined>();
 
@@ -30,10 +28,7 @@ const TopPlacesToVisit = ({topPlacesToVisit}: TopPlacesToVisitProps) => {
     setSelectedPlace(topPlacesToVisit[0].coordinates);
   }, [doesTopPlacesToVisitExist]);
 
-  const onClickPlace = (
-    e: React.MouseEvent<HTMLLIElement>,
-    coordinates: location
-  ) => {
+  const onClickPlace = (e: React.MouseEvent<HTMLLIElement>, coordinates: location) => {
     e.preventDefault();
     setSelectedPlace(coordinates);
   };
@@ -58,10 +53,7 @@ const TopPlacesToVisit = ({topPlacesToVisit}: TopPlacesToVisitProps) => {
                               hover:ring-2 hover:ring-blue-300 duration-500"
                       onClick={(e) => onClickPlace(e, place.coordinates)}
                     >
-                      <span
-                        className="mr-2"
-                        style={{color: `${colors[index % 6]}`}}
-                      >
+                      <span className="mr-2" style={{color: `${colors[index % 6]}`}}>
                         {index + 1}.
                       </span>
                       <span className="font-normal">{place.name}</span>
@@ -76,10 +68,7 @@ const TopPlacesToVisit = ({topPlacesToVisit}: TopPlacesToVisitProps) => {
         </div>
         <div className="w-full p-2 h-[30rem]">
           {doesTopPlacesToVisitExist ? (
-            <Map
-              topPlacesToVisit={topPlacesToVisit}
-              selectedPlace={selectedPlace ?? undefined}
-            />
+            <Map topPlacesToVisit={topPlacesToVisit} selectedPlace={selectedPlace ?? undefined} />
           ) : (
             <SkeletonForTopPlacesToVisit isMaps />
           )}
