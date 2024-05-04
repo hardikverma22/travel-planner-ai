@@ -1,7 +1,6 @@
 "use client";
 import {NoPlans} from "@/components/Dashboard/NoPlans";
 import PlanCard from "@/components/Dashboard/PlanCard";
-import PlanList from "@/components/Dashboard/PlanList";
 import DrawerDialog from "@/components/DrawerDialog";
 import {Loading} from "@/components/Laoding";
 import {Input} from "@/components/ui/input";
@@ -55,6 +54,7 @@ export default function Dashboard() {
             placeholder="Search Travel Plan..."
             type="search"
             className="w-full rounded-lg bg-background pl-8"
+            disabled={!plans || !plans.length}
           />
         </div>
 
