@@ -75,6 +75,7 @@ export function ExpenseSheet({planId}: {planId: string}) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
+          size="sm"
           variant="default"
           className="bg-blue-500 text-white hover:bg-blue-700hover:text-white"
         >

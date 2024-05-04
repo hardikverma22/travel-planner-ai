@@ -35,8 +35,8 @@ const ExpenseTable = ({planId}: {planId: string}) => {
   if (data)
     return (
       <div>
-        <div className="flex justify-between items-center w-full border-b-2 pb-1">
-          <h2 className="font-semibold font-sans">Expenses</h2>
+        <div className="flex justify-between items-end w-full border-b-2 pb-1">
+          <h2 className="font-semibold font-sans text-xl align-bottom">Expenses</h2>
           <ExpenseSheet planId={planId} />
         </div>
         <div>

@@ -37,6 +37,17 @@ export const deleteExpense = mutation({
     },
 });
 
+export const deleteMultipleExpenses = mutation({
+    args: {
+        ids: v.array(v.id("expenses"))
+    },
+    handler: async (ctx, { ids }) => {
+        ids.forEach(async id => {
+            await ctx.db.delete(id);
+        })
+    },
+});
+
 export const getExpenses = query({
     args: {
         planId: v.string()
