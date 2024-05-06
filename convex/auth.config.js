@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: "https://healthy-impala-15.clerk.accounts.dev",
+      domain: process.env.CUSTOM_DOMAIN,
       applicationID: "convex",
     },
   ],
