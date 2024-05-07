@@ -60,7 +60,7 @@ export default function DataTable({data}: {data: (Doc<"expenses"> & {email: stri
 
   const selectedRows = table.getSelectedRowModel().rows;
 
-  const deleteSelectedRows = async (rows: Row<Doc<"expenses">>[]) => {
+  const deleteSelectedRows = async (rows: Row<Doc<"expenses"> & {email: string}>[]) => {
     if (rows.length <= 0) return;
 
     await deleteMultipleExpenses({ids: rows.map((r) => r.original._id)});

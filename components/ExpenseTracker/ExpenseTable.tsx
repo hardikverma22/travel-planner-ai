@@ -1,16 +1,18 @@
 "use client";
 
 import DataTable from "@/components/expenseTracker/DataTable";
-import {ExpenseSheet} from "@/components/expenseTracker/ExpenseSheet";
+
 import {api} from "@/convex/_generated/api";
 import {useQuery} from "convex/react";
 import Image from "next/image";
 import expense from "@/public/expense.svg";
 import LoadingComponent from "@/app/plans/[planId]/expense-tracker/loading";
+import dynamic from "next/dynamic";
+const ExpenseSheet = dynamic(() => import("@/components/expenseTracker/ExpenseSheet"));
 
 const ExpenseTable = ({planId}: {planId: string}) => {
   const data = useQuery(api.expenses.getExpenses, {planId: planId});
-  type s = typeof data;
+
   if (!data) return <LoadingComponent />;
   if (data && data.length == 0)
     return (

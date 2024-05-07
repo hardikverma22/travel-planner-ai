@@ -11,7 +11,7 @@ import {ChangeEvent, useState} from "react";
 export default function Dashboard() {
   const [searchPlanText, setSearchPlanText] = useState("");
   const plans = useQuery(api.plan.getAllPlansForAUser, {});
-  console.log(plans);
+
   const [filteredPlans, setFilteredPlans] = useState<typeof plans>();
   const finalPlans = filteredPlans ?? plans;
 

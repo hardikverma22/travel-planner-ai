@@ -1,4 +1,4 @@
-import {ExpenseSheet} from "@/components/expenseTracker/ExpenseSheet";
+import ExpenseSheet from "@/components/expenseTracker/ExpenseSheet";
 import {expenseCategories} from "@/lib/constants";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Doc} from "@/convex/_generated/dataModel";

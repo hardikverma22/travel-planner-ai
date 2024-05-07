@@ -1,16 +1,6 @@
-import {getAuthToken} from "@/app/auth";
-import {ExpenseSheet} from "@/components/expenseTracker/ExpenseSheet";
-import {api} from "@/convex/_generated/api";
-import {fetchQuery} from "convex/nextjs";
 import ExpenseTable from "@/components/expenseTracker/ExpenseTable";
 
-export default async function ExpenseTracker({
-  params,
-  searchParams,
-}: {
-  params: {planId: string};
-  searchParams?: {isNewPlan: string};
-}) {
+export default async function ExpenseTracker({params}: {params: {planId: string}}) {
   const {planId} = params;
 
   return (

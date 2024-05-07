@@ -50,7 +50,7 @@ const formSchema = z.object({
   userId: z.string(),
 });
 
-export function ExpenseSheet({
+export default function ExpenseSheet({
   planId,
   data,
   edit,
