@@ -171,7 +171,7 @@ export const getSinglePlan = query({
 
     const plan = await ctx.db.get(args.id);
 
-    if (!plan || (plan.userId !== subject && !access)) {
+    if (!plan || (plan.userId !== subject || !access)) {
       throw new ConvexError("The Plan you are trying to access either does not belong to you or does not exist.");
     }
 
