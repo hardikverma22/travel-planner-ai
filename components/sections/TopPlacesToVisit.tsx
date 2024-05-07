@@ -1,5 +1,5 @@
 "use client";
-import Map from "@/components/Plan/Map";
+import Map from "@/components/plan/Map";
 import SectionWrapper from "@/components/sections/SectionWrapper";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Doc} from "@/convex/_generated/dataModel";
@@ -7,7 +7,7 @@ import {colors} from "@/lib/constants";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {MapPin} from "lucide-react";
 import {useEffect, useState} from "react";
-import {Loading} from "@/components/shared/Laoding";
+import {Loading} from "@/components/Shared/Laoding";
 
 type location = {
   lat: number;

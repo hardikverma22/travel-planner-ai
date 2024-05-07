@@ -1,7 +1,7 @@
 "use client";
-import {NoPlans} from "@/components/Dashboard/NoPlans";
-import PlanCard from "@/components/Dashboard/PlanCard";
-import DrawerDialog from "@/components/shared/DrawerDialog";
+import {NoPlans} from "@/components/dashboard/NoPlans";
+import PlanCard from "@/components/dashboard/PlanCard";
+import DrawerDialog from "@/components/Shared/DrawerDialog";
 import {Input} from "@/components/ui/input";
 import {api} from "@/convex/_generated/api";
 import {useQuery} from "convex/react";
@@ -10,10 +10,10 @@ import {ChangeEvent, useState} from "react";
 
 export default function Dashboard() {
   const [searchPlanText, setSearchPlanText] = useState("");
-  const plans = useQuery(api.plan.getPlanForAUser, {});
+  const plans = useQuery(api.plan.getAllPlansForAUser, {});
+  console.log(plans);
   const [filteredPlans, setFilteredPlans] = useState<typeof plans>();
   const finalPlans = filteredPlans ?? plans;
-  console.log(finalPlans);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

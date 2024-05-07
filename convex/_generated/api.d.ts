@@ -15,13 +15,17 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as cleanup from "../cleanup.js";
+import type * as email from "../email.js";
 import type * as expenses from "../expenses.js";
 import type * as http from "../http.js";
 import type * as images from "../images.js";
+import type * as invite from "../invite.js";
+import type * as InviteEmail from "../InviteEmail.js";
 import type * as payments from "../payments.js";
 import type * as plan from "../plan.js";
 import type * as retrier from "../retrier.js";
 import type * as stripe from "../stripe.js";
+import type * as token from "../token.js";
 import type * as users from "../users.js";
 
 /**
@@ -34,13 +38,17 @@ import type * as users from "../users.js";
  */
 declare const fullApi: ApiFromModules<{
   cleanup: typeof cleanup;
+  email: typeof email;
   expenses: typeof expenses;
   http: typeof http;
   images: typeof images;
+  invite: typeof invite;
+  InviteEmail: typeof InviteEmail;
   payments: typeof payments;
   plan: typeof plan;
   retrier: typeof retrier;
   stripe: typeof stripe;
+  token: typeof token;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

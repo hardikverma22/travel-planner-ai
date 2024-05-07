@@ -4,16 +4,18 @@ import {Card, CardContent, CardDescription, CardTitle} from "@/components/ui/car
 import Link from "next/link";
 import Image from "next/image";
 import {MapPin} from "lucide-react";
+import {TooltipContainer} from "@/components/Shared/Toolip";
+import {Button} from "@/components/ui/button";
 
 type PlanCardProps = {
-  plan: Doc<"plan"> & {url: string | null};
+  plan: Doc<"plan"> & {url: string | null} & {isSharedPlan: boolean};
 };
 
 const PlanCard = ({plan}: PlanCardProps) => {
   return (
     <Link
       role="article"
-      href={`/plans/${plan._id}`}
+      href={`/plans/${plan._id}/plan`}
       className="flex justify-center items-center shadow-lg"
     >
       <Card
@@ -31,6 +33,13 @@ const PlanCard = ({plan}: PlanCardProps) => {
               className="relative -z-1 object-cover rounded-t-lg w-full group-hover/card:scale-105 transition ease-in-out duration-500"
               priority={true}
             />
+            {plan.isSharedPlan && (
+              <TooltipContainer text="This plan had been shared to you">
+                <div className="absolute right-1 top-1 bg-white rounded-lg p-1 text-sm shadow-lg text-gray-600">
+                  Shared
+                </div>
+              </TooltipContainer>
+            )}
           </div>
 
           <div className="p-2 pt-0 flex-1 flex justify-between flex-col">

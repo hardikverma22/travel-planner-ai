@@ -50,11 +50,11 @@ export const updateExpense = mutation({
             v.literal('accomodations'),
             v.literal('others'),
         ),
-        date: v.string()
-
+        date: v.string(),
+        userId: v.string()
     },
-    handler: async (ctx, { id, amount, purpose, category, date }) => {
-        await ctx.db.patch(id, { amount, purpose, category, date });
+    handler: async (ctx, { id, amount, purpose, category, date, userId }) => {
+        await ctx.db.patch(id, { amount, purpose, category, date, userId });
     },
 });
 
@@ -82,10 +82,16 @@ export const getExpenses = query({
         const { subject } = identity;
         const expenses = await ctx.db
             .query("expenses")
-            .filter((q) => q.and(q.eq(q.field("userId"), subject), q.eq(q.field("planId"), planId)))
+            .filter((q) => q.eq(q.field("planId"), planId))
             .order("desc")
             .take(100);
 
-        return expenses;
+        return Promise.all(expenses.map(async expense =>
+        ({
+            ...expense,
+            email: (await ctx.db.query("users")
+                .withIndex("by_clerk_id", q => q.eq("userId", expense.userId))
+                .first())?.email ?? "Anonymous User"
+        })))
     },
 });

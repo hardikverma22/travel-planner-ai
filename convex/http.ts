@@ -23,9 +23,10 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
   }
   switch (event.type) {
     case "user.created": {
+      console.log({ userInfo: event.data });
       await ctx.runMutation(internal.users.createUser, {
         userId: event.data.id,
-        email: event.data.email_addresses[0]?.email_address
+        email: event.data.email_addresses[0]?.email_address,
       });
       break;
     }

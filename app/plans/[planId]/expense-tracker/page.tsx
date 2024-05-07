@@ -1,8 +1,8 @@
 import {getAuthToken} from "@/app/auth";
-import {ExpenseSheet} from "@/components/ExpenseTracker/ExpenseSheet";
+import {ExpenseSheet} from "@/components/expenseTracker/ExpenseSheet";
 import {api} from "@/convex/_generated/api";
 import {fetchQuery} from "convex/nextjs";
-import ExpenseTable from "@/components/ExpenseTracker/ExpenseTable";
+import ExpenseTable from "@/components/expenseTracker/ExpenseTable";
 
 export default async function ExpenseTracker({
   params,
@@ -14,7 +14,7 @@ export default async function ExpenseTracker({
   const {planId} = params;
 
   return (
-    <div className="lg:col-span-4 lg:border-l flex flex-col gap-5 px-4 py-6 lg:px-8">
+    <div className="lg:col-span-4 flex flex-col gap-5 py-4">
       <ExpenseTable planId={planId} />
     </div>
   );

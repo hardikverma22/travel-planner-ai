@@ -1,23 +1,10 @@
-"use client";
+import TopMenuBar from "@/components/TopMenuBar";
 
-import Sidebar from "@/components/Plan/Sidebar";
-import PlanContextProvider from "@/contexts/PlanContextProvider";
-
-export default function RootLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: {planId: string};
-}) {
+export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <PlanContextProvider>
-      <div className="bg-background">
-        <div className="grid lg:grid-cols-5 min-h-[calc(100svh-4rem)] lg:px-10 px-5">
-          <Sidebar planId={params.planId} />
-          {children}
-        </div>
-      </div>
-    </PlanContextProvider>
+    <div className="mx-auto w-full ">
+      <TopMenuBar />
+      <div className="w-full lg:px-20 px-5 py-3 min-h-[calc(100svh-6.5rem)]">{children}</div>
+    </div>
   );
 }

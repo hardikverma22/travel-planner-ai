@@ -1,7 +1,7 @@
 "use client";
 import {Doc} from "@/convex/_generated/dataModel";
 import {colors} from "@/lib/constants";
-import {GoogleMap, useJsApiLoader, OverlayView} from "@react-google-maps/api";
+import {GoogleMap, useJsApiLoader, OverlayView, Libraries} from "@react-google-maps/api";
 import {useEffect, useState} from "react";
 
 type MapProps = {
@@ -10,10 +10,12 @@ type MapProps = {
 };
 
 export default function Map({topPlacesToVisit, selectedPlace}: MapProps) {
+  // const libraries: Libraries = ["maps", "maps", "places"];
+  const [libraries] = useState<Libraries>(["places"]);
   const {isLoaded} = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-    libraries: ["maps", "marker", "places"],
+    libraries,
   });
 
   const [mapCenter, setMapCenter] = useState(selectedPlace);

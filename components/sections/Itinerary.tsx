@@ -1,6 +1,6 @@
 import Timeline from "@/components/Timeline";
 import SectionWrapper from "@/components/sections/SectionWrapper";
-import {AddIternaryDay} from "@/components/AddNewItineraryDay/AddIternaryDay";
+import {AddIternaryDay} from "@/components/addNewItineraryDay/AddIternaryDay";
 import {Button} from "@/components/ui/button";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Doc} from "@/convex/_generated/dataModel";

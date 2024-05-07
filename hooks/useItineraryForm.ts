@@ -1,5 +1,5 @@
 
-import { ItineraryValidationSchema } from "@/components/AddNewItineraryDay/ItineraryValidationSchema";
+import { ItineraryValidationSchema } from "@/components/addNewItineraryDay/ItineraryValidationSchema";
 import { useZodForm } from "@/hooks/useZodForm";
 import { useRef } from "react";
 import { useFieldArray, FieldArrayWithId } from 'react-hook-form';

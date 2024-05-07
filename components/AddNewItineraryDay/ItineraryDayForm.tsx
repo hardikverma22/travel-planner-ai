@@ -7,13 +7,13 @@ import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
 
 import useItineraryForm from "@/hooks/useItineraryForm";
 
-import {ItineraryValidationSchema} from "@/components/AddNewItineraryDay/ItineraryValidationSchema";
+import {ItineraryValidationSchema} from "@/components/addNewItineraryDay/ItineraryValidationSchema";
 
 import {api} from "@/convex/_generated/api";
 import {Doc} from "@/convex/_generated/dataModel";
 
 import {Sun, Sunrise, Sunset} from "lucide-react";
-import CustomTabContent from "@/components/AddNewItineraryDay/CustomTabContent";
+import CustomTabContent from "@/components/addNewItineraryDay/CustomTabContent";
 
 export type ItineraryType = z.infer<typeof ItineraryValidationSchema>["itinerary"];
 

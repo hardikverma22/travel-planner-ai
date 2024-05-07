@@ -14,7 +14,7 @@ import {useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {Trash2Icon} from "lucide-react";
 
-const DropDownActions = ({row}: {row: Row<Doc<"expenses">>}) => {
+const DropDownActions = ({row}: {row: Row<Doc<"expenses"> & {email: string}>}) => {
   const deleteExpense = useMutation(api.expenses.deleteExpense);
 
   return (

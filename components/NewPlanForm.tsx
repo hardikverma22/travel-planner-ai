@@ -75,7 +75,6 @@ const NewPlanForm = () => {
                   selectedFromList={selectedFromList}
                   setSelectedFromList={setSelectedFromList}
                 />
-                {/* <Input placeholder="e.g. 3 days trip to Mathura" {...field} disabled={pending} /> */}
               </FormControl>
               <FormMessage />
             </FormItem>

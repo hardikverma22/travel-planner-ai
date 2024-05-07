@@ -1,7 +1,7 @@
 "use client";
 
-import DataTable from "@/components/ExpenseTracker/DataTable";
-import {ExpenseSheet} from "@/components/ExpenseTracker/ExpenseSheet";
+import DataTable from "@/components/expenseTracker/DataTable";
+import {ExpenseSheet} from "@/components/expenseTracker/ExpenseSheet";
 import {api} from "@/convex/_generated/api";
 import {useQuery} from "convex/react";
 import Image from "next/image";
@@ -10,13 +10,14 @@ import LoadingComponent from "@/app/plans/[planId]/expense-tracker/loading";
 
 const ExpenseTable = ({planId}: {planId: string}) => {
   const data = useQuery(api.expenses.getExpenses, {planId: planId});
+  type s = typeof data;
   if (!data) return <LoadingComponent />;
   if (data && data.length == 0)
     return (
       <div
         className="flex flex-col justify-center items-center gap-2
                       border-2 border-gray-100 rounded-xl w-full h-full
-                      shadow-md font-sans"
+                      shadow-md font-sans py-5 px-3"
       >
         <p className="font-semibold text-lg md:text-xl">You haven't added any Expenses yet!</p>
         <p className="px-8 max-w-xl text-base text-center text-gray-500">
@@ -40,7 +41,7 @@ const ExpenseTable = ({planId}: {planId: string}) => {
           <ExpenseSheet planId={planId} />
         </div>
         <div>
-          <DataTable data={data} planId={planId} />
+          <DataTable data={data} />
         </div>
       </div>
     );

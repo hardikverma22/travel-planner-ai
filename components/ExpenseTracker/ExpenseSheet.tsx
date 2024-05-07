@@ -21,25 +21,25 @@ import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {useState} from "react";
-import {useMutation} from "convex/react";
+import {useEffect, useMemo, useState} from "react";
+import {useMutation, useQuery} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {useUser} from "@clerk/nextjs";
 import {cn} from "@/lib/utils";
 
-import {Bus, CalendarIcon, Gift, Hotel, Pizza, ShieldQuestion, ShoppingCart} from "lucide-react";
+import {CalendarIcon, UserIcon} from "lucide-react";
 import {format} from "date-fns";
 import {Calendar} from "@/components/ui/calendar";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {expenseCategories} from "@/lib/constants";
-import {Doc} from "@/convex/_generated/dataModel";
-import Link from "next/link";
+import {Doc, Id} from "@/convex/_generated/dataModel";
+import UserDropdown from "@/components/expenseTracker/UserDropdown";
 
 const formSchema = z.object({
   purpose: z.string().min(2).max(50),
   category: z.union([
-    z.literal("food"),
     z.literal("commute"),
+    z.literal("food"),
     z.literal("shopping"),
     z.literal("gifts"),
     z.literal("accomodations"),
@@ -47,6 +47,7 @@ const formSchema = z.object({
   ]),
   amount: z.coerce.number(),
   date: z.date(),
+  userId: z.string(),
 });
 
 export function ExpenseSheet({
@@ -62,17 +63,22 @@ export function ExpenseSheet({
 
   const [open, setOpen] = useState(false);
   const {user} = useUser();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: !edit
-      ? {}
-      : {
-          amount: data?.amount,
-          category: data?.category,
-          purpose: data?.purpose,
-          date: new Date(data?.date!),
-        },
   });
+
+  useEffect(() => {
+    if (!edit) return;
+    if (data) {
+      console.log(data.userId);
+      form.setValue("purpose", data.purpose);
+      form.setValue("amount", data.amount);
+      form.setValue("category", data.category);
+      form.setValue("userId", data.userId);
+      form.setValue("date", new Date(data.date));
+    }
+  }, [edit, data]);
 
   const addExpense = useMutation(api.expenses.createExpense);
   const updateExpense = useMutation(api.expenses.updateExpense);
@@ -88,11 +94,12 @@ export function ExpenseSheet({
         category: values.category,
         purpose: values.purpose,
         date: values.date.toISOString(),
+        userId: values.userId,
       });
     } else {
       await addExpense({
         planId: planId,
-        userId: user?.id,
+        userId: values.userId,
         amount: values.amount,
         category: values.category,
         purpose: values.purpose,
@@ -143,20 +150,38 @@ export function ExpenseSheet({
             />
             <FormField
               control={form.control}
+              name="userId"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Who Spent</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a User" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <UserDropdown userId={user!.id} planId={planId} />
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="category"
               render={({field}) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                      </FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
                       <SelectContent>
                         {expenseCategories.map((category) => (
-                          <SelectItem value={category.key}>
+                          <SelectItem value={category.key} key={category.key}>
                             <div className="flex gap-2 items-center">
                               {category.icon}
                               <span>{category.label}</span>
@@ -206,12 +231,7 @@ export function ExpenseSheet({
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0 z-50 bg-white" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          initialFocus
-                        />
+                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} />
                       </PopoverContent>
                     </Popover>
                   </FormControl>

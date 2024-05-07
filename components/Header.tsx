@@ -4,16 +4,16 @@ import Link from "next/link";
 import {AuthLoading, Authenticated, Unauthenticated} from "convex/react";
 import {SignInButton, UserButton} from "@clerk/nextjs";
 
-import {Loading} from "@/components/shared/Laoding";
+import {Loading} from "@/components/Shared/Laoding";
 import MobileMenu from "@/components/MobileMenu";
-import Credits from "@/components/shared/DrawerDialog";
-import PlanComboBox from "@/components/Plan/PlanComboBox";
+import Credits from "@/components/Shared/DrawerDialog";
+import PlanComboBox from "@/components/plan/PlanComboBox";
 import {navlinks} from "@/lib/constants";
 import {cn} from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
 
 const Header = () => {
-  const {isCurrentPathDashboard, isCurrentPathHome} = useAuth();
+  const {isCurrentPathDashboard, isCurrentPathHome, isAuthenticated} = useAuth();
 
   return (
     <header
@@ -25,7 +25,7 @@ const Header = () => {
       <nav className="lg:px-20 px-5 py-3 mx-auto">
         <div className="flex justify-between ">
           <div className="hidden md:flex gap-10 items-center">
-            <Link href="/">
+            <Link href={isAuthenticated ? "/dashboard" : "/"}>
               <div className="flex flex-col leading-5 font-bold text-xl">
                 <span>Travel</span>
                 <span>

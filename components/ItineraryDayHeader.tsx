@@ -33,6 +33,7 @@ export default function ItineraryDayHeader({title, planId}: ItineraryDayHeaderPr
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogTrigger>
           <Button
+            asChild
             size="icon"
             variant="ghost"
             className="p-1 rounded-full"

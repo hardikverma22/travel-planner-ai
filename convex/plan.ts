@@ -1,6 +1,6 @@
 import { ActionCtx, MutationCtx, QueryCtx, action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import { internal } from "./_generated/api";
-import { Doc, Id } from "./_generated/dataModel";
+import { Doc, Id } from './_generated/dataModel';
 
 import { ConvexError, v } from "convex/values";
 
@@ -9,9 +9,98 @@ import {
   generatebatch2,
   generatebatch3
 } from "../lib/openai";
-import { Query } from "convex/server";
 
-export const getPlanForAUser = query({
+export const PlanAdmin = query({
+  args: { planId: v.string() },
+  handler: async (ctx, args) => {
+    return getPlanAdmin(ctx, args.planId)
+  },
+});
+
+export const getPlanAdmin = async (ctx: QueryCtx, planId: string) => {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) {
+    throw new ConvexError("Not authorized to perform to check for Plan Admin")
+  }
+
+  const { subject } = identity;
+
+  const plan = await ctx.db.get(planId as Id<"plan">);
+  if (plan && plan.userId === subject) return { isPlanAdmin: true, planName: plan.nameoftheplace };
+  return { isPlanAdmin: false, planName: null };
+}
+
+const getSharedPlans = async (ctx: QueryCtx, userId: string) => {
+
+  const access = await ctx.db.query("access")
+    .withIndex("by_userId", q => q.eq("userId", userId))
+    .take(100);
+
+  const planIds = access.map(a => a.planId);
+
+  const promises = planIds.map(async planId => {
+    const plan = await ctx.db.get(planId);
+    return plan!;
+  })
+
+  return Promise.all(promises);
+}
+
+export const getPlanAccessRecords = query({
+  args: {
+    planId: v.id("plan"),
+  },
+  handler: async (ctx, args) => {
+    const admin = await getPlanAdmin(ctx, args.planId.toString());
+    if (!admin.isPlanAdmin) return [];
+
+    const access = await ctx.db.query("access")
+      .filter(q => q.eq(q.field("planId"), args.planId))
+      .collect();
+
+    return access;
+  },
+});
+
+export const getAllUsersForAPlan = query({
+  args: {
+    planId: v.id("plan"),
+  },
+  handler: async (ctx, args) => {
+
+    const access = await ctx.db.query("access")
+      .filter(q => q.eq(q.field("planId"), args.planId))
+      .collect();
+
+    const sharedAccess = access.map(a => ({ userId: a.userId, email: a.email }));
+    const planRecord = await ctx.db.get(args.planId);
+    if (planRecord) {
+
+      const ownerAccess = await ctx.db.query("users")
+        .withIndex("by_clerk_id", q => q.eq("userId", planRecord.userId))
+        .first();
+      if (ownerAccess)
+        sharedAccess.push({ email: ownerAccess?.email, userId: ownerAccess?.userId })
+
+    }
+    return sharedAccess;
+  },
+});
+
+export const revokeAccess = mutation({
+  args: { id: v.id("access") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return null;
+    }
+
+    await ctx.db.delete(args.id);
+  },
+});
+
+
+export const getAllPlansForAUser = query({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
@@ -25,14 +114,22 @@ export const getPlanForAUser = query({
       .filter((q) => q.eq(q.field("userId"), subject))
       .order("desc")
       .take(100);
-    return Promise.all(
-      plans.map(async (plan) => ({
+
+    const sharedPlans = await getSharedPlans(ctx, subject);
+    const sharedPlansIds = sharedPlans.map(s => s._id);
+    const combinedPlans = plans.concat(sharedPlans);
+
+    const data = await Promise.all(
+      combinedPlans.map(async (plan) => ({
         ...plan,
+        ...{ isSharedPlan: sharedPlansIds.includes(plan._id) },
         ...(plan.storageId === null
           ? { url: null }
           : { url: await ctx.storage.getUrl(plan.storageId) }),
       }))
     );
+
+    return data;
   },
 });
 
@@ -45,12 +142,16 @@ export const getComboBoxPlansForAUser = query({
 
     const { subject } = identity;
 
-    const plans = await ctx.db
+    const ownPlans = await ctx.db
       .query("plan")
       .filter((q) => q.eq(q.field("userId"), subject))
       .order("desc")
       .take(100);
-    return plans;
+
+    const sharedPlans = await getSharedPlans(ctx, subject);
+    const allPlans = ownPlans.concat(sharedPlans);
+
+    return allPlans;
   },
 });
 
@@ -62,8 +163,23 @@ export const getSinglePlan = query({
       return null;
     }
 
+    const { subject } = identity;
+
+    const access = await ctx.db.query("access")
+      .withIndex("by_planId_userId", q => q.eq("planId", args.id).eq("userId", subject))
+      .first();
+
     const plan = await ctx.db.get(args.id);
-    return { ...plan!, url: (plan && plan.storageId) ? await ctx.storage.getUrl(plan.storageId) : null };
+
+    if (!plan || (plan.userId !== subject && !access)) {
+      throw new ConvexError("The Plan you are trying to access either does not belong to you or does not exist.");
+    }
+
+    return {
+      ...plan!,
+      url: ((plan && plan.storageId) ? await ctx.storage.getUrl(plan.storageId) : null),
+      isSharedPlan: access ? true : false
+    };
   },
 });
 

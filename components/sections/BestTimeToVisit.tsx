@@ -12,11 +12,7 @@ export default function BestTimeToVisit({content}: BestTimeToVisitProps) {
       <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">
         <Clock3 className="mr-2" /> Best time to visit
       </h2>
-      {content ? (
-        <p className="ml-8">{content}</p>
-      ) : (
-        <Skeleton className="w-full h-full" />
-      )}
+      {content ? <p className="ml-8">{content}</p> : <Skeleton className="w-full h-full" />}
     </SectionWrapper>
   );
 }

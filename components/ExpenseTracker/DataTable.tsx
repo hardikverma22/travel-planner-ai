@@ -17,7 +17,6 @@ import {
 } from "@tanstack/react-table";
 
 import {Button} from "@/components/ui/button";
-import {Checkbox} from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -26,111 +25,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Input} from "@/components/ui/input";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {Doc} from "@/convex/_generated/dataModel";
-import DropDownActions from "@/components/ExpenseTracker/DropDownActions";
+import {Doc, Id} from "@/convex/_generated/dataModel";
+import DropDownActions from "@/components/expenseTracker/DropDownActions";
 import {useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
-import {ExpenseSheet} from "@/components/ExpenseTracker/ExpenseSheet";
-import {expenseCategories} from "@/lib/constants";
+import {columns} from "@/components/expenseTracker/DataColums";
 
-export const columns: ColumnDef<Doc<"expenses">>[] = [
-  {
-    id: "select",
-    header: ({table}) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({row}) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "purpose",
-    header: () => <div className="text-left">For</div>,
-    cell: ({row}) => <ExpenseSheet planId={row.original.planId} edit data={row.original} />,
-  },
-  {
-    accessorKey: "category",
-    header: ({column}) => {
-      return (
-        <div className="text-left">
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Category
-            <CaretSortIcon className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-    cell: ({row}) => (
-      <div className="lowercase text-left flex gap-1 ml-4">
-        {expenseCategories.find((e) => e.key === row.original.category)?.icon}
-        {row.getValue("category")}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({row}) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    accessorKey: "date",
-    header: () => <div className="text-right">Date</div>,
-    cell: ({row}) => {
-      const date = row.getValue("date") as string;
-
-      // Format the amount as a dollar amount
-      const formatted = new Date(date);
-
-      return (
-        <div className="text-right font-medium">
-          {formatted.toLocaleDateString("en-us", {
-            weekday: "short",
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })}
-        </div>
-      );
-    },
-  },
-
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({row}) => {
-      const expense = row.original;
-
-      return <DropDownActions row={row} />;
-    },
-  },
-];
-
-export default function DataTable({data, planId}: {data: Doc<"expenses">[]; planId: string}) {
+export default function DataTable({data}: {data: (Doc<"expenses"> & {email: string})[]}) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});

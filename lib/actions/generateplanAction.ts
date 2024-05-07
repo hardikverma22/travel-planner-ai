@@ -50,5 +50,5 @@ export async function generatePlanAction(formData: formSchemaType) {
     fetchMutation(api.users.reduceUserCreditsByOne, {}, { token: token });
   }).catch(e => console.log(e));
 
-  redirect(`/plans/${planId}?isNewPlan=true`);
+  redirect(`/plans/${planId}/plan?isNewPlan=true`);
 }

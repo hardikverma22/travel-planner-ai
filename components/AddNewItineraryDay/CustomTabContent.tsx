@@ -1,4 +1,4 @@
-import ErrorMessage from "@/components/AddNewItineraryDay/ErrorMessage";
+import ErrorMessage from "@/components/addNewItineraryDay/ErrorMessage";
 import {Button} from "@/components/ui/button";
 import {Textarea} from "@/components/ui/textarea";
 import {cn} from "@/lib/utils";
@@ -13,7 +13,7 @@ import {
   UseFormGetFieldState,
   UseFormRegister,
 } from "react-hook-form";
-import {ItineraryType} from "@/components/AddNewItineraryDay/ItineraryDayForm";
+import {ItineraryType} from "@/components/addNewItineraryDay/ItineraryDayForm";
 
 type TabContentProps = {
   tabName: "morning" | "afternoon" | "evening";

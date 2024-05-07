@@ -5,7 +5,7 @@ import {Button} from "@/components/ui/button";
 import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import {PlusCircleIcon} from "lucide-react";
 
-import ItineraryDayForm from "@/components/AddNewItineraryDay/ItineraryDayForm";
+import ItineraryDayForm from "@/components/addNewItineraryDay/ItineraryDayForm";
 
 export function AddIternaryDay({planId}: {planId: string}) {
   const [open, setOpen] = useState(false);

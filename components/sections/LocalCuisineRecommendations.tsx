@@ -1,8 +1,8 @@
 "use client";
 import SectionWrapper from "@/components/sections/SectionWrapper";
-import EditList from "@/components/shared/EditList";
-import HeaderWithEditIcon from "@/components/shared/HeaderWithEditIcon";
-import List from "@/components/shared/List";
+import EditList from "@/components/Shared/EditList";
+import HeaderWithEditIcon from "@/components/Shared/HeaderWithEditIcon";
+import List from "@/components/Shared/List";
 import {Skeleton} from "@/components/ui/skeleton";
 import {api} from "@/convex/_generated/api";
 import {Doc} from "@/convex/_generated/dataModel";

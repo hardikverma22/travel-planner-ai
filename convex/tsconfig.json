@@ -13,6 +13,7 @@
       "ES2021",
       "dom"
     ],
+    "jsx": "react",
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "module": "ESNext",

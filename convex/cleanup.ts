@@ -13,7 +13,6 @@ export const fixImages = mutation({
         plans?.forEach(async plan => {
             const name = plan.nameoftheplace.split(",")
             if (name && name.length > 1) {
-                // console.log(name);
                 await ctx.scheduler.runAfter(0, api.images.generateAndStore, {
                     prompt: name[0],
                     planId: plan._id

@@ -23,6 +23,7 @@ export default function PlanComboBox() {
 
   const pathname = usePathname();
   const router = useRouter();
+
   const planId = pathname.split("/")[2];
   const plans = useQuery(api.plan.getComboBoxPlansForAUser, {});
 
@@ -61,7 +62,8 @@ export default function PlanComboBox() {
                     value={plan.nameoftheplace}
                     onSelect={(currentValue) => {
                       setOpen(false);
-                      router.push(`/plans/${plan._id}`);
+                      let updatedUrl = pathname.replace(/\/plans\/[^\/]+/, "/plans/" + plan._id);
+                      router.push(updatedUrl);
                     }}
                     className="cursor-pointer"
                   >

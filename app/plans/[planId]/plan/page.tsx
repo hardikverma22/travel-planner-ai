@@ -1,4 +1,4 @@
-import Plan from "@/components/Plan/Plan";
+import Plan from "@/components/plan/Plan";
 
 export default async function PlanPage({
   params,

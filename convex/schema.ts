@@ -43,7 +43,8 @@ export default defineSchema({
     email: v.string(),
     credits: v.number(),
     freeCredits: v.number(),
-  }).index("by_clerk_id", ["userId"]),
+  }).index("by_clerk_id", ["userId"])
+    .index("by_email", ["email"]),
   payments: defineTable({
     userId: v.string(),
     stripeId: v.string(),
@@ -62,5 +63,18 @@ export default defineSchema({
       v.literal('others'),
     ),
     date: v.string()
-  })
+  }),
+  invites: defineTable({
+    planId: v.id("plan"),
+    email: v.string(),
+    token: v.string()
+  }).index("by_planId_email", ["planId", "email"])
+    .index("by_token", ["token"])
+    .index("by_planId", ["planId"]),
+  access: defineTable({
+    planId: v.id("plan"),
+    userId: v.string(),
+    email: v.string()
+  }).index("by_userId", ["userId"])
+    .index("by_planId_userId", ["planId", "userId"]),
 });

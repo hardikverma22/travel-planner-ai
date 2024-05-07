@@ -1,4 +1,4 @@
-import {SidebarProps} from "@/components/Plan/Sidebar";
+import {SidebarProps} from "@/components/plan/Sidebar";
 import {
   Backpack,
   Clock3,
