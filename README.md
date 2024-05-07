@@ -7,9 +7,12 @@ Whether you're dreaming of a weekend getaway or a month-long expedition, Travel 
 Travel Planner AI is a Software as a Service (SaaS) product that leverages cutting-edge technologies to streamline the travel planning process.
 By simply providing a prompt such as "2 days trip to London with budget $1000," our AI-powered tool generates comprehensive travel plans tailored to your preferences.
 
+![image](https://github.com/hardikverma22/travel-planner-ai/assets/26103679/de21a51b-6d95-427c-a00a-b919dd09c56e)
+
+
 ## Demo
 
-Check out the live demo [here](https://travel-plannerai.vercel.app/).
+Check out the live demo [here](https://travelplannerai.online/).
 
 ## Key Functional Features
 - **Top Spots Unveiled:** Discover hidden gems and popular attractions effortlessly.
@@ -17,6 +20,8 @@ Check out the live demo [here](https://travel-plannerai.vercel.app/).
 - **Optimal Timing:** Learn the best time to visit your destinations for an unparalleled experience.
 - **Foodie Hotspots:** Indulge in culinary delights with recommendations from local experts.
 - **Prime Experiences:** Immerse yourself in unforgettable moments curated just for you.
+- **Expense Tracker:** Effectively track your expenses throughout your journey and can revisit later as well.
+- **Email Invite:** Invite your friend and colleagues to your desired plan and collaborate together.
 
 ## Architecture
 
@@ -62,6 +67,7 @@ To run the Travel Planner AI, follow these steps:
 - **OpenAI APIs:** Harnessing the power of OpenAI's APIs for intelligent content generation and natural language processing.
 - **Clerk:** Providing secure authentication solutions to safeguard user accounts and data.
 - **Stripe:** Facilitating seamless payment processing for premium features and subscriptions.
+- **Resend:** For sending email invites using my custom domain.
 
 
 ## Contributing
