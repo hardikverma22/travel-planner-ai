@@ -1,6 +1,6 @@
 "use client";
 
-import {Loading} from "@/components/Shared/Laoding";
+import {Loading} from "@/components/shared/Loading";
 import {Button} from "@/components/ui/button";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";

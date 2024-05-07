@@ -12,7 +12,7 @@ import {Drawer, DrawerContent, DrawerTrigger} from "@/components/ui/drawer";
 import NewPlanForm from "@/components/NewPlanForm";
 import {Backpack, Loader} from "lucide-react";
 
-const DrawerDialog = ({shouldOpenForCreatePlan = false}) => {
+const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
   const user = useQuery(api.users.currentUser);
   const boughtCredits = user?.credits ?? 0;
   const freeCredits = user?.freeCredits ?? 0;
@@ -133,4 +133,4 @@ export const CreditContent = ({
   );
 };
 
-export default DrawerDialog;
+export default DrawerWithDialog;

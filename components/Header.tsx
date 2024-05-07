@@ -4,9 +4,9 @@ import Link from "next/link";
 import {AuthLoading, Authenticated, Unauthenticated} from "convex/react";
 import {SignInButton, UserButton} from "@clerk/nextjs";
 
-import {Loading} from "@/components/Shared/Laoding";
+import {Loading} from "@/components/shared/Loading";
 import MobileMenu from "@/components/MobileMenu";
-import Credits from "@/components/Shared/DrawerDialog";
+import DrawerWithDialog from "@/components/shared/DrawerWithDialog";
 import PlanComboBox from "@/components/plan/PlanComboBox";
 import {navlinks} from "@/lib/constants";
 import {cn} from "@/lib/utils";
@@ -64,7 +64,7 @@ const Header = () => {
             <Authenticated>
               <div className="flex justify-center items-center gap-2">
                 {!isCurrentPathDashboard && !isCurrentPathHome && <PlanComboBox />}
-                <Credits />
+                <DrawerWithDialog />
                 <UserButton afterSignOutUrl="/" />
               </div>
             </Authenticated>

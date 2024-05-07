@@ -19,7 +19,7 @@ import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Users} from "lucide-react";
 import {ExclamationTriangleIcon} from "@radix-ui/react-icons";
 import {useRouter} from "next/navigation";
-import {Loading} from "@/components/Shared/Laoding";
+import {Loading} from "@/components/shared/Loading";
 
 type PlanProps = {
   planId: string;

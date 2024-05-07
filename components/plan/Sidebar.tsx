@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import {DollarSign} from "lucide-react";
 
-import Pulse from "@/components/Shared/Pulse";
+import Pulse from "@/components/shared/Pulse";
 import {Button} from "@/components/ui/button";
 import {usePlanContext} from "@/contexts/PlanContextProvider";
 

@@ -7,7 +7,7 @@ import {colors} from "@/lib/constants";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {MapPin} from "lucide-react";
 import {useEffect, useState} from "react";
-import {Loading} from "@/components/Shared/Laoding";
+import {Loading} from "@/components/shared/Loading";
 
 type location = {
   lat: number;

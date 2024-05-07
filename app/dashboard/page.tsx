@@ -1,7 +1,7 @@
 "use client";
 import {NoPlans} from "@/components/dashboard/NoPlans";
 import PlanCard from "@/components/dashboard/PlanCard";
-import DrawerDialog from "@/components/Shared/DrawerDialog";
+import DrawerDialog from "@/components/shared/DrawerWithDialog";
 import {Input} from "@/components/ui/input";
 import {api} from "@/convex/_generated/api";
 import {useQuery} from "convex/react";

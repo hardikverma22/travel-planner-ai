@@ -4,8 +4,7 @@ import {Card, CardContent, CardDescription, CardTitle} from "@/components/ui/car
 import Link from "next/link";
 import Image from "next/image";
 import {MapPin} from "lucide-react";
-import {TooltipContainer} from "@/components/Shared/Toolip";
-import {Button} from "@/components/ui/button";
+import {TooltipContainer} from "@/components/shared/Toolip";
 
 type PlanCardProps = {
   plan: Doc<"plan"> & {url: string | null} & {isSharedPlan: boolean};
