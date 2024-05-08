@@ -1,31 +1,17 @@
 "use client";
+import {planNavLinks} from "@/lib/constants";
 import {cn} from "@/lib/utils";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 
-const navLinks = [
-  {
-    key: "plan",
-    lable: "Plan",
-  },
-  {
-    key: "expense-tracker",
-    lable: "Expense Tracker",
-  },
-  {
-    key: "settings",
-    lable: "Settings",
-  },
-];
-
 const TopMenuBar = () => {
   const pathname = usePathname();
-
   const currentPathArray = pathname.split("/")[3];
+
   return (
     <div className="h-10 border-b-2 w-full bg-white">
       <ul className="flex gap-3 h-full justify-start items-center lg:px-20 px-5">
-        {navLinks.map((link) => (
+        {planNavLinks.map((link) => (
           <li
             key={link.key}
             className={cn(

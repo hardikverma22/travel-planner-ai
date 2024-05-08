@@ -68,7 +68,7 @@ export default function DataTable({data}: {data: (Doc<"expenses"> & {email: stri
   };
 
   return (
-    <div className="w-full">
+    <>
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter Expenses..."
@@ -174,6 +174,6 @@ export default function DataTable({data}: {data: (Doc<"expenses"> & {email: stri
           </Button>
         </div>
       </div>
-    </div>
+    </>
   );
 }

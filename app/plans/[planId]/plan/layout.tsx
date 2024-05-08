@@ -13,8 +13,10 @@ export default function RootLayout({
   return (
     <PlanContextProvider>
       <div className="grid lg:grid-cols-5">
-        <Sidebar planId={params.planId} />
-        {children}
+        <div className="lg:col-span-1 col-span-full">
+          <Sidebar planId={params.planId} />
+        </div>
+        <div className="lg:col-span-4 lg:border-l">{children}</div>
       </div>
     </PlanContextProvider>
   );

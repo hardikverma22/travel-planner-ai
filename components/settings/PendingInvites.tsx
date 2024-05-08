@@ -41,6 +41,7 @@ const PendingInvites = ({planId}: {planId: string}) => {
       <div className="flex flex-col gap-3 w-96">
         {invites.map((invite) => (
           <div
+            key={invite._id}
             className="px-5 py-2 
                         border border-solid border-gray-300 
                         shadow-sm rounded-md

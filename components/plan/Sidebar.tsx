@@ -26,25 +26,23 @@ const Sidebar = ({planId}: {planId: string}) => {
   const {planState} = usePlanContext();
 
   return (
-    <aside className={cn("pb-12 lg:col-span-1 col-span-full")}>
-      <div className="space-y-4 py-4 sticky top-2">
-        <div className="py-2">
-          <h2 className="mb-2 text-lg font-semibold tracking-tight">Discover</h2>
-          <div className="space-y-1">
-            {planSections.map((section) => (
-              <Link href={`${pathname}#${section.id}`} key={section.id}>
-                <Button
-                  aria-label={section.name}
-                  variant="ghost"
-                  className="w-full justify-start items-center gap-2 whitespace-break-spaces px-0"
-                >
-                  {section.icon}
-                  <span>{section.name}</span>
-                  {planState && !planState[section.id] && <Pulse />}
-                </Button>
-              </Link>
-            ))}
-          </div>
+    <aside className="space-y-4 sticky top-2">
+      <div className="space-y-2">
+        <h2 className="mb-2 text-lg font-semibold tracking-tight">Discover</h2>
+        <div className="space-y-1">
+          {planSections.map((section) => (
+            <Link href={`${pathname}#${section.id}`} key={section.id}>
+              <Button
+                aria-label={section.name}
+                variant="ghost"
+                className="w-full justify-start items-center gap-2 whitespace-break-spaces px-0"
+              >
+                {section.icon}
+                <span>{section.name}</span>
+                {planState && !planState[section.id] && <Pulse />}
+              </Button>
+            </Link>
+          ))}
         </div>
       </div>
     </aside>

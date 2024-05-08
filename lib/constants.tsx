@@ -87,3 +87,18 @@ export const expenseCategories = [
   {key: "accomodations", icon: <Hotel className="h-4 w-4" />, label: "Accomodation"},
   {key: "others", icon: <ShieldQuestion className="h-4 w-4" />, label: "Others"},
 ];
+
+export const planNavLinks = [
+  {
+    key: "plan",
+    lable: "Plan",
+  },
+  {
+    key: "expense-tracker",
+    lable: "Expense Tracker",
+  },
+  {
+    key: "settings",
+    lable: "Settings",
+  },
+];

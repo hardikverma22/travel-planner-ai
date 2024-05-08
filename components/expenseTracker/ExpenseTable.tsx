@@ -14,6 +14,7 @@ const ExpenseTable = ({planId}: {planId: string}) => {
   const data = useQuery(api.expenses.getExpenses, {planId: planId});
 
   if (!data) return <LoadingComponent />;
+
   if (data && data.length == 0)
     return (
       <div
@@ -35,17 +36,16 @@ const ExpenseTable = ({planId}: {planId: string}) => {
         <ExpenseSheet planId={planId} />
       </div>
     );
+
   if (data)
     return (
-      <div>
+      <>
         <div className="flex justify-between items-end w-full border-b-2 pb-1">
           <h2 className="font-semibold font-sans text-xl align-bottom">Expenses</h2>
           <ExpenseSheet planId={planId} />
         </div>
-        <div>
-          <DataTable data={data} />
-        </div>
-      </div>
+        <DataTable data={data} />
+      </>
     );
 };
 

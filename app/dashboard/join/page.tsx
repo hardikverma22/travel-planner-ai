@@ -3,7 +3,7 @@
 import {useToast} from "@/components/ui/use-toast";
 import {api} from "@/convex/_generated/api";
 import {useUser} from "@clerk/nextjs";
-import {useMutation} from "convex/react";
+import {useMutation, useQuery} from "convex/react";
 import {ConvexError} from "convex/values";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect} from "react";
@@ -16,6 +16,8 @@ const Join = () => {
 
   const grantAccessByToken = useMutation(api.token.grantAccessByToken);
   const {toast} = useToast();
+
+  const currentUser = useQuery(api.users.currentUser);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -50,7 +52,7 @@ const Join = () => {
     };
 
     callGrantAcess();
-  }, [isLoaded, isSignedIn, token]);
+  }, [isLoaded, isSignedIn, token, currentUser]);
   return <div>Joining...</div>;
 };
 

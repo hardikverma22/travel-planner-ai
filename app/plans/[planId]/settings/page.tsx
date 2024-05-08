@@ -81,55 +81,53 @@ const page = () => {
   };
 
   return (
-    <div className="py-6">
-      <div className="bg-white shadow-sm rounded-lg p-4 border-2 border-gray-100">
-        <div className="border-b-2 border-b-gray-100 pb-2 mb-2 font-bold">Collaborators</div>
-        <p className="text-sm text-gray-600">
-          To invite people to your travel plan, send them a email invite using below
-        </p>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-5 max-w-xl">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel className="font-bold">Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={sendingInvite}
-                      type="email"
-                      placeholder="your-co-worker@example.com"
-                      {...field}
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <div className="bg-white shadow-sm rounded-lg p-4 border-2 border-gray-100">
+      <div className="border-b-2 border-b-gray-100 pb-2 mb-2 font-bold">Collaborators</div>
+      <p className="text-sm text-gray-600">
+        To invite people to your travel plan, send them a email invite using below
+      </p>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-5 max-w-xl">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({field}) => (
+              <FormItem>
+                <FormLabel className="font-bold">Email</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={sendingInvite}
+                    type="email"
+                    placeholder="your-co-worker@example.com"
+                    {...field}
+                    onChange={field.onChange}
+                    value={field.value}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <Button
-              type="submit"
-              variant="outline"
-              size="sm"
-              disabled={sendingInvite}
-              className={cn("text-white hover:text-white bg-blue-500 hover:bg-blue-700")}
-            >
-              {sendingInvite ? (
-                <div className="flex justify-center items-center gap-2">
-                  <Loading className="w-4 h-4" /> Sendin Invite...
-                </div>
-              ) : (
-                "Invite"
-              )}
-            </Button>
-          </form>
-        </Form>
-        <PendingInvites planId={planId} />
-        <AccessRecords planId={planId} />
-      </div>
+          <Button
+            type="submit"
+            variant="outline"
+            size="sm"
+            disabled={sendingInvite}
+            className={cn("text-white hover:text-white bg-blue-500 hover:bg-blue-700")}
+          >
+            {sendingInvite ? (
+              <div className="flex justify-center items-center gap-2">
+                <Loading className="w-4 h-4" /> Sendin Invite...
+              </div>
+            ) : (
+              "Invite"
+            )}
+          </Button>
+        </form>
+      </Form>
+      <PendingInvites planId={planId} />
+      <AccessRecords planId={planId} />
     </div>
   );
 };
