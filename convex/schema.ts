@@ -63,7 +63,7 @@ export default defineSchema({
       v.literal('others'),
     ),
     date: v.string()
-  }),
+  }).index("by_planId", ["planId"]),
   invites: defineTable({
     planId: v.id("plan"),
     email: v.string(),
@@ -75,6 +75,7 @@ export default defineSchema({
     planId: v.id("plan"),
     userId: v.string(),
     email: v.string()
-  }).index("by_userId", ["userId"])
+  }).index("by_planId", ["planId"])
+    .index("by_userId", ["userId"])
     .index("by_planId_userId", ["planId", "userId"]),
 });

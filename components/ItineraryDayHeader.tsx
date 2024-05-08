@@ -36,10 +36,10 @@ export default function ItineraryDayHeader({title, planId}: ItineraryDayHeaderPr
             asChild
             size="icon"
             variant="ghost"
-            className="p-1 rounded-full"
+            className="p-1 rounded-full bg-stone-100"
             onClick={() => setOpen(true)}
           >
-            <TrashIcon className="h-5 w-5 text-red-500" />
+            <TrashIcon className="h-6 w-6 text-red-500" />
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>

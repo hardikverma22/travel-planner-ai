@@ -21,3 +21,18 @@ export const fixImages = mutation({
         });
     },
 });
+
+
+export const deleteOrphanImnages = mutation({
+    async handler(ctx, args) {
+        const planStorageIds = (await ctx.db.query("plan").collect()).map(p => p.storageId);
+        const storageIds = (await ctx.db.system.query("_storage").collect()).map(a => a._id);
+        console.log(planStorageIds);
+        console.log(storageIds);
+
+        storageIds.forEach(async id => {
+            if (!planStorageIds.includes(id))
+                return await ctx.storage.delete(id);
+        })
+    },
+})

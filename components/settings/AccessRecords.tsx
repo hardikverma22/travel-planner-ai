@@ -1,9 +1,9 @@
+"use client";
 import {Button} from "@/components/ui/button";
 import {useToast} from "@/components/ui/use-toast";
 import {api} from "@/convex/_generated/api";
 import {Id} from "@/convex/_generated/dataModel";
 import {useMutation, useQuery} from "convex/react";
-import {ConvexError} from "convex/values";
 import {useTransition} from "react";
 
 const AccessRecords = ({planId}: {planId: string}) => {

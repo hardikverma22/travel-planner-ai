@@ -15,7 +15,7 @@ export const sendInvite = action({
       planId: args.planId,
     });
 
-    if (!result.isPlanAdmin) {
+    if (!result || !result.isPlanAdmin) {
       throw new ConvexError("You must be a plan admin to invite others");
     }
 

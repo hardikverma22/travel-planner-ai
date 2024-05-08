@@ -9,7 +9,7 @@ export const getInvites = query({
     },
     handler: async (ctx, { planId }) => {
         const admin = await getPlanAdmin(ctx, planId);
-        if (!admin.isPlanAdmin) return [];
+        if (!admin || !admin.isPlanAdmin) return [];
         const invites = await ctx.db
             .query("invites")
             .withIndex("by_planId", (q) => q.eq("planId", planId as Id<"plan">))

@@ -20,7 +20,7 @@ export const PlanAdmin = query({
 export const getPlanAdmin = async (ctx: QueryCtx, planId: string) => {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
-    throw new ConvexError("Not authorized to perform to check for Plan Admin")
+    return null;
   }
 
   const { subject } = identity;
@@ -52,7 +52,7 @@ export const getPlanAccessRecords = query({
   },
   handler: async (ctx, args) => {
     const admin = await getPlanAdmin(ctx, args.planId.toString());
-    if (!admin.isPlanAdmin) return [];
+    if (!admin || !admin.isPlanAdmin) return [];
 
     const access = await ctx.db.query("access")
       .filter(q => q.eq(q.field("planId"), args.planId))
@@ -98,7 +98,6 @@ export const revokeAccess = mutation({
     await ctx.db.delete(args.id);
   },
 });
-
 
 export const getAllPlansForAUser = query({
   handler: async (ctx, args) => {
@@ -522,3 +521,37 @@ export const createEmptyPlan = mutation({
     return newPlan;
   },
 });
+
+export const deletePlan = mutation({
+  args: { planId: v.string() },
+  async handler(ctx, args) {
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) {
+      console.log("Not logged in to delete a user");
+      return null;
+    }
+
+    const planId = args.planId as Id<"plan">;
+
+    const plan = await ctx.db.get(planId);
+
+    if (!plan) {
+      throw new ConvexError("There is no such plan to dlete with the given Id")
+    }
+
+    if (plan.userId === identity.subject) {
+      await ctx.storage.delete(plan.storageId as Id<"_storage">);
+
+      const expenseIds = (await ctx.db.query("expenses").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
+      await Promise.all(expenseIds.map((id) => ctx.db.delete(id)));
+
+      const accessIds = (await ctx.db.query("access").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
+      await Promise.all(accessIds.map((id) => ctx.db.delete(id)));
+
+      const inviteIds = (await ctx.db.query("invites").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
+      await Promise.all(inviteIds.map((id) => ctx.db.delete(id)));
+
+      await ctx.db.delete(planId);
+    }
+  }
+})

@@ -1,10 +1,9 @@
 "use server";
 import { formSchemaType } from "@/components/NewPlanForm";
-import { fetchAction, fetchMutation } from "convex/nextjs";
+import { fetchMutation } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { getAuthToken } from "@/app/auth";
 import { redirect } from "next/navigation";
-import { useAction } from "convex/react";
 
 export async function generatePlanAction(formData: formSchemaType) {
   const token = await getAuthToken();

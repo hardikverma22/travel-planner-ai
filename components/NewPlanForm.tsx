@@ -40,6 +40,10 @@ const NewPlanForm = () => {
 
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
+    // defaultValues: {
+    //   noOfDays: "1",
+    //   placeName: undefined,
+    // },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -87,7 +91,7 @@ const NewPlanForm = () => {
             <FormItem>
               <FormLabel>Number of Days</FormLabel>
 
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select number of days" />

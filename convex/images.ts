@@ -19,7 +19,7 @@ export const generateAndStore = action({
         const imageObject = await unsplashApi.search.getPhotos({ query: name, page: 1, perPage: 1 });
         const imageUrlExist = imageObject?.response?.results && imageObject?.response?.results.length > 0;
         if (!imageUrlExist) {
-            console.log("Error");
+            console.log("Error getting image from unsplash");
             return null;
         }
 

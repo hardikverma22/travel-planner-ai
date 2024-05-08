@@ -9,7 +9,7 @@ const TopMenuBar = () => {
   const currentPathArray = pathname.split("/")[3];
 
   return (
-    <div className="h-10 border-b-2 w-full bg-white">
+    <div className="h-10 border-b-2 w-full bg-white select-none">
       <ul className="flex gap-3 h-full justify-start items-center lg:px-20 px-5">
         {planNavLinks.map((link) => (
           <li
