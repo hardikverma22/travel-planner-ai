@@ -28,6 +28,8 @@ export const features = [
   "Optimal Timing",
   "Foodie Hotspots",
   "Prime Experiences",
+  "Invite Others",
+  "Expense tracking",
 ];
 
 export const planSections: {
