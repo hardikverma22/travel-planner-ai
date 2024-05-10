@@ -9,7 +9,7 @@ import {usePlanContext} from "@/contexts/PlanContextProvider";
 import {planSections} from "@/lib/constants";
 import {cn} from "@/lib/utils";
 import {usePathname} from "next/navigation";
-import {DollarSignIcon, SettingsIcon} from "lucide-react";
+import {DollarSignIcon, ImageIcon, SettingsIcon, UserIcon} from "lucide-react";
 
 export type SidebarProps = {
   imagination: boolean;
@@ -48,16 +48,6 @@ const Sidebar = ({planId}: {planId: string}) => {
       <div className="space-y-2">
         <h2 className="mb-2 text-lg font-semibold tracking-tight">Control Center</h2>
         <div className="space-y-1">
-          <Link href={`/plans/${planId}/settings`}>
-            <Button
-              aria-label="settings"
-              variant="ghost"
-              className="w-full justify-start items-center gap-2 whitespace-break-spaces px-0"
-            >
-              <SettingsIcon className="mr-2 h-4 w-4" />
-              <span className="md:text-left">Settings</span>
-            </Button>
-          </Link>
           <Link href={`/plans/${planId}/expense-tracker`}>
             <Button
               aria-label="expense tracker"
@@ -66,6 +56,26 @@ const Sidebar = ({planId}: {planId: string}) => {
             >
               <DollarSignIcon className="mr-2 h-4 w-4" />
               <span className="md:text-left">Expense Tracker</span>
+            </Button>
+          </Link>
+          <Link href={`/plans/${planId}/collaborate`}>
+            <Button
+              aria-label="collaborate"
+              variant="ghost"
+              className="w-full justify-start items-center gap-2 whitespace-break-spaces px-0"
+            >
+              <UserIcon className="mr-2 h-4 w-4" />
+              <span className="md:text-left">Collaborate</span>
+            </Button>
+          </Link>
+          <Link href={`/plans/${planId}/settings`}>
+            <Button
+              aria-label="settings"
+              variant="ghost"
+              className="w-full justify-start items-center gap-2 whitespace-break-spaces px-0"
+            >
+              <SettingsIcon className="mr-2 h-4 w-4" />
+              <span className="md:text-left">Settings</span>
             </Button>
           </Link>
         </div>

@@ -539,19 +539,20 @@ export const deletePlan = mutation({
       throw new ConvexError("There is no such plan to dlete with the given Id")
     }
 
-    if (plan.userId === identity.subject) {
-      await ctx.storage.delete(plan.storageId as Id<"_storage">);
-
-      const expenseIds = (await ctx.db.query("expenses").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
-      await Promise.all(expenseIds.map((id) => ctx.db.delete(id)));
-
-      const accessIds = (await ctx.db.query("access").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
-      await Promise.all(accessIds.map((id) => ctx.db.delete(id)));
-
-      const inviteIds = (await ctx.db.query("invites").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
-      await Promise.all(inviteIds.map((id) => ctx.db.delete(id)));
-
-      await ctx.db.delete(planId);
+    if (plan.userId !== identity.subject) {
+      throw new ConvexError("You are not the owner of this plan.")
     }
+    await ctx.storage.delete(plan.storageId as Id<"_storage">);
+
+    const expenseIds = (await ctx.db.query("expenses").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
+    await Promise.all(expenseIds.map((id) => ctx.db.delete(id)));
+
+    const accessIds = (await ctx.db.query("access").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
+    await Promise.all(accessIds.map((id) => ctx.db.delete(id)));
+
+    const inviteIds = (await ctx.db.query("invites").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
+    await Promise.all(inviteIds.map((id) => ctx.db.delete(id)));
+
+    await ctx.db.delete(planId);
   }
 })
