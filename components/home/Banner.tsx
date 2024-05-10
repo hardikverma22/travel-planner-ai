@@ -10,7 +10,7 @@ const Banner = () => {
                 w-full h-full
                 flex lg:flex-row flex-col lg:justify-between justify-center items-center
                 gap-5
-                min-h-[calc(100vh-5.25rem)]"
+                min-h-[calc(100svh-4rem)]"
     >
       <article className="flex flex-col h-full justify-center items-center lg:flex-1 ">
         <h1

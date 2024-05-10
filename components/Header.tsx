@@ -23,8 +23,8 @@ const Header = () => {
       )}
     >
       <nav className="lg:px-20 px-5 py-3 mx-auto">
-        <div className="flex justify-between ">
-          <div className="hidden md:flex gap-10 items-center">
+        <div className="flex justify-evenly w-full">
+          <div className="hidden md:flex gap-10 items-center justify-start flex-1">
             <Link href={isAuthenticated ? "/dashboard" : "/"}>
               <div className="flex flex-col leading-5 font-bold text-xl">
                 <span>Travel</span>
@@ -34,27 +34,32 @@ const Header = () => {
                 </span>
               </div>
             </Link>
+          </div>
+          <div className="hidden md:flex items-center flex-1 justify-center">
             <ul className="flex gap-8 items-center text-sm">
               {isCurrentPathHome && (
                 <>
                   {navlinks.map((link) => (
                     <li key={link.id} className="hover:underline cursor-pointer">
-                      <Link href={`/#${link.id}`} scroll>
-                        {link.text}
-                      </Link>
+                      <Link href={`/#${link.id}`}>{link.text}</Link>
                     </li>
                   ))}
+                  <li className="hover:underline cursor-pointer">
+                    <Link href="dashboard" scroll>
+                      Dashboard
+                    </Link>
+                  </li>
                 </>
               )}
             </ul>
           </div>
-          <div className="md:hidden flex gap-6">
+          <div className="md:hidden flex gap-6 flex-1">
             <MobileMenu
               isCurrentPathHome={isCurrentPathHome}
               isCurrentPathDashboard={isCurrentPathDashboard}
             />
           </div>
-          <div className="flex gap-4 justify-center items-center">
+          <div className="flex gap-4 justify-end items-center flex-1">
             <AuthLoading>
               <Loading />
             </AuthLoading>

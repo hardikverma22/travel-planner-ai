@@ -44,7 +44,7 @@ export default function Dashboard() {
                      lg:px-20 px-7 py-4 border-b"
       >
         <div className="relative ml-auto flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-blue-500" />
           <Input
             id="searchPlan"
             name="searchPlan"

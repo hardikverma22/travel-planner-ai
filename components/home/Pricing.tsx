@@ -18,66 +18,46 @@ const Pricing = () => {
         </h3>
       </div>
       <div className="flex gap-5 flex-col md:flex-row">
-        <article
-          className="flex flex-col justify-between flex-1 min-w-96 md:min-w-80 
-                            ring-1 ring-gray-200 rounded-3xl p-8 shadow-xl shadow-blue-500"
-        >
-          <div className="flex flex-col">
-            <div>Free Plan</div>
-            <h3 id="tier-standard" className="text-blue-500 text-2xl font-extrabold leading-8">
-              1 Credit
-            </h3>
-            <p className="mt-3 flex items-baseline gap-x-1">
-              <span className="line-through text-2xl font-sans text-gray-500/70">₹400</span>
-              <span className="text-3xl font-bold tracking-tight text-gray-900">₹0</span>
-            </p>
-          </div>
-          <div className="flex flex-col">
-            <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-gray-600 xl:mt-10">
-              {features.map((faature, index) => (
-                <li className="flex gap-x-3 text-base" key={index}>
-                  <CheckCircle2 className="h-6 w-5 flex-none text-blue-600" />
-                  {faature}
-                </li>
-              ))}
-            </ul>
-
-            <p className="text-xs text-gray-500 text-base-content-secondary/80 font-medium mt-5">
-              Free. No subscription
-            </p>
-          </div>
-        </article>
-        <article
-          className="flex flex-col justify-between flex-1 min-w-96 md:min-w-80
-                             ring-1 ring-gray-200 rounded-3xl p-8 shadow-xl shadow-blue-500"
-        >
-          <div className="flex flex-col">
-            <div>Paid Plan</div>
-            <h3 id="tier-standard" className="text-blue-500 text-2xl font-extrabold leading-8">
-              5 Credits
-            </h3>
-            <p className="mt-3 flex items-baseline gap-x-1">
-              <span className="line-through text-2xl font-sans text-gray-500/70">₹400</span>
-              <span className="text-3xl font-bold tracking-tight text-gray-900">₹80</span>
-            </p>
-          </div>
-          <div className="flex flex-col">
-            <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-gray-600 xl:mt-10">
-              {features.map((faature, index) => (
-                <li className="flex gap-x-3 text-base" key={index}>
-                  <CheckCircle2 className="h-6 w-5 flex-none text-blue-600" />
-                  {faature}
-                </li>
-              ))}
-            </ul>
-
-            <p className="text-xs text-gray-500 text-base-content-secondary/80 font-medium mt-5">
-              One-time payment. No subscription
-            </p>
-          </div>
-        </article>
+        <PricingCard isFreePlan={true} />
+        <PricingCard isFreePlan={false} />
       </div>
     </section>
+  );
+};
+
+const PricingCard = ({isFreePlan}: {isFreePlan: boolean}) => {
+  return (
+    <article
+      className="flex flex-col justify-between flex-1 min-w-96 md:min-w-80
+                       ring-1 ring-gray-200 rounded-3xl p-8 shadow-xl shadow-blue-500"
+    >
+      <div className="flex flex-col">
+        <div>{isFreePlan ? "Free" : "Paid"} Plan</div>
+        <h3 id="tier-standard" className="text-blue-500 text-2xl font-extrabold leading-8">
+          {isFreePlan ? "1 Credit" : "5 Credits"}
+        </h3>
+        <p className="mt-3 flex items-baseline gap-x-1">
+          <span className="line-through text-2xl font-sans text-gray-500/70">₹400</span>
+          <span className="text-3xl font-bold tracking-tight text-gray-900">
+            {isFreePlan ? "₹0" : "₹80"}
+          </span>
+        </p>
+      </div>
+      <div className="flex flex-col">
+        <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-gray-600 xl:mt-10">
+          {features.map((faature, index) => (
+            <li className="flex gap-x-3 text-base" key={index}>
+              <CheckCircle2 className="h-6 w-5 flex-none text-blue-600" />
+              {faature}
+            </li>
+          ))}
+        </ul>
+
+        <p className="text-xs text-gray-500 text-base-content-secondary/80 font-medium mt-5">
+          {isFreePlan ? "Free Plan" : "One-time payment"}. No subscription
+        </p>
+      </div>
+    </article>
   );
 };
 
