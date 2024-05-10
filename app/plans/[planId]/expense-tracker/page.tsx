@@ -1,7 +1,7 @@
-import ExpenseTable from "@/components/expenseTracker/ExpenseTable";
+import ExpenseSection from "@/components/expenseTracker/ExpenseSection";
 
 export default async function ExpenseTracker({params}: {params: {planId: string}}) {
   const {planId} = params;
 
-  return <ExpenseTable planId={planId} />;
+  return <ExpenseSection planId={planId} />;
 }

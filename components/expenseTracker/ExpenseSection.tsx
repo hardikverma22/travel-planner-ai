@@ -10,7 +10,7 @@ import LoadingComponent from "@/app/plans/[planId]/expense-tracker/loading";
 import dynamic from "next/dynamic";
 const ExpenseSheet = dynamic(() => import("@/components/expenseTracker/ExpenseSheet"));
 
-const ExpenseTable = ({planId}: {planId: string}) => {
+const ExpenseSection = ({planId}: {planId: string}) => {
   const data = useQuery(api.expenses.getExpenses, {planId: planId});
 
   if (!data) return <LoadingComponent />;
@@ -20,7 +20,7 @@ const ExpenseTable = ({planId}: {planId: string}) => {
       <div
         className="flex flex-col justify-center items-center gap-2
                       border-2 border-gray-100 rounded-xl w-full h-full
-                      shadow-md font-sans py-5 px-3"
+                      shadow-xl font-sans"
       >
         <p className="font-semibold text-lg md:text-xl">You haven't added any Expenses yet!</p>
         <p className="px-8 max-w-xl text-base text-center text-gray-500">
@@ -49,4 +49,4 @@ const ExpenseTable = ({planId}: {planId: string}) => {
     );
 };
 
-export default ExpenseTable;
+export default ExpenseSection;

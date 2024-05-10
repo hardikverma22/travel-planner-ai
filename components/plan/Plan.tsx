@@ -49,7 +49,7 @@ const Plan = ({planId, isNewPlan}: PlanProps) => {
   }, [error]);
 
   return (
-    <section className="h-full px-4 lg:px-8 flex flex-col gap-10">
+    <section className="h-full flex flex-col gap-10">
       {error ? (
         <Alert variant="destructive">
           <ExclamationTriangleIcon className="h-4 w-4" />

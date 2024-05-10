@@ -40,7 +40,7 @@ export default function Dashboard() {
                 flex-1 flex flex-col"
     >
       <div
-        className="flex justify-between gap-5 bg-white items-center shadow-lg
+        className="flex justify-between gap-5 bg-stone-50 items-center
                      lg:px-20 px-7 py-4 border-b"
       >
         <div className="relative ml-auto flex-1">
@@ -60,7 +60,7 @@ export default function Dashboard() {
         <DrawerDialog shouldOpenForCreatePlan={true} />
       </div>
       <div className="flex h-full w-full px-4 lg:px-20 flex-1">
-        <div className="mt-10 mx-auto bg-white rounded-sm flex-1" style={{flex: "1 1 auto"}}>
+        <div className="mt-5 mx-auto bg-white rounded-sm flex-1" style={{flex: "1 1 auto"}}>
           {!finalPlans || finalPlans.length === 0 ? (
             <NoPlans isLoading={!plans} />
           ) : (
