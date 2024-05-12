@@ -14,29 +14,31 @@ const Banner = () => {
     >
       <article className="flex flex-col h-full justify-center items-center lg:flex-1 ">
         <h1
-          className="font-extrabold lg:text-7xl md:text-5xl text-4xl font-sans
+          className="font-bold lg:text-7xl md:text-5xl text-4xl font-sans
       text-left w-full"
         >
           Uncover the <br /> <span className="text-blue-500">AI</span> Travel{" "}
           <span className="text-blue-500">Plan</span>
         </h1>
 
-        <div className="mt-5 lg:mt-10 rounded-md w-full text-left">
+        <div className="mt-5 lg:mt-10 rounded-md w-full text-left lg:text-lg md:text-md text-base">
           <div className="flex justify-start  items-center">
             <Lightbulb className="mr-1 text-yellow-600" />
-            <span className="text-center">Imagine telling your travel planner,</span>
+            <span className="text-center ">Imagine telling your travel planner,</span>
           </div>
           <div className="p-2">
-            <p className="text-blue-500 font-bold tracking-normal text-sm">
+            <p className="text-blue-500 font-bold tracking-wide lg:text-md md:text-base text-sm">
               'Weekend escape to a vibrant city, <br className="lg:hidden" />
               with mid-range budget in summer.'
             </p>
             <p
               className="mt-5 mb-5 
-                      text-sm
-                    text-gray-600
-                      md:max-w-xl 
-                      text-left"
+                        lg:text-md md:text-base text-sm
+                      text-gray-500
+                        font-medium
+                        tracking-wide
+                        md:max-w-xl 
+                        text-left"
             >
               Our AI not only understands but crafts a personalized adventure. Discover local
               secrets, savor culinary delights, and explore iconic landmarks with an itinerary

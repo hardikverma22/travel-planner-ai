@@ -11,6 +11,7 @@ import PlanComboBox from "@/components/plan/PlanComboBox";
 import {navlinks} from "@/lib/constants";
 import {cn} from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
+import {MapPinIcon} from "lucide-react";
 
 const Header = () => {
   const {isCurrentPathDashboard, isCurrentPathHome, isAuthenticated} = useAuth();
@@ -26,12 +27,15 @@ const Header = () => {
         <div className="flex justify-evenly w-full">
           <div className="hidden md:flex gap-10 items-center justify-start flex-1">
             <Link href={isAuthenticated ? "/dashboard" : "/"}>
-              <div className="flex flex-col leading-5 font-bold text-xl">
-                <span>Travel</span>
-                <span>
-                  Planner
-                  <span className="text-blue-500 ml-0.5">AI</span>
-                </span>
+              <div className="flex gap-1 justify-center items-center">
+                <MapPinIcon className="h-10 w-10 text-blue-500" />
+                <div className="flex flex-col leading-5 font-bold text-xl">
+                  <span>Travel</span>
+                  <span>
+                    Planner
+                    <span className="text-blue-500 ml-0.5">AI</span>
+                  </span>
+                </div>
               </div>
             </Link>
           </div>
