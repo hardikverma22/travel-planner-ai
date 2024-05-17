@@ -1,5 +1,6 @@
 import { mutation } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
+import { getPlanAdmin } from "./plan";
 
 export function generateToken() {
     const array = new Uint8Array(12);
@@ -44,6 +45,7 @@ export const grantAccessByToken = mutation({
         const invite = await ctx.db.query('invites')
             .withIndex("by_token", q => q.eq("token", args.token))
             .first();
+
         if (!invite) {
             throw new ConvexError("no invite found with the provided token");
         }
@@ -60,6 +62,12 @@ export const grantAccessByToken = mutation({
 
         if (!plan) {
             throw new ConvexError(`No Plan found while giving access to user ${userToAdd.userId}`);
+        }
+
+        const adminAccess = await getPlanAdmin(ctx, plan._id);
+
+        if (adminAccess?.isPlanAdmin) {
+            throw new ConvexError(`You can join the plan you already own.`);
         }
 
         await ctx.db.insert("access", {

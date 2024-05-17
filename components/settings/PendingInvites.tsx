@@ -43,11 +43,11 @@ const PendingInvites = ({planId}: {planId: string}) => {
           <div
             key={invite._id}
             className="px-5 py-2 
-                        border border-solid border-gray-300 
+                        border border-solid border-border 
                         shadow-sm rounded-md
                         flex gap-5 justify-between items-center"
           >
-            <span className="text-sm text-gray-500">{invite.email}</span>
+            <span className="text-sm text-muted-foreground">{invite.email}</span>
             <Button
               variant="destructive"
               size="sm"

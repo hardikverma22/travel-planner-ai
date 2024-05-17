@@ -22,7 +22,10 @@ export const getUser = internalQuery({
 export const createUser = internalMutation({
   args: { userId: v.string(), email: v.string() }, // no runtime validation, trust Clerk
   async handler(ctx, { userId, email }) {
-    const userRecord = await userQuery(ctx, userId);
+    const userRecord = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", email))
+      .unique();
 
     if (userRecord === null) {
       await ctx.db.insert("users", { userId, credits: 0, email, freeCredits: 1 });

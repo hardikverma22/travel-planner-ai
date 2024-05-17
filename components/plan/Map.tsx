@@ -1,7 +1,8 @@
 "use client";
 import {Doc} from "@/convex/_generated/dataModel";
-import {colors} from "@/lib/constants";
+import {colors, MAPS_DARK_MODE_STYLES} from "@/lib/constants";
 import {GoogleMap, useJsApiLoader, OverlayView, Libraries} from "@react-google-maps/api";
+import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 
 type MapProps = {
@@ -21,6 +22,8 @@ export default function Map({topPlacesToVisit, selectedPlace}: MapProps) {
   const [mapCenter, setMapCenter] = useState(selectedPlace);
   const [mapZoom, setMapZoom] = useState(13);
 
+  const {resolvedTheme} = useTheme();
+
   useEffect(() => {
     if (!selectedPlace) return;
     zoomSelecedPlace(selectedPlace?.lat, selectedPlace?.lng);
@@ -38,6 +41,7 @@ export default function Map({topPlacesToVisit, selectedPlace}: MapProps) {
         center={mapCenter}
         zoom={mapZoom}
         options={{
+          styles: resolvedTheme === "dark" ? MAPS_DARK_MODE_STYLES : [],
           disableDefaultUI: false,
           clickableIcons: true,
           scrollwheel: true,

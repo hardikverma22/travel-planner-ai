@@ -12,6 +12,7 @@ import {navlinks} from "@/lib/constants";
 import {cn} from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
 import {MapPinIcon} from "lucide-react";
+import {ThemeDropdown} from "@/components/ThemeDropdown";
 
 const Header = () => {
   const {isCurrentPathDashboard, isCurrentPathHome, isAuthenticated} = useAuth();
@@ -19,7 +20,8 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "w-full border-b bottom-2 border-gray-200 z-50 bg-white/90",
+        "w-full border-b bottom-2 border-border/40 z-50 sticky top-0",
+        "bg-background backdrop-blur supports-[backdrop-filter]:bg-background/60",
         isCurrentPathHome && "sticky top-0"
       )}
     >
@@ -68,12 +70,14 @@ const Header = () => {
               <Loading />
             </AuthLoading>
             <Unauthenticated>
+              <ThemeDropdown />
               <SignInButton mode="modal" afterSignInUrl="/dashboard" />
             </Unauthenticated>
             <Authenticated>
               <div className="flex justify-center items-center gap-2">
                 {!isCurrentPathDashboard && !isCurrentPathHome && <PlanComboBox />}
                 <DrawerWithDialog />
+                <ThemeDropdown />
                 <UserButton afterSignOutUrl="/" />
               </div>
             </Authenticated>

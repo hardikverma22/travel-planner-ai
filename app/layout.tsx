@@ -11,6 +11,7 @@ import Progress from "@/components/Progress";
 import {Toaster} from "@/components/ui/toaster";
 
 import "./globals.css";
+import {ThemeProvider} from "@/contexts/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "Travel Planner AI",
@@ -20,18 +21,25 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <ConvexClientProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          <Header />
-          <main className="flex min-h-[calc(100svh-4rem)] flex-col items-center bg-blue-50/40">
-            {children}
-            <Progress />
-            <Analytics />
-            <Toaster />
-          </main>
-        </body>
-      </html>
-    </ConvexClientProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ConvexClientProvider>
+            <Header />
+            <main className="flex min-h-[calc(100svh-4rem)] flex-col items-center bg-blue-50/40">
+              {children}
+              <Progress />
+              <Analytics />
+              <Toaster />
+            </main>
+          </ConvexClientProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

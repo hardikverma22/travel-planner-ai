@@ -19,7 +19,7 @@ const Timeline = ({itinerary, planId}: TimelineProps) => {
   });
 
   return (
-    <ol className="relative border-s border-gray-200 ml-10 mt-5">
+    <ol className="relative border-s border-gray-200 dark:border-foreground/40 ml-10 mt-5">
       {filteredItinerary?.map((day) => (
         <li className="mb-10 ms-6" key={day.title}>
           <span className="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
@@ -68,7 +68,7 @@ const Activity = ({
 }) => {
   if (activity.length == 0) return null;
   return (
-    <div className="flex flex-col gap-2 shadow-md p-2 bg-slate-50">
+    <div className="flex flex-col gap-2 shadow-md p-2 bg-muted rounded-sm">
       <h3
         className="text-sm leading-none
                   text-gray-600  w-max p-2 font-semibold
@@ -77,11 +77,11 @@ const Activity = ({
         {icon}
         {heading}
       </h3>
-      <ul className="space-y-1 text-gray-500 pl-2">
+      <ul className="space-y-1 text-muted-foreground pl-2">
         {activity.map((act, index) => (
           <li key={index}>
             <div className="w-full p-1 overflow-hidden">
-              <span className=" text-black font-semibold">{act.itineraryItem}</span>
+              <span className=" text-foreground font-semibold">{act.itineraryItem}</span>
               <p className="max-w-md md:max-w-full text-wrap whitespace-pre-line">
                 {act.briefDescription}
               </p>

@@ -43,8 +43,7 @@ const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
           aria-label={`open dialog button for ${btnText}`}
           variant={`${!shouldOpenForCreatePlan ? "link" : "default"}`}
           className={`${
-            shouldOpenForCreatePlan &&
-            "bg-blue-500 text-white hover:bg-blue-600 hover:text-white flex gap-1"
+            shouldOpenForCreatePlan && "bg-blue-500  hover:bg-blue-600 text-white flex gap-1"
           }`}
           onClick={() => {
             setOpen(true);

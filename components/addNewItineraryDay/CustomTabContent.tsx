@@ -62,13 +62,13 @@ export default function CustomTabContent({
         return (
           <div
             className="flex flex-col gap-5 w-full justify-start items-center
-                    mt-2 bg-slate-100 px-3 py-2 rounded-lg"
+                    mt-2 bg-background px-3 py-2 rounded-lg"
             key={field.id}
           >
             <div className="flex flex-col gap-2 justify-center items-start w-full">
               <div className="flex justify-between w-full items-center">
                 <Label
-                  className="text-sm font-bold font-sans tracking-wide text-slate-600"
+                  className="text-sm font-bold font-sans tracking-wide"
                   htmlFor={`itinerary.activities.${tabName}.${index}.itineraryItem`}
                 >
                   Name of the Place
@@ -102,7 +102,7 @@ export default function CustomTabContent({
             <div className="flex flex-col gap-2 justify-center items-start w-full">
               <Label
                 htmlFor={`itinerary.activities.${tabName}.${index}.briefDescription`}
-                className="text-sm font-bold font-sans tracking-wide text-slate-600"
+                className="text-sm font-bold font-sans tracking-wide"
               >
                 Description of the place
               </Label>

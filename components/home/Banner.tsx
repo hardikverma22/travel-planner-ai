@@ -6,7 +6,7 @@ const Banner = () => {
   return (
     <section
       className="lg:px-20 px-5 py-2 
-                ring-1
+                bg-background
                 w-full h-full
                 flex lg:flex-row flex-col lg:justify-between justify-center items-center
                 gap-5
@@ -34,7 +34,7 @@ const Banner = () => {
             <p
               className="mt-5 mb-5 
                         lg:text-md md:text-base text-sm
-                      text-gray-500
+                      text-muted-foreground
                         font-medium
                         tracking-wide
                         md:max-w-xl 

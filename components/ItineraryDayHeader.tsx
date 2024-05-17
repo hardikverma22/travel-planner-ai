@@ -28,7 +28,7 @@ export default function ItineraryDayHeader({title, planId}: ItineraryDayHeaderPr
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex justify-between mb-2 text-lg font-bold leading-2 text-gray-900 ">
+    <div className="flex justify-between mb-2 text-lg font-bold leading-2 text-foreground ">
       <span>{title}</span>
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogTrigger>
@@ -36,10 +36,10 @@ export default function ItineraryDayHeader({title, planId}: ItineraryDayHeaderPr
             asChild
             size="icon"
             variant="ghost"
-            className="p-1 rounded-full bg-stone-100"
+            className="p-1 rounded-full bg-background/50"
             onClick={() => setOpen(true)}
           >
-            <TrashIcon className="h-6 w-6 text-red-500" />
+            <TrashIcon className="h-6 w-6 text-red-500 dark:text-foreground dark:hover:text-red-500 hover:scale-105 transition-all duration-300" />
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>

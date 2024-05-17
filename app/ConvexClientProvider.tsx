@@ -8,7 +8,15 @@ const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL as strin
 
 export default function ConvexClientProvider({children}: {children: ReactNode}) {
   return (
-    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string}>
+    <ClerkProvider
+      appearance={{
+        variables: {
+          colorPrimary: "hsl(222.2, 47.4%, 11.2%)",
+          // change this value (you can get it from you're css variables, make sure to include 'hsl' and commas)
+        },
+      }}
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string}
+    >
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
         {children}
       </ConvexProviderWithClerk>

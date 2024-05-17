@@ -15,7 +15,7 @@ export default function AboutThePlace({content}: AboutThePlaceProps) {
       </h2>
       <div className="ml-8">
         {content ? (
-          <p className="tracking-wide font-medium text-slate-700">{content}</p>
+          <p className="tracking-wide font-medium text-accent-foreground/90">{content}</p>
         ) : (
           <Skeleton className="w-full h-full" />
         )}

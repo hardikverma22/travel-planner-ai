@@ -37,11 +37,11 @@ export default function Dashboard() {
   return (
     <section
       className="bg-stone-200 w-full h-full
-                flex-1 flex flex-col"
+                flex-1 flex flex-col dark:bg-background"
     >
       <div
         className="flex justify-between gap-5 bg-stone-50 items-center
-                     lg:px-20 px-7 py-4 border-b"
+                     lg:px-20 px-7 py-4 border-b dark:bg-background"
       >
         <div className="relative ml-auto flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-blue-500" />
@@ -52,7 +52,7 @@ export default function Dashboard() {
             value={searchPlanText}
             placeholder="Search Travel Plan..."
             type="search"
-            className="w-full rounded-lg bg-background pl-8"
+            className="w-full cursor-pointer rounded-lg bg-background pl-8 transition-colors hover:bg-accent hover:text-accent-foreground  text-muted-foreground"
             disabled={!plans || !plans.length}
           />
         </div>
@@ -60,7 +60,10 @@ export default function Dashboard() {
         <DrawerDialog shouldOpenForCreatePlan={true} />
       </div>
       <div className="flex h-full w-full px-4 lg:px-20 flex-1">
-        <div className="mt-5 mx-auto bg-white rounded-sm flex-1" style={{flex: "1 1 auto"}}>
+        <div
+          className="mt-5 mx-auto bg-background dark:border-2 dark:border-border/50 rounded-sm flex-1"
+          style={{flex: "1 1 auto"}}
+        >
           {!finalPlans || finalPlans.length === 0 ? (
             <NoPlans isLoading={!plans} />
           ) : (

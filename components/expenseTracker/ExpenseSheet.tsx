@@ -119,7 +119,7 @@ export default function ExpenseSheet({
           <Button
             size="sm"
             variant="default"
-            className="bg-blue-500 text-white hover:bg-blue-700hover:text-white"
+            className="bg-blue-500 hover:bg-blue-700 text-white hover:bg-blue-700hover:text-white"
           >
             Add a New Expense
           </Button>
@@ -230,7 +230,7 @@ export default function ExpenseSheet({
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 z-50 bg-white" align="start">
+                      <PopoverContent className="w-auto p-0 z-50 bg-background" align="start">
                         <Calendar mode="single" selected={field.value} onSelect={field.onChange} />
                       </PopoverContent>
                     </Popover>

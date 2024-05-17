@@ -6,7 +6,7 @@ import Pulse from "@/components/shared/Pulse";
 import {Button} from "@/components/ui/button";
 import {usePlanContext} from "@/contexts/PlanContextProvider";
 
-import {planSections} from "@/lib/constants";
+import {controlCenterSections, planSections} from "@/lib/constants";
 import {cn} from "@/lib/utils";
 import {usePathname} from "next/navigation";
 import {DollarSignIcon, ImageIcon, SettingsIcon, UserIcon} from "lucide-react";
@@ -26,7 +26,7 @@ const Sidebar = ({planId}: {planId: string}) => {
   const {planState} = usePlanContext();
 
   return (
-    <aside className="space-y-8 sticky top-2">
+    <aside className="space-y-8 sticky top-20">
       <div className="space-y-2">
         <h2 className="mb-2 text-lg font-semibold tracking-tight">Your Plan</h2>
         <div className="space-y-1">
@@ -35,7 +35,10 @@ const Sidebar = ({planId}: {planId: string}) => {
               <Button
                 aria-label={section.name}
                 variant="ghost"
-                className="w-full justify-start items-center gap-2 whitespace-break-spaces px-0"
+                className="w-full 
+                          flex justify-start items-center
+                          gap-2 whitespace-break-spaces px-2
+                          text-foreground dark:text-muted-foreground hover:dark:text-foreground"
               >
                 {section.icon}
                 <span className="md:text-left">{section.name}</span>
@@ -48,36 +51,19 @@ const Sidebar = ({planId}: {planId: string}) => {
       <div className="space-y-2">
         <h2 className="mb-2 text-lg font-semibold tracking-tight">Control Center</h2>
         <div className="space-y-1">
-          <Link href={`/plans/${planId}/expense-tracker`}>
-            <Button
-              aria-label="expense tracker"
-              variant="ghost"
-              className="w-full justify-start items-center gap-2 whitespace-break-spaces px-0"
-            >
-              <DollarSignIcon className="mr-2 h-4 w-4" />
-              <span className="md:text-left">Expense Tracker</span>
-            </Button>
-          </Link>
-          <Link href={`/plans/${planId}/collaborate`}>
-            <Button
-              aria-label="collaborate"
-              variant="ghost"
-              className="w-full justify-start items-center gap-2 whitespace-break-spaces px-0"
-            >
-              <UserIcon className="mr-2 h-4 w-4" />
-              <span className="md:text-left">Collaborate</span>
-            </Button>
-          </Link>
-          <Link href={`/plans/${planId}/settings`}>
-            <Button
-              aria-label="settings"
-              variant="ghost"
-              className="w-full justify-start items-center gap-2 whitespace-break-spaces px-0"
-            >
-              <SettingsIcon className="mr-2 h-4 w-4" />
-              <span className="md:text-left">Settings</span>
-            </Button>
-          </Link>
+          {controlCenterSections.map((link) => (
+            <Link href={`/plans/${planId}/${link.id}`} key={link.id}>
+              <Button
+                aria-label={link.id}
+                variant="ghost"
+                className="w-full justify-start items-center gap-2 whitespace-break-spaces px-2
+                        text-foreground dark:text-muted-foreground hover:dark:text-foreground"
+              >
+                {link.icon}
+                <span className="md:text-left">{link.title}</span>
+              </Button>
+            </Link>
+          ))}
         </div>
       </div>
     </aside>

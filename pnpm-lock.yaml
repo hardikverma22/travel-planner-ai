@@ -92,6 +92,9 @@ dependencies:
   next-nprogress-bar:
     specifier: ^2.1.2
     version: 2.3.5
+  next-themes:
+    specifier: ^0.3.0
+    version: 0.3.0(react-dom@18.2.0)(react@18.2.0)
   openai:
     specifier: ^4.24.7
     version: 4.29.0
@@ -3012,6 +3015,16 @@ packages:
     resolution: {integrity: sha512-yhsRCr25IOZol8LMIfgbziCa/rXa9Q4sQUIw1NR8iRTOQxwEVlyMjhpG6mF/PB5L5evOPdKGF4s07rQz82HsBA==}
     dependencies:
       nprogress: 0.2.0
+    dev: false
+
+  /next-themes@0.3.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-/QHIrsYpd6Kfk7xakK4svpDI5mmXP0gfvCoJdGpZQ2TOrQZmsW0QxjaiLn8wbIKjtm4BTSqLoix4lxYYOnLJ/w==}
+    peerDependencies:
+      react: ^16.8 || ^17 || ^18
+      react-dom: ^16.8 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /next@14.0.4(react-dom@18.2.0)(react@18.2.0):

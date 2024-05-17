@@ -19,11 +19,11 @@ const ExpenseSection = ({planId}: {planId: string}) => {
     return (
       <div
         className="flex flex-col justify-center items-center gap-2
-                      border-2 border-gray-100 rounded-xl w-full h-full
+                      border-2 border-border rounded-xl w-full h-full
                       shadow-xl font-sans"
       >
         <p className="font-semibold text-lg md:text-xl">You haven't added any Expenses yet!</p>
-        <p className="px-8 max-w-xl text-base text-center text-gray-500">
+        <p className="px-8 max-w-xl text-base text-center text-muted-foreground">
           Effortlessly Track Your Expenses and Stay On Budget!
         </p>
         <Image

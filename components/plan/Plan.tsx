@@ -5,7 +5,7 @@ import {
   AboutThePlace,
   BestTimeToVisit,
   Itinerary,
-  Prompt,
+  ImageSection,
   TopActivities,
   TopPlacesToVisit,
   LocalCuisineRecommendations,
@@ -72,7 +72,7 @@ const Plan = ({planId, isNewPlan}: PlanProps) => {
             </Alert>
           )}
           <AlertForAI show={shouldShowAlert} />
-          <Prompt
+          <ImageSection
             content={plan?.userPrompt}
             placeName={plan?.nameoftheplace}
             imageUrl={plan?.url}

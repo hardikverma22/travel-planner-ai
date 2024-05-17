@@ -92,7 +92,7 @@ const PlacesAutoComplete = ({
       {showReults && (
         <div
           className="absolute w-full
-        mt-2 shadow-md rounded-xl p-1 bg-white max-h-80 overflow-auto
+        mt-2 shadow-md rounded-xl p-1 bg-background max-h-80 overflow-auto
         z-50"
           onMouseDown={(e) => e.preventDefault()}
         >

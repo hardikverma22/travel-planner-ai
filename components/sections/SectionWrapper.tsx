@@ -4,11 +4,11 @@ type SectionWrapperProps = {
 };
 export default function SectionWrapper({children, id}: SectionWrapperProps) {
   return (
-    <div
+    <article
       id={id}
-      className="shadow-md ring-1 ring-gray-300 px-5 py-8 bg-white/50 rounded-sm"
+      className="text-foreground shadow-md ring-1 ring-ring/20 px-5 py-8 bg-background/50 rounded-sm"
     >
       {children}
-    </div>
+    </article>
   );
 }
