@@ -122,7 +122,7 @@ export const CreditContent = ({
           buttonVariants({variant: "default"}),
           "bg-blue-500 text-white hover:bg-blue-700"
         )}
-        href={`${process.env.RAZORPAY_PAYMENT_PAGE_URL}/?email=${email}`}
+        href={`${process.env.NEXT_PUBLIC_RAZORPAY_PAYMENT_PAGE_URL}/?email=${email}`}
       >
         Purchase Credits
       </Link>
