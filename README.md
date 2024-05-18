@@ -22,14 +22,16 @@ Check out the live demo [﻿here](https://travelplannerai.online/).
 - **Expense Tracker:** Effectively track your expenses throughout your journey and can revisit later as well.
 - **Email Invite:** Invite your friend and colleagues to your desired plan and collaborate together.
 ## Architecture
-![diagram-export-10-02-2024-23_36_06](https://github.com/hardikverma22/travel-planner-ai/assets/26103679/4117c93e-0d90-4c00-a0fe-ccf6128eda7b "")
+![Architecture Diagram](undefined "Architecture Diagram")
 
-![Email Flow](/.eraser/ITHfX2CmBRfVZimKKniY___02a0ac4RaOW4qPyzxPn66zodRbA3___---figure---oS9Z4ZooYxtcF6PenIQtj---figure---wYeVIfbY5wm_ADKyKI0VPQ.png "Email Flow")
+![Email Flow](/.eraser/ITHfX2CmBRfVZimKKniY___02a0ac4RaOW4qPyzxPn66zodRbA3___---figure---37zEf7fis2npamdFGCnOI---figure---wYeVIfbY5wm_ADKyKI0VPQ.png "Email Flow")
+
+
 
 ## Installation
 To run the Travel Planner AI, follow these steps:
 
-1. Clone the repository:git clone https://github.com/hardikverma22/travel-planner-ai
+1. Clone the repository:git clone [﻿https://github.com/hardikverma22/travel-planner-ai](https://github.com/hardikverma22/travel-planner-ai) 
 2. Navigate to the project directory:cd travel-planner-ai
 3. Install the dependencies:npm install
 4. Start the development server:npm run dev
@@ -41,7 +43,7 @@ To run the Travel Planner AI, follow these steps:
 - **Convex Backend Platform:** Powering our backend infrastructure for robust performance and scalability.
 - **OpenAI APIs:** Harnessing the power of OpenAI's APIs for intelligent content generation and natural language processing.
 - **Clerk:** Providing secure authentication solutions to safeguard user accounts and data.
-- **Stripe:** Facilitating seamless payment processing for premium features and subscriptions.
+- **Razorpay:** Facilitating seamless payment processing supporting wide range of payment methods.
 - **Resend:** For sending email invites using my custom domain.
 ## Contributing
  Contributions are welcome! If you'd like to contribute to Shoe Forge, please follow these steps:
