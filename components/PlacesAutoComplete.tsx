@@ -102,7 +102,7 @@ const PlacesAutoComplete = ({
                 className="cursor-pointer
                 border-b 
                 flex justify-between items-center
-                hover:bg-stone-100 hover:rounded-lg
+                hover:bg-muted hover:rounded-lg
                 px-1 py-2 text-sm"
                 onClick={(e) => hadleSelectItem(e, item.description)}
                 key={item.place_id}

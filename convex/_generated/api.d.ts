@@ -23,8 +23,8 @@ import type * as invite from "../invite.js";
 import type * as InviteEmail from "../InviteEmail.js";
 import type * as payments from "../payments.js";
 import type * as plan from "../plan.js";
+import type * as razorpay from "../razorpay.js";
 import type * as retrier from "../retrier.js";
-import type * as stripe from "../stripe.js";
 import type * as token from "../token.js";
 import type * as users from "../users.js";
 
@@ -46,8 +46,8 @@ declare const fullApi: ApiFromModules<{
   InviteEmail: typeof InviteEmail;
   payments: typeof payments;
   plan: typeof plan;
+  razorpay: typeof razorpay;
   retrier: typeof retrier;
-  stripe: typeof stripe;
   token: typeof token;
   users: typeof users;
 }>;

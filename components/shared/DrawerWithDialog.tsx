@@ -1,16 +1,18 @@
 "use client";
 
 import {api} from "@/convex/_generated/api";
-import {useAction, useQuery} from "convex/react";
+import {useQuery} from "convex/react";
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import Image from "next/image";
 import empty_cart from "@/public/empty_cart.svg";
-import {Button} from "@/components/ui/button";
+import {Button, buttonVariants} from "@/components/ui/button";
 import {useState} from "react";
 import {useMediaQuery} from "@/hooks/useMediaQuery";
 import {Drawer, DrawerContent, DrawerTrigger} from "@/components/ui/drawer";
 import NewPlanForm from "@/components/NewPlanForm";
-import {Backpack, Loader} from "lucide-react";
+import {Backpack} from "lucide-react";
+import Link from "next/link";
+import {cn} from "@/lib/utils";
 
 const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
   const user = useQuery(api.users.currentUser);
@@ -21,6 +23,8 @@ const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
+  if (!user) return null;
+
   const btnText = shouldOpenForCreatePlan ? "Create Travel Plan" : `Credits ${totalCredits ?? 0}`;
 
   const shouldShowCreatePlanForm = shouldOpenForCreatePlan && totalCredits > 0;
@@ -30,10 +34,10 @@ const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
       <DialogHeader>
         <DialogTitle>Create Travel Plan</DialogTitle>
       </DialogHeader>
-      <NewPlanForm />
+      <NewPlanForm closeModal={setOpen} />
     </>
   ) : (
-    <CreditContent boughtCredits={boughtCredits} freeCredits={freeCredits} />
+    <CreditContent boughtCredits={boughtCredits} freeCredits={freeCredits} email={user.email} />
   );
 
   if (isDesktop) {
@@ -81,21 +85,12 @@ const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
 export const CreditContent = ({
   boughtCredits,
   freeCredits,
+  email,
 }: {
   boughtCredits: number;
   freeCredits: number;
+  email: string;
 }) => {
-  const buyCredits = useAction(api.stripe.pay);
-  const [startBuying, setStartBuying] = useState(false);
-
-  const handleBuyCredits = async () => {
-    setStartBuying(true);
-    const paymentUrl = await buyCredits();
-    if (paymentUrl == null) return;
-    // Redirect to Stripe's checkout website
-    window.location.href = paymentUrl!;
-  };
-
   return (
     <>
       {boughtCredits > 0 || freeCredits > 0 ? (
@@ -121,14 +116,16 @@ export const CreditContent = ({
           />
         </div>
       )}
-      <Button
-        aria-label="buy credits"
-        className="bg-blue-500 text-white hover:bg-blue-600"
-        onClick={handleBuyCredits}
-        disabled={startBuying}
+
+      <Link
+        className={cn(
+          buttonVariants({variant: "default"}),
+          "bg-blue-500 text-white hover:bg-blue-700"
+        )}
+        href={`${process.env.RAZORPAY_PAYMENT_PAGE_URL}/?email=${email}`}
       >
-        {startBuying && <Loader className="mr-2 animate-spin" />}Buy Credits
-      </Button>
+        Purchase Credits
+      </Link>
     </>
   );
 };

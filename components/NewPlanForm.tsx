@@ -3,7 +3,7 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {useAuth} from "@clerk/nextjs";
-import {useState, useTransition} from "react";
+import {Dispatch, SetStateAction, useState, useTransition} from "react";
 import * as z from "zod";
 
 import {Button} from "@/components/ui/button";
@@ -31,7 +31,7 @@ export const formSchema = z.object({
 
 export type formSchemaType = z.infer<typeof formSchema>;
 
-const NewPlanForm = () => {
+const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>>}) => {
   const {isSignedIn} = useAuth();
   if (!isSignedIn) return null;
 
@@ -40,10 +40,6 @@ const NewPlanForm = () => {
 
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   noOfDays: "1",
-    //   placeName: undefined,
-    // },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -56,7 +52,7 @@ const NewPlanForm = () => {
     }
     startTransaction(async () => {
       const planId = await generatePlanAction(values);
-
+      closeModal(false);
       if (planId === null) {
         console.log("Error received from server action");
       }

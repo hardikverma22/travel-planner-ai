@@ -3,16 +3,15 @@ import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import type { WebhookEvent } from "@clerk/backend";
 import { Webhook } from "svix";
+import { validateRazorPayRequest } from "./razorpay";
 
-function ensureEnvironmentVariable(name: string): string {
+export const ensureEnvironmentVariable = (name: string): string => {
   const value = process.env[name];
   if (value === undefined) {
     throw new Error(`missing environment variable ${name}`);
   }
   return value;
 }
-
-const webhookSecret = ensureEnvironmentVariable("CLERK_WEBHOOK_SECRET");
 
 const handleClerkWebhook = httpAction(async (ctx, request) => {
   const event = await validateRequest(request);
@@ -56,7 +55,9 @@ async function validateRequest(
     "svix-timestamp": req.headers.get("svix-timestamp")!,
     "svix-signature": req.headers.get("svix-signature")!,
   };
-  const wh = new Webhook(webhookSecret);
+  const clerkWebhookSecret = ensureEnvironmentVariable("CLERK_WEBHOOK_SECRET");
+
+  const wh = new Webhook(clerkWebhookSecret);
   let evt: Event | null = null;
   try {
     evt = wh.verify(payloadString, svixHeaders) as Event;
@@ -68,21 +69,51 @@ async function validateRequest(
   return evt as unknown as WebhookEvent;
 }
 
+// http.route({
+//   path: "/stripe",
+//   method: "POST",
+//   handler: httpAction(async (ctx, request) => {
+//     // Getting the stripe-signature header
+//     const signature: string = request.headers.get("stripe-signature") as string;
+//     // Calling the action that will perform our fulfillment
+//     const result = await ctx.runAction(internal.stripe.fulfill, {
+//       signature,
+//       payload: await request.text(),
+//     });
+
+//     if (result.success) {
+//       // We make sure to confirm the successful processing
+//       // so that Stripe can stop sending us the confirmation
+//       // of this payment.
+//       return new Response(null, {
+//         status: 200,
+//       });
+//     } else {
+//       // If something goes wrong Stripe will continue repeating
+//       // the same webhook request until we confirm it.
+//       return new Response("Webhook Error", {
+//         status: 400,
+//       });
+//     }
+//   }),
+// });
+
 http.route({
-  path: "/stripe",
+  path: "/razorpay",
   method: "POST",
   handler: httpAction(async (ctx, request) => {
-    // Getting the stripe-signature header
-    const signature: string = request.headers.get("stripe-signature") as string;
+    const signature: string = request.headers.get("X-Razorpay-Signature") as string;
+    const body = await request.text();
+
     // Calling the action that will perform our fulfillment
-    const result = await ctx.runAction(internal.stripe.fulfill, {
+    const result = await ctx.runAction(internal.razorpay.handleRazorPayWebhook, {
       signature,
-      payload: await request.text(),
+      body: body,
     });
 
     if (result.success) {
       // We make sure to confirm the successful processing
-      // so that Stripe can stop sending us the confirmation
+      // so that Razorpay can stop sending us the confirmation
       // of this payment.
       return new Response(null, {
         status: 200,
@@ -94,7 +125,9 @@ http.route({
         status: 400,
       });
     }
-  }),
+  })
 });
+
+
 
 export default http;

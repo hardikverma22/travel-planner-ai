@@ -40,6 +40,7 @@
     "next-nprogress-bar": "^2.1.2",
     "next-themes": "^0.3.0",
     "openai": "^4.24.7",
+    "razorpay": "^2.9.3",
     "react": "^18",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
