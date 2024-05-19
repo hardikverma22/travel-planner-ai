@@ -1,9 +1,8 @@
 "use client";
 
 import {useState} from "react";
-import {CaretSortIcon, ChevronDownIcon} from "@radix-ui/react-icons";
+import {ChevronDownIcon} from "@radix-ui/react-icons";
 import {
-  ColumnDef,
   ColumnFiltersState,
   Row,
   SortingState,
@@ -25,8 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Input} from "@/components/ui/input";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {Doc, Id} from "@/convex/_generated/dataModel";
-import DropDownActions from "@/components/expenseTracker/DropDownActions";
+import {Doc} from "@/convex/_generated/dataModel";
 import {useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {columns} from "@/components/expenseTracker/DataColums";

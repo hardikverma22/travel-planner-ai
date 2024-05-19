@@ -8,6 +8,9 @@ import Image from "next/image";
 import expense from "@/public/expense.svg";
 import LoadingComponent from "@/app/plans/[planId]/expense-tracker/loading";
 import dynamic from "next/dynamic";
+
+import ExpenseMetrics from "@/components/expenseTracker/ExpenseMetrics";
+
 const ExpenseSheet = dynamic(() => import("@/components/expenseTracker/ExpenseSheet"));
 
 const ExpenseSection = ({planId}: {planId: string}) => {
@@ -44,6 +47,7 @@ const ExpenseSection = ({planId}: {planId: string}) => {
           <h2 className="font-semibold font-sans text-xl align-bottom">Expenses</h2>
           <ExpenseSheet planId={planId} />
         </div>
+        <ExpenseMetrics expenses={data} />
         <DataTable data={data} />
       </>
     );
