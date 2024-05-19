@@ -10,10 +10,9 @@ import {useState} from "react";
 import {useMediaQuery} from "@/hooks/useMediaQuery";
 import {Drawer, DrawerContent, DrawerTrigger} from "@/components/ui/drawer";
 import NewPlanForm from "@/components/NewPlanForm";
-import {Backpack} from "lucide-react";
+import {Backpack, LockIcon} from "lucide-react";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
-
 const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
   const user = useQuery(api.users.currentUser);
   const boughtCredits = user?.credits ?? 0;
@@ -92,7 +91,7 @@ export const CreditContent = ({
   email: string;
 }) => {
   return (
-    <>
+    <div>
       {boughtCredits > 0 || freeCredits > 0 ? (
         <div className="flex gap-2 justify-between items-center p-2">
           <div className="flex flex-col gap-1 justify-center items-center p-10 rounded-lg border-2 flex-1">
@@ -120,13 +119,31 @@ export const CreditContent = ({
       <Link
         className={cn(
           buttonVariants({variant: "default"}),
-          "bg-blue-500 text-white hover:bg-blue-700"
+          "bg-blue-500 text-white hover:bg-blue-700",
+          "flex gap-1 justify-center items-center mt-2 mb-1"
         )}
         href={`${process.env.NEXT_PUBLIC_RAZORPAY_PAYMENT_PAGE_URL}/?email=${email}`}
       >
-        Purchase Credits
+        <LockIcon className="w-4 h-4" />
+        <span>Purchase Credits</span>
       </Link>
-    </>
+      <div className="flex gap-1 justify-end">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 18 20"
+          fill="#3b82f6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7.077 6.476l-.988 3.569 5.65-3.589-3.695 13.54 3.752.004 5.457-20L7.077 6.476z"
+            fill="#3b82f6"
+          ></path>
+          <path d="M1.455 14.308L0 20h7.202L10.149 8.42l-8.694 5.887z" fill="#072654"></path>
+        </svg>
+        <span className="text-[10px]">Secured by Razorpay</span>
+      </div>
+    </div>
   );
 };
 
