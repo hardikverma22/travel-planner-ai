@@ -17,6 +17,7 @@ import type {
 import type * as cleanup from "../cleanup.js";
 import type * as email from "../email.js";
 import type * as expenses from "../expenses.js";
+import type * as feedback from "../feedback.js";
 import type * as http from "../http.js";
 import type * as images from "../images.js";
 import type * as invite from "../invite.js";
@@ -40,6 +41,7 @@ declare const fullApi: ApiFromModules<{
   cleanup: typeof cleanup;
   email: typeof email;
   expenses: typeof expenses;
+  feedback: typeof feedback;
   http: typeof http;
   images: typeof images;
   invite: typeof invite;

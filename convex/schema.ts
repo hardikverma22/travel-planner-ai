@@ -84,4 +84,18 @@ export default defineSchema({
   }).index("by_planId", ["planId"])
     .index("by_userId", ["userId"])
     .index("by_planId_userId", ["planId", "userId"]),
+  feedback: defineTable({
+    userId: v.string(),
+    planId: v.optional(v.id("plan")),
+    message: v.string(),
+    label: v.union(v.literal('issue'),
+      v.literal('idea'),
+      v.literal('question'),
+      v.literal('complaint'),
+      v.literal('featurerequest'),
+      v.literal('other'),
+    ),
+  }).index("by_planId", ["planId"])
+    .index("by_userId", ["userId"])
+    .index("by_planId_userId", ["planId", "userId"]),
 });

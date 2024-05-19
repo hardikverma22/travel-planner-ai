@@ -316,3 +316,12 @@ export const MAPS_DARK_MODE_STYLES = [
     ],
   },
 ];
+
+export const FEEDBACK_LABELS = [
+  {id: "issue", displayName: "Issue"},
+  {id: "idea", displayName: "Idea"},
+  {id: "question", displayName: "Question"},
+  {id: "complaint", displayName: "Complaint"},
+  {id: "featurerequest", displayName: "Feature Request"},
+  {id: "other", displayName: "Other"},
+];

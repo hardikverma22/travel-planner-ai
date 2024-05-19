@@ -13,6 +13,7 @@ import NewPlanForm from "@/components/NewPlanForm";
 import {Backpack, LockIcon} from "lucide-react";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
+
 const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
   const user = useQuery(api.users.currentUser);
   const boughtCredits = user?.credits ?? 0;
