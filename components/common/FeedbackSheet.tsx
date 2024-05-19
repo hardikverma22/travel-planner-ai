@@ -1,6 +1,5 @@
 "use client";
 import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -21,22 +20,17 @@ import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {useEffect, useMemo, useState} from "react";
-import {useMutation, useQuery} from "convex/react";
+import {useState} from "react";
+import {useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
-import {useUser} from "@clerk/nextjs";
-import {cn} from "@/lib/utils";
 
-import {CalendarIcon, MessageCircleCode, UserIcon} from "lucide-react";
-import {format} from "date-fns";
-import {Calendar} from "@/components/ui/calendar";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {expenseCategories, FEEDBACK_LABELS} from "@/lib/constants";
-import {Doc, Id} from "@/convex/_generated/dataModel";
-import UserDropdown from "@/components/expenseTracker/UserDropdown";
+import {MessageCircleCode} from "lucide-react";
+import {FEEDBACK_LABELS} from "@/lib/constants";
+import {Id} from "@/convex/_generated/dataModel";
 import {Textarea} from "@/components/ui/textarea";
 import {useParams} from "next/navigation";
 import {TooltipContainer} from "@/components/shared/Toolip";
+import {useToast} from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   message: z.string().min(2),
@@ -52,6 +46,7 @@ const formSchema = z.object({
 
 export default function FeedbackSheet() {
   const [open, setOpen] = useState(false);
+  const {toast} = useToast();
 
   const {planId} = useParams<{planId: string}>();
 
@@ -71,6 +66,10 @@ export default function FeedbackSheet() {
       planId: planId ? (planId as Id<"plan">) : undefined,
       label,
       message,
+    });
+
+    toast({
+      description: "Feedback submitted!",
     });
   };
 
