@@ -63,6 +63,9 @@ export default function PlanComboBox() {
                     onSelect={(currentValue) => {
                       setOpen(false);
                       let updatedUrl = pathname.replace(/\/plans\/[^\/]+/, "/plans/" + plan._id);
+                      if (pathname.includes("join")) {
+                        updatedUrl = `/plans/${plan._id}/plan`;
+                      }
                       router.push(updatedUrl);
                     }}
                     className="cursor-pointer"

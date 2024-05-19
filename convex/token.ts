@@ -67,7 +67,7 @@ export const grantAccessByToken = mutation({
         const adminAccess = await getPlanAdmin(ctx, plan._id);
 
         if (adminAccess?.isPlanAdmin) {
-            throw new ConvexError(`You can join the plan you already own.`);
+            throw new ConvexError(`You can't join the plan you already own.`);
         }
 
         await ctx.db.insert("access", {

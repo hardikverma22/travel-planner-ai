@@ -19,7 +19,13 @@ export default function DeletePlanButtons({planId}: {planId: string}) {
   const hanleDeletePlan = async () => {
     try {
       setIsDeleting(true);
+      const {id, dismiss} = toast({
+        title: "Deleting Plan",
+        description: "You plan is being deleted. Please wait...",
+      });
       await deletePlan({planId});
+      dismiss();
+
       router.push("/dashboard");
     } catch (error) {
       if (error instanceof ConvexError) {

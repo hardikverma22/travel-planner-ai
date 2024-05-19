@@ -542,7 +542,8 @@ export const deletePlan = mutation({
     if (plan.userId !== identity.subject) {
       throw new ConvexError("You are not the owner of this plan.")
     }
-    await ctx.storage.delete(plan.storageId as Id<"_storage">);
+    if (plan.storageId)
+      await ctx.storage.delete(plan.storageId as Id<"_storage">);
 
     const expenseIds = (await ctx.db.query("expenses").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
     await Promise.all(expenseIds.map((id) => ctx.db.delete(id)));
