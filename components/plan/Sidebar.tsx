@@ -26,7 +26,7 @@ const Sidebar = ({planId}: {planId: string}) => {
   const {planState} = usePlanContext();
 
   return (
-    <aside className="space-y-8 sticky top-20">
+    <aside className="sticky top-20">
       <div className="space-y-2">
         <h2 className="mb-2 text-lg font-semibold tracking-tight">Your Plan</h2>
         <div className="space-y-1">

@@ -14,7 +14,6 @@ import useAuth from "@/hooks/useAuth";
 import {MapPinIcon} from "lucide-react";
 import {ThemeDropdown} from "@/components/ThemeDropdown";
 import FeedbackSheet from "@/components/common/FeedbackSheet";
-import {useParams} from "next/navigation";
 
 const Header = () => {
   const {isCurrentPathDashboard, isCurrentPathHome, isAuthenticated} = useAuth();
