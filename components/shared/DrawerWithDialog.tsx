@@ -23,8 +23,6 @@ const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  if (!user) return null;
-
   const btnText = shouldOpenForCreatePlan ? "Create Travel Plan" : `Credits ${totalCredits ?? 0}`;
 
   const shouldShowCreatePlanForm = shouldOpenForCreatePlan && totalCredits > 0;
@@ -37,7 +35,7 @@ const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
       <NewPlanForm closeModal={setOpen} />
     </>
   ) : (
-    <CreditContent boughtCredits={boughtCredits} freeCredits={freeCredits} email={user.email} />
+    <CreditContent boughtCredits={boughtCredits} freeCredits={freeCredits} email={user?.email} />
   );
 
   if (isDesktop) {
@@ -89,7 +87,7 @@ export const CreditContent = ({
 }: {
   boughtCredits: number;
   freeCredits: number;
-  email: string;
+  email: string | undefined;
 }) => {
   return (
     <div>
@@ -123,7 +121,9 @@ export const CreditContent = ({
           "bg-blue-500 text-white hover:bg-blue-700",
           "flex gap-1 justify-center items-center mt-2 mb-1"
         )}
-        href={`${process.env.NEXT_PUBLIC_RAZORPAY_PAYMENT_PAGE_URL}/?email=${email}`}
+        href={`${process.env.NEXT_PUBLIC_RAZORPAY_PAYMENT_PAGE_URL}${
+          email ? `/?email=${email} ` : ``
+        }`}
       >
         <LockIcon className="w-4 h-4" />
         <span>Purchase Credits</span>

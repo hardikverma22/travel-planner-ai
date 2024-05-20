@@ -55,9 +55,6 @@ const PlanCard = ({plan}: PlanCardProps) => {
                     </span>
                   </div>
                 </div>
-                {/* <div className="bg-white/20 p-2 rounded-full">
-                  <PlaneIcon className="h-5 w-5 text-white" />
-                </div> */}
               </div>
             </div>
           </div>
