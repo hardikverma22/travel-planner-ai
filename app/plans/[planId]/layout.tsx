@@ -8,10 +8,8 @@ import {Metadata, ResolvingMetadata} from "next";
 export async function generateMetadata(
   {
     params,
-    searchParams,
   }: {
     params: {planId: string};
-    searchParams?: {isNewPlan: string};
   },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
@@ -19,7 +17,7 @@ export async function generateMetadata(
   const token = await getAuthToken();
 
   const plan = await fetchQuery(api.plan.getSinglePlan, {id: id as Id<"plan">}, {token});
-  console.log(plan?.nameoftheplace);
+
   return {
     title: plan ? plan.nameoftheplace : "Your Plan",
   };
