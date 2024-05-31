@@ -45,7 +45,7 @@ const InviteEmail = ({inviteLink, projectName}: {inviteLink: string; projectName
                            text-[12px] font-semibold no-underline text-center p-3"
                 href={inviteLink}
               >
-                Join the team
+                Join the Plan
               </Button>
               <Text className="text-black text-[14px] leading-[24px]">
                 If you have recieved this invite in error, you may safely ignore this.

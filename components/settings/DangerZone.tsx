@@ -15,7 +15,7 @@ import DeletePlanButton from "./DeletePlanButtons";
 
 export default function DangerZone({planId}: {planId: string}) {
   return (
-    <div className="bg-background shadow-sm rounded-lg p-4 border-2 border-border">
+    <article className="bg-background shadow-sm rounded-lg p-4 border-2 border-border">
       <div className="border-b-2 border-b-border pb-2 mb-2 font-bold text-red-500">Danger Zone</div>
 
       <span className="text-neutral-500 dark:text-neutral-400 mb-4 flex text-sm sm:text-base">
@@ -37,6 +37,6 @@ export default function DangerZone({planId}: {planId: string}) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </article>
   );
 }

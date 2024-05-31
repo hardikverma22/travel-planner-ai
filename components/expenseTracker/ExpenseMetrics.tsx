@@ -7,7 +7,13 @@ import {ReactNode, useMemo} from "react";
 import {expenseCategories} from "@/lib/constants";
 import {cn} from "@/lib/utils";
 
-const ExpenseMetrics = ({expenses}: {expenses: (Doc<"expenses"> & {email: string})[]}) => {
+const ExpenseMetrics = ({
+  expenses,
+  preferredCurrency,
+}: {
+  preferredCurrency: string;
+  expenses: (Doc<"expenses"> & {email: string})[];
+}) => {
   if (!expenses || expenses.length === 0) return null;
 
   const totalExpenses = useMemo(
@@ -52,11 +58,11 @@ const ExpenseMetrics = ({expenses}: {expenses: (Doc<"expenses"> & {email: string
     () =>
       new Intl.NumberFormat("en-IN", {
         style: "currency",
-        currency: "INR",
+        currency: preferredCurrency,
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
       }),
-    expenses 
+    expenses
   );
 
   return (

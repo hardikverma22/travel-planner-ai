@@ -115,7 +115,7 @@ const InviteForm = ({planId}: {planId: string}) => {
         >
           {sendingInvite ? (
             <div className="flex justify-center items-center gap-2">
-              <Loading className="w-4 h-4" /> Sendin Invite...
+              <Loading className="w-4 h-4" /> Sending Invite...
             </div>
           ) : (
             "Invite"

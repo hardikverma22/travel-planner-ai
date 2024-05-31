@@ -98,4 +98,10 @@ export default defineSchema({
   }).index("by_planId", ["planId"])
     .index("by_userId", ["userId"])
     .index("by_planId_userId", ["planId", "userId"]),
+  planSettings: defineTable({
+    userId: v.string(),
+    planId: v.id("plan"),
+    currencyCode: v.string(),
+  }).index("by_planId", ["planId"])
+    .index("by_planId_userId", ["planId", "userId"]),
 });

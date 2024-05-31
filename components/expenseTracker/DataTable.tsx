@@ -24,18 +24,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Input} from "@/components/ui/input";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {Doc} from "@/convex/_generated/dataModel";
-import {useMutation} from "convex/react";
+import {Doc, Id} from "@/convex/_generated/dataModel";
+import {useMutation, useQuery} from "convex/react";
 import {api} from "@/convex/_generated/api";
-import {columns} from "@/components/expenseTracker/DataColums";
+import {getColumns} from "@/components/expenseTracker/DataColums";
 
-export default function DataTable({data}: {data: (Doc<"expenses"> & {email: string})[]}) {
+export default function DataTable({
+  data,
+  preferredCurrency,
+}: {
+  preferredCurrency: string;
+  data: (Doc<"expenses"> & {email: string})[];
+}) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
   const deleteMultipleExpenses = useMutation(api.expenses.deleteMultipleExpenses);
+
+  const columns = getColumns(preferredCurrency);
 
   const table = useReactTable({
     data,

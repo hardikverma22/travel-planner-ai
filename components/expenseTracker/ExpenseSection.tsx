@@ -10,11 +10,16 @@ import LoadingComponent from "@/app/plans/[planId]/expense-tracker/loading";
 import dynamic from "next/dynamic";
 
 import ExpenseMetrics from "@/components/expenseTracker/ExpenseMetrics";
+import {Id} from "@/convex/_generated/dataModel";
 
 const ExpenseSheet = dynamic(() => import("@/components/expenseTracker/ExpenseSheet"));
 
 const ExpenseSection = ({planId}: {planId: string}) => {
   const data = useQuery(api.expenses.getExpenses, {planId: planId});
+
+  const preferredCurrency = useQuery(api.planSettings.getPreferredCurrency, {
+    planId: planId as Id<"plan">,
+  });
 
   if (!data) return <LoadingComponent />;
 
@@ -36,7 +41,7 @@ const ExpenseSection = ({planId}: {planId: string}) => {
           height={300}
           className="bg-contain py-10"
         />
-        <ExpenseSheet planId={planId} />
+        <ExpenseSheet planId={planId} preferredCurrency={preferredCurrency || "INR"} />
       </div>
     );
 
@@ -45,10 +50,10 @@ const ExpenseSection = ({planId}: {planId: string}) => {
       <>
         <div className="flex justify-between items-end w-full border-b-2 pb-1">
           <h2 className="font-semibold font-sans text-xl align-bottom">Expenses</h2>
-          <ExpenseSheet planId={planId} />
+          <ExpenseSheet planId={planId} preferredCurrency={preferredCurrency || "INR"} />
         </div>
-        <ExpenseMetrics expenses={data} />
-        <DataTable data={data} />
+        <ExpenseMetrics expenses={data} preferredCurrency={preferredCurrency || "INR"} />
+        <DataTable data={data} preferredCurrency={preferredCurrency || "INR"} />
       </>
     );
 };

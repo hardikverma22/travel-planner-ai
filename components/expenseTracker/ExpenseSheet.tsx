@@ -21,19 +21,20 @@ import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import {useMutation, useQuery} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {useUser} from "@clerk/nextjs";
 import {cn} from "@/lib/utils";
 
-import {CalendarIcon, UserIcon} from "lucide-react";
+import {CalendarIcon} from "lucide-react";
 import {format} from "date-fns";
 import {Calendar} from "@/components/ui/calendar";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {expenseCategories} from "@/lib/constants";
 import {Doc, Id} from "@/convex/_generated/dataModel";
 import UserDropdown from "@/components/expenseTracker/UserDropdown";
+import currencies from "@/lib/currencies.json";
 
 const formSchema = z.object({
   purpose: z.string().min(2).max(50),
@@ -54,10 +55,12 @@ export default function ExpenseSheet({
   planId,
   data,
   edit,
+  preferredCurrency,
 }: {
   planId: string;
   edit?: boolean;
   data?: Doc<"expenses">;
+  preferredCurrency: string;
 }) {
   if (edit && !data) return;
 
@@ -71,7 +74,6 @@ export default function ExpenseSheet({
   useEffect(() => {
     if (!edit) return;
     if (data) {
-      console.log(data.userId);
       form.setValue("purpose", data.purpose);
       form.setValue("amount", data.amount);
       form.setValue("category", data.category);
@@ -82,6 +84,10 @@ export default function ExpenseSheet({
 
   const addExpense = useMutation(api.expenses.createExpense);
   const updateExpense = useMutation(api.expenses.updateExpense);
+
+  const currency = preferredCurrency
+    ? currencies.find((c) => c.cc.includes(preferredCurrency))?.symbol
+    : "₹";
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!user || !user.id) return;
@@ -200,9 +206,9 @@ export default function ExpenseSheet({
               name="amount"
               render={({field}) => (
                 <FormItem>
-                  <FormLabel>Amount(₹)</FormLabel>
+                  <FormLabel>Amount({currency})</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="e.g. ₹1000" {...field} />
+                    <Input type="number" placeholder={`e.g. ${currency} 1000`} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
