@@ -39,14 +39,10 @@ const ExpenseMetrics = ({
     others: 0,
   };
 
-  const mostCommonCategory = useMemo(
-    () =>
-      expenses.reduce((acc, expense) => {
-        acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
-        return acc;
-      }, categoryCounts),
-    expenses
-  );
+  const mostCommonCategory = expenses.reduce((acc, expense) => {
+    acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
+    return acc;
+  }, categoryCounts);
 
   type CategoryKey = keyof typeof mostCommonCategory;
 
@@ -62,7 +58,7 @@ const ExpenseMetrics = ({
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
       }),
-    expenses
+    [expenses, preferredCurrency]
   );
 
   return (
