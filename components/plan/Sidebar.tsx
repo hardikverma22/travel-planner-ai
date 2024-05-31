@@ -7,9 +7,6 @@ import {Button} from "@/components/ui/button";
 import {usePlanContext} from "@/contexts/PlanContextProvider";
 
 import {controlCenterSections, planSections} from "@/lib/constants";
-import {cn} from "@/lib/utils";
-import {usePathname} from "next/navigation";
-import {DollarSignIcon, ImageIcon, SettingsIcon, UserIcon} from "lucide-react";
 
 export type SidebarProps = {
   imagination: boolean;
@@ -22,11 +19,11 @@ export type SidebarProps = {
   besttimetovisit: boolean;
 };
 
-const Sidebar = ({planId}: {planId: string}) => {
+const Sidebar = ({planId, isMobile = false}: {planId: string; isMobile?: boolean}) => {
   const {planState} = usePlanContext();
 
   return (
-    <aside className="sticky top-20">
+    <aside className="space-y-6 sticky top-20">
       <div className="space-y-2">
         <h2 className="mb-2 text-lg font-semibold tracking-tight">Your Plan</h2>
         <div className="space-y-1">
@@ -42,7 +39,7 @@ const Sidebar = ({planId}: {planId: string}) => {
               >
                 {section.icon}
                 <span className="md:text-left">{section.name}</span>
-                {planState && !planState[section.id] && <Pulse />}
+                {!isMobile && planState && !planState[section.id] && <Pulse />}
               </Button>
             </Link>
           ))}

@@ -1,7 +1,29 @@
-"use client";
+import {getAuthToken} from "@/app/auth";
+import PlanLayoutContent from "@/components/plan/PlanLayoutContent";
+import {api} from "@/convex/_generated/api";
+import {Id} from "@/convex/_generated/dataModel";
+import {fetchQuery} from "convex/nextjs";
+import {Metadata, ResolvingMetadata} from "next";
 
-import Sidebar from "@/components/plan/Sidebar";
-import PlanContextProvider from "@/contexts/PlanContextProvider";
+export async function generateMetadata(
+  {
+    params,
+    searchParams,
+  }: {
+    params: {planId: string};
+    searchParams?: {isNewPlan: string};
+  },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const id = params.planId;
+  const token = await getAuthToken();
+
+  const plan = await fetchQuery(api.plan.getSinglePlan, {id: id as Id<"plan">}, {token});
+  console.log(plan?.nameoftheplace);
+  return {
+    title: plan ? plan.nameoftheplace : "Your Plan",
+  };
+}
 
 export default function RootLayout({
   children,
@@ -10,16 +32,5 @@ export default function RootLayout({
   children: React.ReactNode;
   params: {planId: string};
 }) {
-  return (
-    <PlanContextProvider>
-      <div className="w-full lg:px-20 px-5 py-6 min-h-[calc(100svh-6.5rem)] bg-background">
-        <div className="md:grid md:grid-cols-5 lg:gap-2 md:gap-5 gap-3">
-          <div className="hidden space-y-8  md:flex relative md:col-span-1 col-span-full lg:border-r lg:border-muted-foreground/30 min-h-[calc(100svh-6.5rem)]">
-            <Sidebar planId={params.planId} />
-          </div>
-          <div className="md:col-span-4 px-4 lg:px-8">{children}</div>
-        </div>
-      </div>
-    </PlanContextProvider>
-  );
+  return <PlanLayoutContent planId={params.planId}>{children}</PlanLayoutContent>;
 }

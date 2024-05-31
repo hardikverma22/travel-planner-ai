@@ -107,7 +107,7 @@ const MobileMenu = ({isCurrentPathHome, isCurrentPathDashboard}: MobileMenuProps
               setOpen(false);
             }}
           >
-            <Sidebar planId={planId} />
+            <Sidebar planId={planId} isMobile />
           </div>
         )}
       </aside>
