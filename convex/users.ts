@@ -20,15 +20,28 @@ export const getUser = internalQuery({
 
 /** Create a new Clerk user or update existing Clerk user data. */
 export const createUser = internalMutation({
-  args: { userId: v.string(), email: v.string() }, // no runtime validation, trust Clerk
-  async handler(ctx, { userId, email }) {
+  args: {
+    userId: v.string(),
+    email: v.string(),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string())
+  },
+  async handler(ctx, { userId, email, firstName, lastName }) {
     const userRecord = await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", email))
       .unique();
 
     if (userRecord === null) {
-      await ctx.db.insert("users", { userId, credits: 0, email, freeCredits: 1 });
+      await ctx.db.insert("users",
+        {
+          userId,
+          credits: 0,
+          email,
+          freeCredits: 1,
+          firstName,
+          lastName
+        });
     }
   },
 });
