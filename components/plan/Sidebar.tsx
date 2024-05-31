@@ -23,7 +23,7 @@ const Sidebar = ({planId, isMobile = false}: {planId: string; isMobile?: boolean
   const {planState} = usePlanContext();
 
   return (
-    <aside className="space-y-6 sticky top-20">
+    <aside className="space-y-6 sticky top-[5.6rem] h-fit">
       <div className="space-y-2">
         <h2 className="mb-2 text-lg font-semibold tracking-tight">Your Plan</h2>
         <div className="space-y-1">

@@ -14,7 +14,7 @@ const ImageSection = ({content, imageUrl, placeName}: PromptProps) => {
                 flex flex-col gap-5"
     >
       {imageUrl && (
-        <div className="relative w-full overflow-hidden h-[200px] md:h-[400px] flex items-end">
+        <div className="relative w-full overflow-hidden h-[300px] md:h-[400px] flex items-end">
           <Image
             src={imageUrl}
             alt="Image for the place"
