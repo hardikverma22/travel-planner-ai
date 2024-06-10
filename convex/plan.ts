@@ -68,22 +68,30 @@ export const getAllUsersForAPlan = query({
   },
   handler: async (ctx, args) => {
 
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return null;
+    }
+
     const access = await ctx.db.query("access")
       .filter(q => q.eq(q.field("planId"), args.planId))
       .collect();
 
-    const sharedAccess = access.map(a => ({ userId: a.userId, email: a.email }));
+    const sharedAccessUserIds = access.map(a => a.userId);
+
     const planRecord = await ctx.db.get(args.planId);
-    if (planRecord) {
-
-      const ownerAccess = await ctx.db.query("users")
-        .withIndex("by_clerk_id", q => q.eq("userId", planRecord.userId))
-        .first();
-      if (ownerAccess)
-        sharedAccess.push({ email: ownerAccess?.email, userId: ownerAccess?.userId })
-
+    if (!planRecord) {
+      throw new ConvexError("Plan Admin Not found");
     }
-    return sharedAccess;
+
+    sharedAccessUserIds.push(planRecord.userId);
+
+    const result = await Promise.all(sharedAccessUserIds.map(userId => ctx.db.query("users")
+      .withIndex("by_clerk_id", q => q.eq("userId", userId))
+      .first())) as Doc<"users">[];
+
+    var final = result.map(r => ({ ...r, IsCurrentUser: r.userId == identity.subject }));
+    return final;
   },
 });
 

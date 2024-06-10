@@ -22,7 +22,7 @@ const Join = () => {
   const currentUser = useQuery(api.users.currentUser);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded || !currentUser || !token) return;
 
     if (!isSignedIn) {
       router.push("/");

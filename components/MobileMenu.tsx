@@ -2,7 +2,6 @@
 
 import {Button} from "@/components/ui/button";
 import {navlinks} from "@/lib/constants";
-import clsx from "clsx";
 import {useEffect, useRef, useState} from "react";
 import {AiOutlineClose, AiOutlineMenu} from "react-icons/ai";
 import Link from "next/link";
@@ -14,9 +13,14 @@ import {ArrowLeft} from "lucide-react";
 type MobileMenuProps = {
   isCurrentPathHome: boolean;
   isCurrentPathDashboard: boolean;
+  isAuthenticated: boolean;
 };
 
-const MobileMenu = ({isCurrentPathHome, isCurrentPathDashboard}: MobileMenuProps) => {
+const MobileMenu = ({
+  isCurrentPathHome,
+  isCurrentPathDashboard,
+  isAuthenticated,
+}: MobileMenuProps) => {
   const [open, setOpen] = useState(false);
   const asideRef = useRef<HTMLDivElement>(null);
   const {planId} = useParams<{planId: string}>();
@@ -90,11 +94,19 @@ const MobileMenu = ({isCurrentPathHome, isCurrentPathDashboard}: MobileMenuProps
                 </Link>
               </li>
             ))}
-          {!isCurrentPathDashboard && (
-            <li className="cursor-pointer  hover:underline">
+          {!isCurrentPathDashboard && isAuthenticated && (
+            <li className="cursor-pointer hover:underline">
               <Link href="/dashboard" className="flex gap-1 justify-end items-center group">
                 <ArrowLeft className="w-4 h-4 group-hover:scale-125 transition-all duration-100 ease-linear" />
                 <span>Go back to Dashboard</span>
+              </Link>
+            </li>
+          )}
+          {isCurrentPathDashboard && (
+            <li className="cursor-pointer hover:underline">
+              <Link href="/" className="flex gap-1 justify-end items-center group">
+                <ArrowLeft className="w-4 h-4 group-hover:scale-125 transition-all duration-100 ease-linear" />
+                <span>Home</span>
               </Link>
             </li>
           )}

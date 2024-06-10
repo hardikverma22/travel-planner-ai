@@ -40,8 +40,6 @@ export const grantAccessByToken = mutation({
             throw new ConvexError("Not authorized to perform to check for Plan Admin")
         }
 
-        const { subject } = identity;
-
         const invite = await ctx.db.query('invites')
             .withIndex("by_token", q => q.eq("token", args.token))
             .first();

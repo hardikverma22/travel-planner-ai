@@ -12,7 +12,7 @@ const ExpenseMetrics = ({
   preferredCurrency,
 }: {
   preferredCurrency: string;
-  expenses: (Doc<"expenses"> & {email: string})[];
+  expenses: (Doc<"expenses"> & {whoSpent: string})[];
 }) => {
   if (!expenses || expenses.length === 0) return null;
 

@@ -34,7 +34,7 @@ export default function DataTable({
   preferredCurrency,
 }: {
   preferredCurrency: string;
-  data: (Doc<"expenses"> & {email: string})[];
+  data: (Doc<"expenses"> & {whoSpent: string})[];
 }) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -66,7 +66,7 @@ export default function DataTable({
 
   const selectedRows = table.getSelectedRowModel().rows;
 
-  const deleteSelectedRows = async (rows: Row<Doc<"expenses"> & {email: string}>[]) => {
+  const deleteSelectedRows = async (rows: Row<Doc<"expenses"> & {whoSpent: string}>[]) => {
     if (rows.length <= 0) return;
 
     await deleteMultipleExpenses({ids: rows.map((r) => r.original._id)});

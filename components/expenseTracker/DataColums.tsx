@@ -7,7 +7,7 @@ import {ColumnDef} from "@tanstack/react-table";
 import {Button} from "@/components/ui/button";
 import DropDownActions from "@/components/expenseTracker/DropDownActions";
 
-export const getColumns = (currency: string): ColumnDef<Doc<"expenses"> & {email: string}>[] => {
+export const getColumns = (currency: string): ColumnDef<Doc<"expenses"> & {whoSpent: string}>[] => {
   return [
     {
       id: "select",
@@ -46,7 +46,7 @@ export const getColumns = (currency: string): ColumnDef<Doc<"expenses"> & {email
     {
       accessorKey: "whopaid",
       header: () => <div className="text-left">Who Spent</div>,
-      cell: ({row}) => <div className="text-left font-medium">{row.original.email}</div>,
+      cell: ({row}) => <div className="text-left font-medium">{row.original.whoSpent}</div>,
     },
     {
       accessorKey: "category",

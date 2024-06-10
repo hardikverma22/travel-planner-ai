@@ -64,6 +64,7 @@ const Header = () => {
             <MobileMenu
               isCurrentPathHome={isCurrentPathHome}
               isCurrentPathDashboard={isCurrentPathDashboard}
+              isAuthenticated={isAuthenticated}
             />
           </div>
           <div className="flex gap-4 justify-end items-center flex-1">

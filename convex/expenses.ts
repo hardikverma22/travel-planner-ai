@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, QueryCtx } from "./_generated/server";
 import { Id } from './_generated/dataModel';
 
 export const createExpense = mutation({
@@ -89,9 +89,16 @@ export const getExpenses = query({
         return Promise.all(expenses.map(async expense =>
         ({
             ...expense,
-            email: (await ctx.db.query("users")
-                .withIndex("by_clerk_id", q => q.eq("userId", expense.userId))
-                .first())?.email ?? "Anonymous User"
+            whoSpent: await getName(ctx, expense.userId)
         })))
     },
 });
+
+
+const getName = async (ctx: QueryCtx, userId: string) => {
+    const user = await ctx.db.query("users")
+        .withIndex("by_clerk_id", q => q.eq("userId", userId))
+        .first();
+    if (!user) return "Anonymous User";
+    return user.firstName ? (user.firstName + (user.lastName ?? "")) : user.email;
+}
