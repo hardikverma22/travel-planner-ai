@@ -13,7 +13,7 @@ const UserDropdown = ({planId, userId}: {planId: string; userId: string}) => {
   const getDisplayName = (userObject: Doc<"users">) => {
     if (!userObject.firstName && !userObject.lastName) return userObject.email;
     if (userObject.firstName && userObject.firstName.length > 0)
-      return userObject.firstName + (userObject.lastName ?? "");
+      return userObject.firstName + (userObject.lastName ? ` ${userObject.lastName}` : "");
   };
 
   return sharedUserList?.map((userObject) => (

@@ -1,6 +1,7 @@
 import { Id } from './_generated/dataModel';
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query, QueryCtx } from "./_generated/server";
+import { userQuery } from './users';
 
 export const getPreferredCurrency = query({
     args: {

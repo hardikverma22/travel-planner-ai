@@ -66,9 +66,27 @@ export const reduceUserCreditsByOne = mutation({
   },
 });
 
+export const updateDisplayName = mutation({
+  args: { firstName: v.string(), lastName: v.string() },
+  async handler(ctx, { firstName, lastName }) {
+    if (!firstName)
+      throw new ConvexError("First Name is mandatory!");
+
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("Not Authrized to update display name");
+    }
+
+    const userRecord = await userQuery(ctx, identity.subject);
+
+    if (!userRecord)
+      throw new ConvexError("No User found to update display name");
+    console.log({ firstName, lastName });
+    await ctx.db.patch(userRecord?._id, { firstName, lastName });
+  },
+})
 
 export const updateUserCredits = async (ctx: MutationCtx, email: string, amount: number) => {
-
   const creditsToUpdate = (amount / 100 / 80) * 5;
   const user_object = await ctx.db
     .query("users")

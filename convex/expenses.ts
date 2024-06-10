@@ -100,5 +100,5 @@ const getName = async (ctx: QueryCtx, userId: string) => {
         .withIndex("by_clerk_id", q => q.eq("userId", userId))
         .first();
     if (!user) return "Anonymous User";
-    return user.firstName ? (user.firstName + (user.lastName ?? "")) : user.email;
+    return user.firstName ? (user.firstName + (user.lastName ? ` ${user.lastName}` : "")) : user.email;
 }

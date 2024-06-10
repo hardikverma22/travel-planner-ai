@@ -93,60 +93,58 @@ const CurrencySelector = ({planId}: {planId: string}) => {
       </p>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
-          <div className="flex gap-2">
-            <FormField
-              control={form.control}
-              name="currency"
-              render={({field}) => (
-                <FormItem>
-                  <FormControl>
-                    <Select
-                      disabled={isSending || preferredCurrency === undefined}
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      defaultValue={preferredCurrency == null ? undefined : preferredCurrency}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue
-                          placeholder={
-                            preferredCurrency === undefined
-                              ? "Laoding preffered Currency"
-                              : "Select a Currency"
-                          }
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Currency</SelectLabel>
-                          {currencies.map((currency) => (
-                            <SelectItem value={currency.cc} key={currency.cc}>
-                              {currency.cc} - {currency.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage className="ml-1" />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="currency"
+            render={({field}) => (
+              <FormItem>
+                <FormControl>
+                  <Select
+                    disabled={isSending || preferredCurrency === undefined}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={preferredCurrency == null ? undefined : preferredCurrency}
+                  >
+                    <SelectTrigger className="max-w-md">
+                      <SelectValue
+                        placeholder={
+                          preferredCurrency === undefined
+                            ? "Laoding preffered Currency"
+                            : "Select a Currency"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Currency</SelectLabel>
+                        {currencies.map((currency) => (
+                          <SelectItem value={currency.cc} key={currency.cc}>
+                            {currency.cc} - {currency.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage className="ml-1" />
+              </FormItem>
+            )}
+          />
 
-            <Button
-              type="submit"
-              variant="outline"
-              disabled={isSending || preferredCurrency === undefined}
-              className={cn("text-white hover:text-white bg-blue-500 hover:bg-blue-700")}
-            >
-              {false ? (
-                <div className="flex justify-center items-center gap-2">
-                  <Loading className="w-4 h-4" /> Saving Prefernces...
-                </div>
-              ) : (
-                "Save"
-              )}
-            </Button>
-          </div>
+          <Button
+            type="submit"
+            variant="outline"
+            disabled={isSending || preferredCurrency === undefined}
+            className={cn("")}
+          >
+            {isSending ? (
+              <div className="flex justify-center items-center gap-2">
+                <Loading className="w-4 h-4" /> Saving Prefernces...
+              </div>
+            ) : (
+              "Save"
+            )}
+          </Button>
         </form>
       </Form>
       <p className="font-sans text-sm text-muted-foreground pt-3">
