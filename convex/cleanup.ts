@@ -36,3 +36,23 @@ export const deleteOrphanImnages = mutation({
         })
     },
 })
+
+export const fillDefaultValues = mutation({
+    async handler(ctx, args) {
+        const planIds = (await ctx.db.query("plan").collect()).map(p => p._id);
+        planIds?.forEach(async planId => {
+            await ctx.db.patch(planId, {
+                contentGenerationState: {
+                    imagination: true,
+                    abouttheplace: true,
+                    adventuresactivitiestodo: true,
+                    topplacestovisit: true,
+                    itinerary: true,
+                    localcuisinerecommendations: true,
+                    packingchecklist: true,
+                    besttimetovisit: true
+                }
+            })
+        });
+    },
+})
