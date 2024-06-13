@@ -21,14 +21,10 @@ const ExpenseMetrics = ({
     expenses
   );
 
-  const highestExpense = useMemo(
-    () =>
-      expenses.reduce((prev, curr) => {
-        if (prev.amount > curr.amount) return prev;
-        else return curr;
-      }),
-    expenses
-  );
+  const highestExpense = expenses.reduce((prev, curr) => {
+    if (prev.amount > curr.amount) return prev;
+    else return curr;
+  });
 
   const categoryCounts: {[key in Doc<"expenses">["category"]]: number} = {
     food: 0,
@@ -67,23 +63,31 @@ const ExpenseMetrics = ({
         title="Total Expense"
         amount={totalExpenses}
         subtext="total spent on the plan"
-        icon={<DollarSignIcon className="h-4 w-4 text-muted-foreground" />}
         formatter={formatter}
         bgColor="bg-green-50"
       />
       <MetricCard
         title="Most Spent Category"
         amount={categoryCounts[topCategory]}
-        subtext={topCategory.toUpperCase()}
-        icon={expenseCategories.find((c) => c.key.includes(topCategory))?.icon}
+        subtext={
+          <div className="flex gap-2 items-center">
+            {expenseCategories.find((c) => c.key.includes(topCategory))?.icon}{" "}
+            {topCategory.toUpperCase()}
+          </div>
+        }
         formatter={formatter}
         bgColor="bg-purple-50"
       />
       <MetricCard
         title="Highest Single Expense"
         amount={highestExpense.amount}
-        subtext={`spent on ${highestExpense.category.toUpperCase()}`}
-        icon={<DollarSignIcon className="h-4 w-4 text-muted-foreground" />}
+        subtext={
+          <div className="flex gap-2 items-center">
+            <span>spent on</span>
+            {expenseCategories.find((c) => c.key.includes(highestExpense.category))?.icon}{" "}
+            {topCategory.toUpperCase()}
+          </div>
+        }
         formatter={formatter}
         bgColor="bg-red-50"
       />
@@ -95,26 +99,23 @@ const MetricCard = ({
   title,
   amount,
   subtext,
-  icon,
   formatter,
   bgColor,
 }: {
   title: string;
   amount: number;
-  subtext: string;
-  icon: ReactNode;
+  subtext: string | ReactNode;
   formatter: Intl.NumberFormat;
   bgColor: string;
 }) => {
   return (
     <Card className={cn("flex flex-col h-full justify-between", `dark:bg-card ${bgColor}`)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        {icon}
       </CardHeader>
-      <CardContent className="p-6">
+      <CardContent className="p-6 flex flex-col gap-3">
         <div className="text-2xl font-bold tracking-wider">{formatter.format(amount)}</div>
-        <p className="text-xs text-muted-foreground">{subtext}</p>
+        <div className="text-xs text-muted-foreground">{subtext}</div>
       </CardContent>
     </Card>
   );
