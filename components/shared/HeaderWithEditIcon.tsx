@@ -8,9 +8,17 @@ type Props = {
   handleToggleEditMode: () => void;
   title: string;
   hasData: boolean;
+  isLoading?: boolean;
 };
 
-const HeaderWithEditIcon = ({icon, editMode, handleToggleEditMode, title, hasData}: Props) => {
+const HeaderWithEditIcon = ({
+  icon,
+  editMode,
+  handleToggleEditMode,
+  title,
+  hasData,
+  isLoading = false,
+}: Props) => {
   return (
     <div className="mb-2 flex justify-between items-center">
       <h2
@@ -19,7 +27,7 @@ const HeaderWithEditIcon = ({icon, editMode, handleToggleEditMode, title, hasDat
       >
         {icon} {title}
       </h2>
-      {!editMode && (
+      {!editMode && !isLoading && (
         <Button variant="outline" size="icon" onClick={handleToggleEditMode}>
           {!hasData ? <PlusIcon className="h-4 w-4" /> : <PencilIcon className="h-4 w-4" />}
         </Button>

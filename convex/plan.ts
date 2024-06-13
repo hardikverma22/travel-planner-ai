@@ -46,22 +46,6 @@ const getSharedPlans = async (ctx: QueryCtx, userId: string) => {
   return Promise.all(promises);
 }
 
-export const getPlanAccessRecords = query({
-  args: {
-    planId: v.id("plan"),
-  },
-  handler: async (ctx, args) => {
-    const admin = await getPlanAdmin(ctx, args.planId.toString());
-    if (!admin || !admin.isPlanAdmin) return [];
-
-    const access = await ctx.db.query("access")
-      .filter(q => q.eq(q.field("planId"), args.planId))
-      .collect();
-
-    return access;
-  },
-});
-
 export const getAllUsersForAPlan = query({
   args: {
     planId: v.id("plan"),
@@ -92,18 +76,6 @@ export const getAllUsersForAPlan = query({
 
     var final = result.map(r => ({ ...r, IsCurrentUser: r.userId == identity.subject }));
     return final;
-  },
-});
-
-export const revokeAccess = mutation({
-  args: { id: v.id("access") },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return null;
-    }
-
-    await ctx.db.delete(args.id);
   },
 });
 
@@ -228,10 +200,6 @@ export const prepareBatch1 = action({
     { planId }
   ) => {
     try {
-
-      // if (!IsAuthenticated(ctx)) { return null }
-      console.log({ planId });
-
       const emptyPlan = await fetchEmptyPlan(ctx, planId);
 
       if (!emptyPlan) {
@@ -247,18 +215,16 @@ export const prepareBatch1 = action({
         ?.arguments as string;
 
       const modelName = JSON.parse(nameMsg) as
-        Pick<Doc<"plan">, "nameoftheplace" |
-          "abouttheplace" |
+        Pick<Doc<"plan">, "abouttheplace" |
           "besttimetovisit">;
 
-      await ctx.runMutation(internal.plan.updatePlaceNameAboutThePlaceBestTimeToVisit, {
-        nameoftheplace: modelName.nameoftheplace,
+      await ctx.runMutation(internal.plan.updateAboutThePlaceBestTimeToVisit, {
         abouttheplace: modelName.abouttheplace,
         besttimetovisit: modelName.besttimetovisit,
-        planId: emptyPlan._id,
+        planId: emptyPlan._id
       });
     } catch (error) {
-      throw new Error(`Error occured in prepare Plan Convex action: ${error}`);
+      throw new ConvexError(`Error occured in prepare Plan Convex action: ${error}`);
     }
   },
 });
@@ -351,18 +317,23 @@ export const prepareBatch3 = action({
 });
 
 //Mutation Patches after openAi responds
-export const updatePlaceNameAboutThePlaceBestTimeToVisit = internalMutation({
+export const updateAboutThePlaceBestTimeToVisit = internalMutation({
   args: {
     planId: v.id("plan"),
-    nameoftheplace: v.string(),
     abouttheplace: v.string(),
     besttimetovisit: v.string(),
   },
   handler: async (ctx, args) => {
+    const plan = await ctx.db.get(args.planId);
+
     await ctx.db.patch(args.planId, {
-      nameoftheplace: args.nameoftheplace,
       abouttheplace: args.abouttheplace,
       besttimetovisit: args.besttimetovisit,
+      contentGenerationState: {
+        ...plan!.contentGenerationState,
+        abouttheplace: true,
+        besttimetovisit: true
+      }
     });
   },
 });
@@ -372,13 +343,21 @@ export const updateActivitiesToDoPackingChecklistLocalCuisineRecommendations = i
     planId: v.id("plan"),
     adventuresactivitiestodo: v.array(v.string()),
     packingchecklist: v.array(v.string()),
-    localcuisinerecommendations: v.array(v.string())
+    localcuisinerecommendations: v.array(v.string()),
   },
   handler: async (ctx, args) => {
+    const plan = await ctx.db.get(args.planId);
+
     await ctx.db.patch(args.planId, {
       adventuresactivitiestodo: args.adventuresactivitiestodo,
       packingchecklist: args.packingchecklist,
-      localcuisinerecommendations: args.localcuisinerecommendations
+      localcuisinerecommendations: args.localcuisinerecommendations,
+      contentGenerationState: {
+        ...plan!.contentGenerationState,
+        adventuresactivitiestodo: true,
+        packingchecklist: true,
+        localcuisinerecommendations: true
+      }
     });
   },
 });
@@ -410,52 +389,71 @@ export const updateItineraryTopPlacesToVisit = internalMutation({
         })),
       })
     })),
+
   },
   handler: async (ctx, args) => {
+    const plan = await ctx.db.get(args.planId);
+
     await ctx.db.patch(args.planId, {
       topplacestovisit: args.topplacestovisit,
       itinerary: args.itinerary,
+      contentGenerationState: {
+        ...plan!.contentGenerationState,
+        topplacestovisit: true,
+        itinerary: true,
+      }
     });
   },
 });
 
 //edit in UI
-export const updateActivitiesToDo = mutation({
+
+export const updatePartOfPlan = mutation({
   args: {
     planId: v.id("plan"),
-    adventuresactivitiestodo: v.array(v.string()),
+    data: v.union(v.string(), v.array(v.string()), v.array(v.object({
+      name: v.string(),
+      coordinates: v.object({
+        lat: v.float64(),
+        lng: v.float64()
+      })
+    }))),
+    key: v.union(v.literal("abouttheplace"),
+      v.literal("besttimetovisit"),
+      v.literal("packingchecklist"),
+      v.literal("localcuisinerecommendations"),
+      v.literal("adventuresactivitiestodo"),
+      v.literal("topplacestovisit"))
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.planId, {
-      adventuresactivitiestodo: args.adventuresactivitiestodo,
+      [args.key]: args.data,
     });
   },
-});
+})
 
-export const updateLocalCuisineRecommendations = mutation({
+export const updatePlaceToVisit = mutation({
   args: {
     planId: v.id("plan"),
-    localcuisinerecommendations: v.array(v.string()),
+    lat: v.float64(),
+    lng: v.float64(),
+    placeName: v.string(),
   },
   handler: async (ctx, args) => {
-    await ctx.db.patch(args.planId, {
-      localcuisinerecommendations: args.localcuisinerecommendations,
-    });
+    const plan = await ctx.db.get(args.planId);
+    if (!plan) return;
+    const existing = plan?.topplacestovisit;
+    await ctx.db.patch(plan?._id, {
+      topplacestovisit: [...existing, {
+        name: args.placeName,
+        coordinates: {
+          lat: args.lat,
+          lng: args.lng
+        }
+      }]
+    })
   },
-});
-
-export const updatePackingChecklist = mutation({
-  args: {
-    planId: v.id("plan"),
-    packingchecklist: v.array(v.string()),
-  },
-  handler: async (ctx, args) => {
-    await ctx.db.patch(args.planId, {
-      packingchecklist: args.packingchecklist,
-    });
-  },
-});
-
+})
 
 export const deleteDayInItinerary = mutation({
   args: { dayName: v.string(), planId: v.id("plan"), },
@@ -504,7 +502,9 @@ export const addDayInItinerary = mutation({
 
 export const createEmptyPlan = mutation({
   args: {
-    userPrompt: v.string()
+    placeName: v.string(),
+    noOfDays: v.string(),
+    isGeneratedUsingAI: v.boolean()
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -513,18 +513,31 @@ export const createEmptyPlan = mutation({
       return null;
     }
 
+    const state = args.isGeneratedUsingAI ? false : true;
+
     const newPlan = await ctx.db.insert("plan", {
-      nameoftheplace: "",
+      nameoftheplace: args.placeName,
       abouttheplace: "",
       adventuresactivitiestodo: [],
       topplacestovisit: [],
       userId: identity.subject,
-      userPrompt: args.userPrompt,
+      userPrompt: `${args.noOfDays} days trip to ${args.placeName}`,
       besttimetovisit: "",
       itinerary: [],
       storageId: null,
       localcuisinerecommendations: [],
-      packingchecklist: []
+      packingchecklist: [],
+      isGeneratedUsingAI: args.isGeneratedUsingAI,
+      contentGenerationState: {
+        imagination: state,
+        abouttheplace: state,
+        adventuresactivitiestodo: state,
+        besttimetovisit: state,
+        itinerary: state,
+        localcuisinerecommendations: state,
+        packingchecklist: state,
+        topplacestovisit: state
+      }
     });
     return newPlan;
   },

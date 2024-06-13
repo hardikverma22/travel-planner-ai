@@ -23,7 +23,7 @@ export default function LocalCuisineRecommendations({
 }: LocalCuisineRecommendationsProps) {
   const [editMode, setEditMode] = useState(false);
 
-  const updateLocalCuisineRecommendations = useMutation(api.plan.updateLocalCuisineRecommendations);
+  const updateLocalCuisineRecommendations = useMutation(api.plan.updatePartOfPlan);
 
   const handleToggleEditMode = () => {
     setEditMode(!editMode);
@@ -32,20 +32,22 @@ export default function LocalCuisineRecommendations({
   const updateLocalCuisines = (updatedArray: string[]) => {
     updateLocalCuisineRecommendations({
       planId: planId as Doc<"plan">["_id"],
-      localcuisinerecommendations: updatedArray,
+      data: updatedArray,
+      key: "localcuisinerecommendations",
     }).then(() => {
       handleToggleEditMode();
     });
   };
 
   return (
-    <SectionWrapper id="localcuisines">
+    <SectionWrapper id="localcuisinerecommendations">
       <HeaderWithEditIcon
         editMode={editMode}
         handleToggleEditMode={handleToggleEditMode}
         hasData={recommendations != null && recommendations.length != 0}
         icon={<Utensils className="mr-2" />}
         title="Local Cuisine Recommendations"
+        isLoading={isLoading}
       />
 
       {!isLoading && recommendations ? (

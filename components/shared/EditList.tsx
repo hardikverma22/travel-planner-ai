@@ -2,7 +2,7 @@
 
 import {useFieldArray} from "react-hook-form";
 import {z} from "zod";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Plus, TrashIcon} from "lucide-react";
 import {cn} from "@/lib/utils";

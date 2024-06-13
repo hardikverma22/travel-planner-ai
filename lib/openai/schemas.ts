@@ -1,10 +1,6 @@
 export const batch1Schema = {
     type: "object",
     properties: {
-        nameoftheplace: {
-            type: "string",
-            description: "Comma separated names of the user input places or locations",
-        },
         abouttheplace: {
             type: "string",
             description: "about the place in atleast 50 words",
@@ -16,7 +12,6 @@ export const batch1Schema = {
 
     },
     "required": [
-        "nameoftheplace",
         "abouttheplace",
         "besttimetovisit"
     ],

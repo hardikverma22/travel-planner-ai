@@ -1,28 +1,40 @@
-import React, {createContext, useContext, useState} from "react";
+import {Doc} from "@/convex/_generated/dataModel";
+import React, {createContext, useContext, useState, Dispatch, SetStateAction} from "react";
 
-const planInitialState = {
+type planStateType = Doc<"plan">["contentGenerationState"];
+
+type PlanContextType = {
+  planState: planStateType;
+  setPlanState: Dispatch<SetStateAction<planStateType>>;
+};
+
+const defaultPlanState: planStateType = {
   imagination: false,
   abouttheplace: false,
-  topactivities: false,
+  adventuresactivitiestodo: false,
   topplacestovisit: false,
   itinerary: false,
-  localcuisines: false,
+  localcuisinerecommendations: false,
   packingchecklist: false,
   besttimetovisit: false,
 };
 
-const PlanContext = createContext({
-  planState: planInitialState,
-  setPlanState: (state: any) => {},
+const PlanContext = createContext<PlanContextType | undefined>({
+  planState: defaultPlanState,
+  setPlanState: () => {},
 });
 
 export const usePlanContext = () => {
-  if (PlanContext == null) throw new Error("No Context Found");
-  return useContext(PlanContext);
+  const context = useContext(PlanContext);
+  if (context === undefined) {
+    throw new Error("usePlanContext must be used within a PlanContextProvider");
+  }
+  return context;
 };
 
 const PlanContextProvider = ({children}: {children: React.ReactNode}) => {
-  const [planState, setPlanState] = useState(planInitialState);
+  const [planState, setPlanState] = useState<planStateType>(defaultPlanState);
+
   return <PlanContext.Provider value={{planState, setPlanState}}>{children}</PlanContext.Provider>;
 };
 

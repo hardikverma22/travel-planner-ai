@@ -19,7 +19,8 @@ type PackingChecklistProps = {
 export default function PackingChecklist({checklist, isLoading, planId}: PackingChecklistProps) {
   const [editMode, setEditMode] = useState(false);
 
-  const updatePackingChecklist = useMutation(api.plan.updatePackingChecklist);
+  // const updatePackingChecklist = useMutation(api.plan.updatePackingChecklist);
+  const updatePackingChecklist = useMutation(api.plan.updatePartOfPlan);
 
   const handleToggleEditMode = () => {
     setEditMode(!editMode);
@@ -28,7 +29,8 @@ export default function PackingChecklist({checklist, isLoading, planId}: Packing
   const updateChecklist = (updatedArray: string[]) => {
     updatePackingChecklist({
       planId: planId as Doc<"plan">["_id"],
-      packingchecklist: updatedArray,
+      data: updatedArray,
+      key: "packingchecklist",
     }).then(() => {
       handleToggleEditMode();
     });
@@ -42,6 +44,7 @@ export default function PackingChecklist({checklist, isLoading, planId}: Packing
         hasData={checklist != null && checklist.length != 0}
         icon={<Backpack className="mr-2" />}
         title="Packing Checklist"
+        isLoading={isLoading}
       />
 
       {!isLoading && checklist ? (

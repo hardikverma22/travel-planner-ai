@@ -8,7 +8,7 @@ import * as z from "zod";
 
 import {Button} from "@/components/ui/button";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {Loader2} from "lucide-react";
+import {Loader2, MessageSquarePlus, Wand2} from "lucide-react";
 import {generatePlanAction} from "@/lib/actions/generateplanAction";
 import PlacesAutoComplete from "@/components/PlacesAutoComplete";
 import {
@@ -18,9 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {generateEmptyPlanAction} from "@/lib/actions/generateEmptyPlanAction";
+import {useToast} from "@/components/ui/use-toast";
 
 export const formSchema = z.object({
-  // promptText: z.string().min(1, "I can't use my AI powers without your imagination"),
   placeName: z
     .string({required_error: "Please select a place"})
     .min(3, "Place name should be at least 3 character long"),
@@ -35,14 +36,17 @@ const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>
   const {isSignedIn} = useAuth();
   if (!isSignedIn) return null;
 
-  const [pending, startTransaction] = useTransition();
+  const [pendingEmptyPlan, startTransactionEmptyPlan] = useTransition();
+  const [pendingAIPlan, startTransactionAiPlan] = useTransition();
+
   const [selectedFromList, setSelectedFromList] = useState(false);
+  const {toast} = useToast();
 
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmitEmptyPlan(values: z.infer<typeof formSchema>) {
     if (!selectedFromList) {
       form.setError("placeName", {
         message: "Place should be selected from the list",
@@ -50,7 +54,29 @@ const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>
       });
       return;
     }
-    startTransaction(async () => {
+
+    startTransactionEmptyPlan(async () => {
+      const planId = await generateEmptyPlanAction(values);
+      closeModal(false);
+      if (planId === null) {
+        toast({
+          title: "Error",
+          description: "Error received from server action",
+        });
+      }
+    });
+  }
+
+  async function onSubmitAIPlan(values: z.infer<typeof formSchema>) {
+    if (!selectedFromList) {
+      form.setError("placeName", {
+        message: "Place should be selected from the list",
+        type: "custom",
+      });
+      return;
+    }
+
+    startTransactionAiPlan(async () => {
       const planId = await generatePlanAction(values);
       closeModal(false);
       if (planId === null) {
@@ -61,7 +87,7 @@ const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form className="space-y-4">
         <FormField
           control={form.control}
           name="placeName"
@@ -105,21 +131,47 @@ const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>
             </FormItem>
           )}
         />
-        <Button
-          aria-label="generate plan"
-          type="submit"
-          disabled={pending || !form.formState.isValid}
-          className="bg-blue-500 text-white hover:bg-blue-600"
-        >
-          {pending ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              <span>Generating Travel Plan...</span>
-            </>
-          ) : (
-            <span>Generate Plan</span>
-          )}
-        </Button>
+        <div className="w-full flex justify-between gap-1">
+          <Button
+            onClick={() => form.handleSubmit(onSubmitEmptyPlan)()}
+            aria-label="generate plan"
+            type="submit"
+            disabled={pendingEmptyPlan || pendingAIPlan || !form.formState.isValid}
+            className="bg-blue-500 text-white hover:bg-blue-600 w-full"
+          >
+            {pendingEmptyPlan ? (
+              <div className="flex gap-1 justify-center items-center">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <span>Generating Travel Plan...</span>
+              </div>
+            ) : (
+              <div className="flex gap-1 justify-center items-center">
+                <MessageSquarePlus className="h-4 w-4" />
+                <span>Create Your Plan</span>
+              </div>
+            )}
+          </Button>
+
+          <Button
+            onClick={() => form.handleSubmit(onSubmitAIPlan)()}
+            aria-label="generate AI plan"
+            type="submit"
+            disabled={pendingAIPlan || pendingEmptyPlan || !form.formState.isValid}
+            className="bg-indigo-500 text-white hover:bg-indigo-600 w-full group"
+          >
+            {pendingAIPlan ? (
+              <div className="flex gap-1 justify-center items-center">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <span>Generating AI Travel Plan...</span>
+              </div>
+            ) : (
+              <div className="flex gap-1 justify-center items-center ">
+                <Wand2 className="h-4 w-4 group-hover:animate-pulse" />
+                <span>Generate AI Plan</span>
+              </div>
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );

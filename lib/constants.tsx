@@ -1,4 +1,4 @@
-import {SidebarProps} from "@/components/plan/Sidebar";
+import {Doc} from "@/convex/_generated/dataModel";
 import {
   Backpack,
   Clock3,
@@ -58,7 +58,7 @@ export const controlCenterSections: {
 ];
 
 export const planSections: {
-  id: keyof SidebarProps;
+  id: keyof Doc<"plan">["contentGenerationState"];
   name: string;
   icon: ReactNode;
 }[] = [
@@ -73,7 +73,7 @@ export const planSections: {
     icon: <Info className="mr-2 h-4 w-4" />,
   },
   {
-    id: "topactivities",
+    id: "adventuresactivitiestodo",
     name: "Top Activities",
     icon: <Sailboat className="mr-2 h-4 w-4" />,
   },
@@ -88,7 +88,7 @@ export const planSections: {
     icon: <Navigation className="mr-2 h-4 w-4" />,
   },
   {
-    id: "localcuisines",
+    id: "localcuisinerecommendations",
     name: "Local Cuisines",
     icon: <Utensils className="mr-2 h-4 w-4" />,
   },

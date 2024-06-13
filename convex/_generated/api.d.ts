@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as access from "../access.js";
 import type * as cleanup from "../cleanup.js";
 import type * as email from "../email.js";
 import type * as expenses from "../expenses.js";
@@ -39,6 +40,7 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  access: typeof access;
   cleanup: typeof cleanup;
   email: typeof email;
   expenses: typeof expenses;

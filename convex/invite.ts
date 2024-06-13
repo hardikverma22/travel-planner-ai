@@ -1,5 +1,5 @@
-import { Id } from "./_generated/dataModel";
-import { ConvexError, v } from "convex/values";
+import { Doc, Id } from "./_generated/dataModel";
+import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getPlanAdmin } from "./plan";
 
@@ -16,7 +16,16 @@ export const getInvites = query({
             .order("desc")
             .take(100);
 
-        return invites;
+        if (!invites) return [];
+        const result = await Promise.all(invites.map(async invite => {
+            const currentUser = await ctx.db.query("users")
+                .withIndex("by_email", q => q.eq("email", invite.email))
+                .first() as Doc<"users">;
+
+            return { ...invite, firstName: currentUser.firstName, lastName: currentUser.lastName };
+        }));
+
+        return result;
     },
 });
 

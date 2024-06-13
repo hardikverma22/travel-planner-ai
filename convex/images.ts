@@ -44,8 +44,13 @@ export const updateStorageId = internalMutation({
         planId: v.id("plan")
     },
     handler: async (ctx, { storageId, planId }) => {
+        const plan = await ctx.db.get(planId);
         await ctx.db.patch(planId, {
             storageId: storageId,
+            contentGenerationState: {
+                ...plan!.contentGenerationState,
+                imagination: true
+            }
         });
     },
 });

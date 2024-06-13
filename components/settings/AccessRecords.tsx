@@ -3,14 +3,15 @@ import {Button} from "@/components/ui/button";
 import {useToast} from "@/components/ui/use-toast";
 import {api} from "@/convex/_generated/api";
 import {Id} from "@/convex/_generated/dataModel";
+import {getDisplayName} from "@/lib/utils";
 import {useMutation, useQuery} from "convex/react";
 import {useTransition} from "react";
 
 const AccessRecords = ({planId}: {planId: string}) => {
-  const records = useQuery(api.plan.getPlanAccessRecords, {
+  const records = useQuery(api.access.getPlanAccessRecords, {
     planId: planId as Id<"plan">,
   });
-  const revokeAccess = useMutation(api.plan.revokeAccess);
+  const revokeAccess = useMutation(api.access.revokeAccess);
   const {toast} = useToast();
   const [isPending, startTransition] = useTransition();
 
@@ -28,7 +29,7 @@ const AccessRecords = ({planId}: {planId: string}) => {
   return (
     <div className="mt-5">
       <div className="mb-2 font-bold text-sm">People having access to this plan</div>
-      <div className="flex flex-col gap-3 w-96">
+      <div className="flex flex-col gap-3 max-w-lg">
         {records.map((record) => (
           <div
             key={record._id}
@@ -37,7 +38,9 @@ const AccessRecords = ({planId}: {planId: string}) => {
                         shadow-sm rounded-md
                         flex gap-5 justify-between items-center"
           >
-            <span className="text-sm text-muted-foreground">{record.email}</span>
+            <span className="text-sm text-muted-foreground">
+              {getDisplayName(record.firstName, record.lastName, record.email)}
+            </span>
             <Button
               variant="destructive"
               size="sm"

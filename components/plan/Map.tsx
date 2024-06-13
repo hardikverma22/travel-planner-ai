@@ -2,6 +2,7 @@
 import {Doc} from "@/convex/_generated/dataModel";
 import {colors, MAPS_DARK_MODE_STYLES} from "@/lib/constants";
 import {GoogleMap, useJsApiLoader, OverlayView, Libraries} from "@react-google-maps/api";
+import {MapPin} from "lucide-react";
 import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 
@@ -11,14 +12,6 @@ type MapProps = {
 };
 
 export default function Map({topPlacesToVisit, selectedPlace}: MapProps) {
-  // const libraries: Libraries = ["maps", "maps", "places"];
-  const [libraries] = useState<Libraries>(["places"]);
-  const {isLoaded} = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-    libraries,
-  });
-
   const [mapCenter, setMapCenter] = useState(selectedPlace);
   const [mapZoom, setMapZoom] = useState(13);
 
@@ -34,30 +27,33 @@ export default function Map({topPlacesToVisit, selectedPlace}: MapProps) {
     setMapZoom(16);
   };
 
-  return (
-    isLoaded && (
-      <GoogleMap
-        mapContainerStyle={{height: "100%", width: "100%"}}
-        center={mapCenter}
-        zoom={mapZoom}
-        options={{
-          styles: resolvedTheme === "dark" ? MAPS_DARK_MODE_STYLES : [],
-          disableDefaultUI: false,
-          clickableIcons: true,
-          scrollwheel: true,
-        }}
-      >
-        {topPlacesToVisit?.map((place, index) => (
-          <OverlayView
-            position={place.coordinates}
-            key={place.name}
-            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-          >
-            <MapPinMarker index={index} />
-          </OverlayView>
-        ))}
-      </GoogleMap>
-    )
+  return topPlacesToVisit && topPlacesToVisit?.length > 0 ? (
+    <GoogleMap
+      mapContainerStyle={{height: "100%", width: "100%"}}
+      center={mapCenter}
+      zoom={mapZoom}
+      options={{
+        styles: resolvedTheme === "dark" ? MAPS_DARK_MODE_STYLES : [],
+        disableDefaultUI: false,
+        clickableIcons: true,
+        scrollwheel: true,
+      }}
+    >
+      {topPlacesToVisit?.map((place, index) => (
+        <OverlayView
+          position={place.coordinates}
+          key={place.name}
+          mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+        >
+          <MapPinMarker index={index} />
+        </OverlayView>
+      ))}
+    </GoogleMap>
+  ) : (
+    <div className="w-full h-full flex flex-col gap-2 justify-center items-center bg-background text-balance px-2 text-center">
+      <MapPin className="h-20 w-20" />
+      <span>Search and select a lcoation to add to places to visit</span>
+    </div>
   );
 }
 

@@ -27,14 +27,15 @@ type PlanProps = {
 };
 
 const Plan = ({planId, isNewPlan}: PlanProps) => {
-  const {shouldShowAlert, planState, plan, isLoading, error} = usePlan(planId, isNewPlan);
+  const {shouldShowAlert, plan, isLoading, error} = usePlan(planId, isNewPlan);
   const {setPlanState} = usePlanContext();
 
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoading) return;
-    setPlanState(planState);
+    if (isLoading || !plan) return;
+
+    setPlanState(plan.contentGenerationState);
   }, [plan]);
 
   useEffect(() => {
@@ -58,7 +59,7 @@ const Plan = ({planId, isNewPlan}: PlanProps) => {
             {error} <br />
             <div className="flex justify-start items-center gap-1 text-md text-gray-600">
               <Loading className="w-4 h-4 mr-1" />
-              Rirecting you back to your dashboard...
+              Redirecting you back to your dashboard...
             </div>
           </AlertDescription>
         </Alert>
@@ -76,26 +77,43 @@ const Plan = ({planId, isNewPlan}: PlanProps) => {
             content={plan?.userPrompt}
             placeName={plan?.nameoftheplace}
             imageUrl={plan?.url}
+            isLoading={isLoading || !plan?.contentGenerationState.imagination}
           />
-          <AboutThePlace content={plan?.abouttheplace} />
+          <AboutThePlace
+            isLoading={isLoading || !plan?.contentGenerationState.abouttheplace}
+            planId={planId}
+            content={plan?.abouttheplace}
+          />
           <TopActivities
             activities={plan?.adventuresactivitiestodo}
             planId={planId}
-            isLoading={isLoading}
+            isLoading={isLoading || !plan?.contentGenerationState.adventuresactivitiestodo}
           />
-          <TopPlacesToVisit topPlacesToVisit={plan?.topplacestovisit} />
-          <Itinerary itinerary={plan?.itinerary} planId={planId} />
+          <TopPlacesToVisit
+            topPlacesToVisit={plan?.topplacestovisit}
+            planId={planId}
+            isLoading={isLoading || !plan?.contentGenerationState.topplacestovisit}
+          />
+          <Itinerary
+            itinerary={plan?.itinerary}
+            planId={planId}
+            isLoading={isLoading || !plan?.contentGenerationState.itinerary}
+          />
           <LocalCuisineRecommendations
             recommendations={plan?.localcuisinerecommendations}
-            isLoading={isLoading}
+            isLoading={isLoading || !plan?.contentGenerationState.localcuisinerecommendations}
             planId={planId}
           />
           <PackingChecklist
             checklist={plan?.packingchecklist}
-            isLoading={isLoading}
+            isLoading={isLoading || !plan?.contentGenerationState.packingchecklist}
             planId={planId}
           />
-          <BestTimeToVisit content={plan?.besttimetovisit} />
+          <BestTimeToVisit
+            content={plan?.besttimetovisit}
+            planId={planId}
+            isLoading={isLoading || !plan?.contentGenerationState.besttimetovisit}
+          />
         </>
       )}
     </section>

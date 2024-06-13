@@ -31,7 +31,7 @@ const InviteForm = ({planId}: {planId: string}) => {
     },
   });
 
-  const addInvite = useAction(api.invite.sendInvite);
+  const addInvite = useAction(api.email.sendInvite);
   const {toast} = useToast();
   const {user} = useUser();
 

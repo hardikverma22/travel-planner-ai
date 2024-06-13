@@ -1,21 +1,64 @@
 import SectionWrapper from "@/components/sections/SectionWrapper";
+
 import {Skeleton} from "@/components/ui/skeleton";
 import {Info} from "lucide-react";
+import {useState} from "react";
+import EditText from "@/components/shared/EditText";
+import HeaderWithEditIcon from "@/components/shared/HeaderWithEditIcon";
+import {api} from "@/convex/_generated/api";
+import {useMutation} from "convex/react";
+import {Doc} from "@/convex/_generated/dataModel";
 
 type AboutThePlaceProps = {
   content: string | undefined;
+  isLoading: boolean;
+  planId: string;
 };
 
-export default function AboutThePlace({content}: AboutThePlaceProps) {
+export default function AboutThePlace({content, isLoading, planId}: AboutThePlaceProps) {
+  const [editMode, setEditMode] = useState(false);
+  const updateAboutThePlace = useMutation(api.plan.updatePartOfPlan);
+
+  const handleToggleEditMode = () => {
+    setEditMode(!editMode);
+  };
+
+  const updateAboutThePlaceContent = (updatedContent: string) => {
+    console.log(updatedContent);
+    updateAboutThePlace({
+      planId: planId as Doc<"plan">["_id"],
+      data: updatedContent.trim(),
+      key: "abouttheplace",
+    }).then(() => {
+      handleToggleEditMode();
+    });
+  };
+
   return (
     <SectionWrapper id="abouttheplace">
-      <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">
-        <Info className="mr-2" />
-        About the Place
-      </h2>
+      <HeaderWithEditIcon
+        editMode={editMode}
+        handleToggleEditMode={handleToggleEditMode}
+        hasData={typeof content === "string" && content.length > 0}
+        icon={<Info className="mr-2" />}
+        title="About the Place"
+        isLoading={isLoading}
+      />
       <div className="ml-8">
-        {content ? (
-          <p className="tracking-wide font-medium text-accent-foreground/90">{content}</p>
+        {!isLoading ? (
+          editMode ? (
+            <EditText
+              content={content ?? ""}
+              toggleEditMode={handleToggleEditMode}
+              updateContent={updateAboutThePlaceContent}
+            />
+          ) : (
+            content || (
+              <div className=" flex justify-center items-center">
+                Click + to add about the place
+              </div>
+            )
+          )
         ) : (
           <Skeleton className="w-full h-full" />
         )}

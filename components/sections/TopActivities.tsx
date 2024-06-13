@@ -20,7 +20,7 @@ type TopActivitiesProps = {
 
 export default function TopActivities({activities, planId, isLoading}: TopActivitiesProps) {
   const [editMode, setEditMode] = useState(false);
-  const updateActivities = useMutation(api.plan.updateActivitiesToDo);
+  const updateActivities = useMutation(api.plan.updatePartOfPlan);
 
   const handleToggleEditMode = () => {
     setEditMode(!editMode);
@@ -29,20 +29,22 @@ export default function TopActivities({activities, planId, isLoading}: TopActivi
   const updateActivitiesToDo = (updatedArray: string[]) => {
     updateActivities({
       planId: planId as Doc<"plan">["_id"],
-      adventuresactivitiestodo: updatedArray,
+      data: updatedArray,
+      key: "adventuresactivitiestodo",
     }).then(() => {
       handleToggleEditMode();
     });
   };
 
   return (
-    <SectionWrapper id="topactivities">
+    <SectionWrapper id="adventuresactivitiestodo">
       <HeaderWithEditIcon
         editMode={editMode}
         handleToggleEditMode={handleToggleEditMode}
         hasData={activities != null && activities.length != 0}
         icon={<Sailboat className="mr-2" />}
         title="Top activities to look for"
+        isLoading={isLoading}
       />
       {!isLoading && activities ? (
         <div className="ml-8">

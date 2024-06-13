@@ -10,6 +10,12 @@ type TimelineProps = {
 };
 
 const Timeline = ({itinerary, planId}: TimelineProps) => {
+  if (itinerary && itinerary.length === 0)
+    return (
+      <div className="flex justify-center items-center p-4">
+        Click + Add a day to plan an itinerary
+      </div>
+    );
   const filteredItinerary = itinerary?.filter((day) => {
     const isMorningEmpty = day.activities.morning.length === 0;
     const isAfternoonEmpty = day.activities.afternoon.length === 0;

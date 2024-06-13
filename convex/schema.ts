@@ -3,7 +3,7 @@ import { v } from "convex/values";
 
 export default defineSchema({
   plan: defineTable({
-    isGeneratedUsingAI: v.optional(v.boolean()),
+    isGeneratedUsingAI: v.boolean(),
     storageId: v.union(v.id("_storage"), v.null()),
     nameoftheplace: v.string(),
     userPrompt: v.string(),
@@ -38,7 +38,7 @@ export default defineSchema({
       })
     })
     ),
-    contentGenerationState: v.optional(v.object({
+    contentGenerationState: v.object({
       imagination: v.boolean(),
       abouttheplace: v.boolean(),
       adventuresactivitiestodo: v.boolean(),
@@ -47,7 +47,7 @@ export default defineSchema({
       localcuisinerecommendations: v.boolean(),
       packingchecklist: v.boolean(),
       besttimetovisit: v.boolean(),
-    }))
+    })
   }),
   users: defineTable({
     userId: v.string(),

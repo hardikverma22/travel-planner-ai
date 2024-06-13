@@ -8,24 +8,13 @@ import {usePlanContext} from "@/contexts/PlanContextProvider";
 
 import {controlCenterSections, planSections} from "@/lib/constants";
 
-export type SidebarProps = {
-  imagination: boolean;
-  abouttheplace: boolean;
-  topactivities: boolean;
-  topplacestovisit: boolean;
-  itinerary: boolean;
-  localcuisines: boolean;
-  packingchecklist: boolean;
-  besttimetovisit: boolean;
-};
-
 const Sidebar = ({planId, isMobile = false}: {planId: string; isMobile?: boolean}) => {
   const {planState} = usePlanContext();
 
   return (
     <aside className="space-y-6 sticky top-[5.6rem] h-fit">
       <div className="space-y-2">
-        <h2 className="mb-2 text-lg font-semibold tracking-tight">Your Plan</h2>
+        <h2 className="mb-2 md:text-lg text-base font-semibold tracking-tight">Your Plan</h2>
         <div className="space-y-1">
           {planSections.map((section) => (
             <Link href={`/plans/${planId}/plan#${section.id}`} key={section.id}>
@@ -33,12 +22,12 @@ const Sidebar = ({planId, isMobile = false}: {planId: string; isMobile?: boolean
                 aria-label={section.name}
                 variant="ghost"
                 className="w-full 
-                          flex justify-start items-center
+                          flex justify-start items-start
                           gap-2 whitespace-break-spaces px-2
                           text-foreground dark:text-muted-foreground hover:dark:text-foreground"
               >
                 {section.icon}
-                <span className="md:text-left">{section.name}</span>
+                <span className="text-left">{section.name}</span>
                 {!isMobile && planState && !planState[section.id] && <Pulse />}
               </Button>
             </Link>

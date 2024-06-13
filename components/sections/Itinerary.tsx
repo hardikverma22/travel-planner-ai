@@ -9,9 +9,10 @@ import {Navigation, PlusCircle, PlusCircleIcon, PlusIcon} from "lucide-react";
 type ItineraryProps = {
   itinerary: Doc<"plan">["itinerary"] | undefined;
   planId: string;
+  isLoading: boolean;
 };
 
-const Itinerary = ({itinerary, planId}: ItineraryProps) => {
+const Itinerary = ({itinerary, planId, isLoading}: ItineraryProps) => {
   return (
     <SectionWrapper id="itinerary">
       <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center"></h2>
@@ -22,9 +23,9 @@ const Itinerary = ({itinerary, planId}: ItineraryProps) => {
         >
           <Navigation className="mr-2" /> Itinerary
         </h2>
-        {itinerary && <AddIternaryDay planId={planId} />}
+        {!isLoading && <AddIternaryDay planId={planId} />}
       </div>
-      {itinerary && itinerary.length > 0 ? (
+      {!isLoading ? (
         <Timeline itinerary={itinerary} planId={planId} />
       ) : (
         <Skeleton className="w-full h-full" />

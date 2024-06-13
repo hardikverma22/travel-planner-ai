@@ -10,7 +10,7 @@ export async function generatePlanAction(formData: formSchemaType) {
   const { placeName, noOfDays } = formData;
 
   const planId = await fetchMutation(api.plan.createEmptyPlan,
-    { userPrompt: `${noOfDays} days trip to ${placeName}` },
+    { placeName, noOfDays, isGeneratedUsingAI: true },
     { token });
 
   if (planId === null)

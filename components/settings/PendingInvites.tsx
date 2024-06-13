@@ -6,11 +6,12 @@ import {api} from "@/convex/_generated/api";
 import {Id} from "@/convex/_generated/dataModel";
 import {useMutation, useQuery} from "convex/react";
 import {ConvexError} from "convex/values";
+import {getDisplayName} from "@/lib/utils";
 import {useTransition} from "react";
 
 const PendingInvites = ({planId}: {planId: string}) => {
-  const invites = useQuery(api.email.getInvites, {planId});
-  const revokeInvite = useMutation(api.email.revokeInvite);
+  const invites = useQuery(api.invite.getInvites, {planId});
+  const revokeInvite = useMutation(api.invite.revokeInvite);
   const {toast} = useToast();
   const [isPending, startTransition] = useTransition();
 
@@ -38,7 +39,7 @@ const PendingInvites = ({planId}: {planId: string}) => {
   return (
     <div className="mt-5">
       <div className="mb-2 font-bold text-sm">Pending Invites</div>
-      <div className="flex flex-col gap-3 w-96">
+      <div className="flex flex-col gap-3 max-w-lg">
         {invites.map((invite) => (
           <div
             key={invite._id}
@@ -47,7 +48,9 @@ const PendingInvites = ({planId}: {planId: string}) => {
                         shadow-sm rounded-md
                         flex gap-5 justify-between items-center"
           >
-            <span className="text-sm text-muted-foreground">{invite.email}</span>
+            <span className="text-sm text-muted-foreground">
+              {getDisplayName(invite.firstName, invite?.lastName, invite?.email)}
+            </span>
             <Button
               variant="destructive"
               size="sm"
