@@ -29,10 +29,13 @@ const DisplayName = () => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: currentUser?.firstName ?? "",
+      lastName: currentUser?.lastName ?? "",
+    },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     setIsSending(true);
     const {firstName, lastName} = values;
 
@@ -75,11 +78,11 @@ const DisplayName = () => {
 
   return (
     <article className="bg-background shadow-sm rounded-lg p-4 border-2 border-border">
-      <div className="border-b-2 border-b-border pb-2 mb-2 font-bold ">Display Name</div>
+      <h2 className="border-b-2 border-b-border pb-2 mb-2 font-bold ">Display Name</h2>
 
-      <p className="text-neutral-500 dark:text-neutral-400 mb-4 flex text-sm sm:text-base">
+      <h3 className="text-neutral-500 dark:text-neutral-400 mb-4 flex text-sm sm:text-base">
         Set your own display name
-      </p>
+      </h3>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
           <FormField

@@ -86,13 +86,16 @@ const CurrencySelector = ({planId}: {planId: string}) => {
 
   return (
     <article className="bg-background shadow-sm rounded-lg p-4 border-2 border-border">
-      <div className="border-b-2 border-b-border pb-2 mb-2 font-bold ">Preffered Currency</div>
+      <h2 className="border-b-2 border-b-border pb-2 mb-2 font-bold font-md">Preffered Currency</h2>
 
-      <p className="text-neutral-500 dark:text-neutral-400 mb-4 flex text-sm sm:text-base">
+      <h3 className="text-neutral-500 dark:text-neutral-400 mb-4 flex text-sm sm:text-base">
         Select your preffered currency for this plan which can be used in expenses section.
-      </p>
+      </h3>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full flex gap-3 justify-start items-center"
+        >
           <FormField
             control={form.control}
             name="currency"
@@ -133,9 +136,8 @@ const CurrencySelector = ({planId}: {planId: string}) => {
 
           <Button
             type="submit"
-            variant="outline"
             disabled={isSending || preferredCurrency === undefined}
-            className={cn("")}
+            className={cn("text-white hover:text-white bg-blue-500 hover:bg-blue-700")}
           >
             {isSending ? (
               <div className="flex justify-center items-center gap-2">
