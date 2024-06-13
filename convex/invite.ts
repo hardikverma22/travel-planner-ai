@@ -20,9 +20,9 @@ export const getInvites = query({
         const result = await Promise.all(invites.map(async invite => {
             const currentUser = await ctx.db.query("users")
                 .withIndex("by_email", q => q.eq("email", invite.email))
-                .first() as Doc<"users">;
+                .first();
 
-            return { ...invite, firstName: currentUser.firstName, lastName: currentUser.lastName };
+            return { ...invite, firstName: currentUser?.firstName, lastName: currentUser?.lastName };
         }));
 
         return result;

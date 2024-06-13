@@ -19,9 +19,9 @@ export const getPlanAccessRecords = query({
         const result = await Promise.all(accesses.map(async access => {
             const currentUser = await ctx.db.query("users")
                 .withIndex("by_email", q => q.eq("email", access.email))
-                .first() as Doc<"users">;
+                .first();
 
-            return { ...access, firstName: currentUser.firstName, lastName: currentUser.lastName };
+            return { ...access, firstName: currentUser?.firstName, lastName: currentUser?.lastName };
         }));
 
         return result;
