@@ -15,10 +15,9 @@ type ItineraryProps = {
 const Itinerary = ({itinerary, planId, isLoading}: ItineraryProps) => {
   return (
     <SectionWrapper id="itinerary">
-      <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center"></h2>
       <div className="mb-2 flex justify-between items-center">
         <h2
-          className="text-lg font-semibold underline underline-offset-2
+          className="text-lg font-semibold
                 tracking-wide flex items-center"
         >
           <Navigation className="mr-2" /> Itinerary

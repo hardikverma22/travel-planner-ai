@@ -61,7 +61,7 @@ const TopPlacesToVisit = ({topPlacesToVisit, planId, isLoading}: TopPlacesToVisi
 
   return (
     <SectionWrapper id="topplacestovisit">
-      <h2 className="mb-2 text-lg font-semibold underline underline-offset-2 tracking-wide flex items-center">
+      <h2 className="mb-2 text-lg font-semibold tracking-wide flex items-center">
         <MapPin className="mr-2" /> Top places to visit
       </h2>
 

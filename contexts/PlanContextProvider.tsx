@@ -1,7 +1,7 @@
 import {Doc} from "@/convex/_generated/dataModel";
 import React, {createContext, useContext, useState, Dispatch, SetStateAction} from "react";
 
-type planStateType = Doc<"plan">["contentGenerationState"];
+type planStateType = Doc<"plan">["contentGenerationState"] & {weather: boolean};
 
 type PlanContextType = {
   planState: planStateType;
@@ -17,6 +17,7 @@ const defaultPlanState: planStateType = {
   localcuisinerecommendations: false,
   packingchecklist: false,
   besttimetovisit: false,
+  weather: false
 };
 
 const PlanContext = createContext<PlanContextType | undefined>({

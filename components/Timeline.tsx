@@ -54,7 +54,7 @@ const Timeline = ({itinerary, planId}: TimelineProps) => {
             <Activity
               activity={day.activities.evening}
               heading="Evening"
-              icon={<Sunset className="w-4 h-4 text-gray-600" />}
+              icon={<Sunset className="w-4 h-4 text-gray-600 dark:text-white" />}
             />
           </div>
         </li>
@@ -81,7 +81,7 @@ const Activity = ({
                   flex justify-center gap-2 items-center capitalize"
       >
         {icon}
-        {heading}
+        <div className="text-foreground">{heading}</div>
       </h3>
       <ul className="space-y-1 text-muted-foreground pl-2">
         {activity.map((act, index) => (

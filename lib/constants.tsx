@@ -17,6 +17,7 @@ import {
   DollarSignIcon,
   UserIcon,
   SettingsIcon,
+  CloudDrizzle,
 } from "lucide-react";
 import {ReactNode} from "react";
 
@@ -58,7 +59,7 @@ export const controlCenterSections: {
 ];
 
 export const planSections: {
-  id: keyof Doc<"plan">["contentGenerationState"];
+  id: keyof Doc<"plan">["contentGenerationState"] | "weather";
   name: string;
   icon: ReactNode;
 }[] = [
@@ -71,6 +72,11 @@ export const planSections: {
     id: "abouttheplace",
     name: "About the Place",
     icon: <Info className="mr-2 h-4 w-4" />,
+  },
+  {
+    id: "weather",
+    name: "Weather",
+    icon: <CloudDrizzle className="mr-2 h-4 w-4" />,
   },
   {
     id: "adventuresactivitiestodo",

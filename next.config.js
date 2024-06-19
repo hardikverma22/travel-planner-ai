@@ -13,6 +13,11 @@ const nextConfig = {
         hostname: "kindred-rhinoceros-563.convex.cloud",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "openweathermap.org",
+        port: "",
+      },
     ],
   },
 };

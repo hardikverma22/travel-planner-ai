@@ -20,6 +20,7 @@ import {Users} from "lucide-react";
 import {ExclamationTriangleIcon} from "@radix-ui/react-icons";
 import {useRouter} from "next/navigation";
 import {Loading} from "@/components/shared/Loading";
+import Weather from "@/components/sections/Weather";
 
 type PlanProps = {
   planId: string;
@@ -35,7 +36,7 @@ const Plan = ({planId, isNewPlan}: PlanProps) => {
   useEffect(() => {
     if (isLoading || !plan) return;
 
-    setPlanState(plan.contentGenerationState);
+    setPlanState((state) => ({...plan.contentGenerationState, weather: state.weather}));
   }, [plan]);
 
   useEffect(() => {
@@ -84,6 +85,7 @@ const Plan = ({planId, isNewPlan}: PlanProps) => {
             planId={planId}
             content={plan?.abouttheplace}
           />
+          <Weather placeName={plan?.nameoftheplace} />
           <TopActivities
             activities={plan?.adventuresactivitiestodo}
             planId={planId}

@@ -34,6 +34,8 @@ const LocationAutoComplete = ({planId}: {planId: string}) => {
       const lat = e?.geometry?.location?.lat();
       const lng = e?.geometry?.location?.lng();
       if (!lat || !lng || !e?.name) return;
+      // e.photos?.forEach((p) => console.log(p.getUrl()));
+      // console.log();
       updatePlaceToVisit({
         placeName: e?.name,
         lat,
