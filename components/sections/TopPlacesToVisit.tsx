@@ -16,6 +16,7 @@ import {Button} from "@/components/ui/button";
 import {useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {toast} from "@/components/ui/use-toast";
+import {v4 as uuidv4} from "uuid";
 
 type location = {
   lat: number;
@@ -30,8 +31,10 @@ type TopPlacesToVisitProps = {
 
 const TopPlacesToVisit = ({topPlacesToVisit, planId, isLoading}: TopPlacesToVisitProps) => {
   const doesTopPlacesToVisitExist = topPlacesToVisit != null && topPlacesToVisit.length > 0;
-
+  const topPlaces = topPlacesToVisit?.map((place) => ({...place, id: uuidv4()}));
+  console.log(topPlaces);
   const [selectedPlace, setSelectedPlace] = useState<location | undefined>();
+  const [isDeleting, setIsDeleting] = useState(false);
   const updateTopPlacesToVisit = useMutation(api.plan.updatePartOfPlan);
 
   useEffect(() => {
@@ -44,9 +47,12 @@ const TopPlacesToVisit = ({topPlacesToVisit, planId, isLoading}: TopPlacesToVisi
     setSelectedPlace(coordinates);
   };
 
-  const handleDeletPlace = (placeName: string) => {
-    if (!topPlacesToVisit) return;
-    const copy = [...topPlacesToVisit].filter((place) => !place.name.includes(placeName));
+  const handleDeletPlace = (id: string) => {
+    if (!topPlaces) return;
+    setIsDeleting(true);
+    const copy = [...topPlaces]
+      .filter((place) => place.id !== id)
+      .map((place) => ({name: place.name, coordinates: place.coordinates}));
     const {dismiss} = toast({
       description: `Deleting the place to visit!`,
     });
@@ -54,9 +60,11 @@ const TopPlacesToVisit = ({topPlacesToVisit, planId, isLoading}: TopPlacesToVisi
       data: copy,
       key: "topplacestovisit",
       planId: planId as Id<"plan">,
-    }).then(() => {
-      dismiss();
-    });
+    })
+      .then(() => {
+        dismiss();
+      })
+      .finally(() => setIsDeleting(false));
   };
 
   return (
@@ -81,7 +89,7 @@ const TopPlacesToVisit = ({topPlacesToVisit, planId, isLoading}: TopPlacesToVisi
                     <LocationAutoComplete planId={planId} />
                   </li>
                   <hr className="font-bold text-black" />
-                  {topPlacesToVisit?.map((place, index) => (
+                  {topPlaces?.map((place, index) => (
                     <li
                       key={place.name}
                       className="p-5 dark:bg-muted bg-white font-bold cursor-pointer
@@ -97,11 +105,12 @@ const TopPlacesToVisit = ({topPlacesToVisit, planId, isLoading}: TopPlacesToVisi
                       </div>
                       <Button
                         variant="outline"
+                        disabled={isDeleting}
                         className="border-none hover:scale-110 duration-200 transition-all "
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          handleDeletPlace(place.name);
+                          handleDeletPlace(place.id);
                         }}
                       >
                         <Trash className="h-4 w-4 text-red-500 dark:text-white" />

@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
-import { action, internalAction, internalMutation, query } from "./_generated/server";
+import { action, internalMutation, query } from "./_generated/server";
 import { createApi } from "unsplash-js";
 import { Id } from "./_generated/dataModel";
 
