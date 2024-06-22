@@ -61,7 +61,7 @@ export default function FeedbackSheet() {
     setOpen(false);
 
     const {label, message} = values;
-    console.log({label, message});
+
     await addFeedback({
       planId: planId ? (planId as Id<"plan">) : undefined,
       label,

@@ -24,7 +24,6 @@ export default function AboutThePlace({content, isLoading, planId}: AboutThePlac
   };
 
   const updateAboutThePlaceContent = (updatedContent: string) => {
-    console.log(updatedContent);
     updateAboutThePlace({
       planId: planId as Doc<"plan">["_id"],
       data: updatedContent.trim(),

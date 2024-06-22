@@ -47,7 +47,6 @@ const CurrencySelector = ({planId}: {planId: string}) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     setIsSending(true);
 
     if (!planId || planId.length == 0) return;

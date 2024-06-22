@@ -23,7 +23,6 @@ export default function BestTimeToVisit({content, isLoading, planId}: BestTimeTo
   };
 
   const updateBestTimeToVisitContent = (updatedContent: string) => {
-    console.log(updatedContent);
     updateBestTimeToVisit({
       planId: planId as Doc<"plan">["_id"],
       data: updatedContent.trim(),

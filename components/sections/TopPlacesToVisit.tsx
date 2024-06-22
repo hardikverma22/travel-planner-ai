@@ -32,7 +32,7 @@ type TopPlacesToVisitProps = {
 const TopPlacesToVisit = ({topPlacesToVisit, planId, isLoading}: TopPlacesToVisitProps) => {
   const doesTopPlacesToVisitExist = topPlacesToVisit != null && topPlacesToVisit.length > 0;
   const topPlaces = topPlacesToVisit?.map((place) => ({...place, id: uuidv4()}));
-  console.log(topPlaces);
+
   const [selectedPlace, setSelectedPlace] = useState<location | undefined>();
   const [isDeleting, setIsDeleting] = useState(false);
   const updateTopPlacesToVisit = useMutation(api.plan.updatePartOfPlan);
