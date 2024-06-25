@@ -4,7 +4,7 @@ import {ReactNode} from "react";
 
 type Props = {
   icon: ReactNode;
-  editMode: boolean;
+  shouldShowEditIcon: boolean;
   handleToggleEditMode: () => void;
   title: string;
   hasData: boolean;
@@ -13,7 +13,7 @@ type Props = {
 
 const HeaderWithEditIcon = ({
   icon,
-  editMode,
+  shouldShowEditIcon,
   handleToggleEditMode,
   title,
   hasData,
@@ -27,7 +27,7 @@ const HeaderWithEditIcon = ({
       >
         {icon} {title}
       </h2>
-      {!editMode && !isLoading && (
+      {shouldShowEditIcon && !isLoading && (
         <Button
           variant="outline"
           size="icon"

@@ -14,12 +14,14 @@ type LocalCuisineRecommendationsProps = {
   recommendations: string[] | undefined;
   planId: string;
   isLoading: boolean;
+  allowEdit: boolean;
 };
 
 export default function LocalCuisineRecommendations({
   recommendations,
   isLoading,
   planId,
+  allowEdit,
 }: LocalCuisineRecommendationsProps) {
   const [editMode, setEditMode] = useState(false);
 
@@ -42,7 +44,7 @@ export default function LocalCuisineRecommendations({
   return (
     <SectionWrapper id="localcuisinerecommendations">
       <HeaderWithEditIcon
-        editMode={editMode}
+        shouldShowEditIcon={!editMode && allowEdit}
         handleToggleEditMode={handleToggleEditMode}
         hasData={recommendations != null && recommendations.length != 0}
         icon={<Utensils className="mr-2" />}

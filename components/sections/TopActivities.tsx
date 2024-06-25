@@ -16,9 +16,15 @@ type TopActivitiesProps = {
   activities: string[] | undefined;
   planId: string;
   isLoading: boolean;
+  allowEdit: boolean;
 };
 
-export default function TopActivities({activities, planId, isLoading}: TopActivitiesProps) {
+export default function TopActivities({
+  activities,
+  planId,
+  isLoading,
+  allowEdit,
+}: TopActivitiesProps) {
   const [editMode, setEditMode] = useState(false);
   const updateActivities = useMutation(api.plan.updatePartOfPlan);
 
@@ -39,7 +45,7 @@ export default function TopActivities({activities, planId, isLoading}: TopActivi
   return (
     <SectionWrapper id="adventuresactivitiestodo">
       <HeaderWithEditIcon
-        editMode={editMode}
+        shouldShowEditIcon={!editMode && allowEdit}
         handleToggleEditMode={handleToggleEditMode}
         hasData={activities != null && activities.length != 0}
         icon={<Sailboat className="mr-2" />}

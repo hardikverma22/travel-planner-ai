@@ -14,12 +14,16 @@ type PackingChecklistProps = {
   checklist: string[] | undefined;
   planId: string;
   isLoading: boolean;
+  allowEdit: boolean;
 };
 
-export default function PackingChecklist({checklist, isLoading, planId}: PackingChecklistProps) {
+export default function PackingChecklist({
+  checklist,
+  isLoading,
+  planId,
+  allowEdit,
+}: PackingChecklistProps) {
   const [editMode, setEditMode] = useState(false);
-
-  // const updatePackingChecklist = useMutation(api.plan.updatePackingChecklist);
   const updatePackingChecklist = useMutation(api.plan.updatePartOfPlan);
 
   const handleToggleEditMode = () => {
@@ -39,7 +43,7 @@ export default function PackingChecklist({checklist, isLoading, planId}: Packing
   return (
     <SectionWrapper id="packingchecklist">
       <HeaderWithEditIcon
-        editMode={editMode}
+        shouldShowEditIcon={!editMode && allowEdit}
         handleToggleEditMode={handleToggleEditMode}
         hasData={checklist != null && checklist.length != 0}
         icon={<Backpack className="mr-2" />}

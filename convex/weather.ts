@@ -14,7 +14,7 @@ export const getCurrentWeather = action({
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${process.env.OPEN_WEATHER_MAP_API_KEY}&units=metric`;
         const response = await fetch(url, { method: "GET", cache: "no-cache" });
         const data = (await response.json()) as CurrentWeatherResponse;
-        console.log(data)
+
         return data;
     },
 })

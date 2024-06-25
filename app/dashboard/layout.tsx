@@ -1,15 +1,5 @@
+import Header from "@/components/dashboard/Header";
 import type {Metadata} from "next";
-import {Montserrat_Alternates} from "next/font/google";
-import {Analytics} from "@vercel/analytics/react";
-import ConvexClientProvider from "@/app/ConvexClientProvider";
-import {ThemeProvider} from "@/contexts/ThemeProvider";
-
-import Progress from "@/components/Progress";
-import {Toaster} from "@/components/ui/toaster";
-
-import "./globals.css";
-
-const inter = Montserrat_Alternates({weight: "500", subsets: ["cyrillic"]});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.travelplannerai.online"),
@@ -41,20 +31,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ConvexClientProvider>{children}</ConvexClientProvider>
-          <Progress />
-          <Analytics />
-          <Toaster />
-        </ThemeProvider>
-      </body>
-    </html>
+    <>
+      <Header />
+      <main className="flex min-h-[calc(100svh-4rem)] flex-col items-center bg-blue-50/40">
+        {children}
+      </main>
+    </>
   );
 }

@@ -1,3 +1,4 @@
+"use client";
 import SectionWrapper from "@/components/sections/SectionWrapper";
 import EditText from "@/components/shared/EditText";
 import HeaderWithEditIcon from "@/components/shared/HeaderWithEditIcon";
@@ -12,9 +13,15 @@ type BestTimeToVisitProps = {
   content: string | undefined;
   isLoading: boolean;
   planId: string;
+  allowEdit: boolean;
 };
 
-export default function BestTimeToVisit({content, isLoading, planId}: BestTimeToVisitProps) {
+export default function BestTimeToVisit({
+  content,
+  isLoading,
+  planId,
+  allowEdit,
+}: BestTimeToVisitProps) {
   const [editMode, setEditMode] = useState(false);
   const updateBestTimeToVisit = useMutation(api.plan.updatePartOfPlan);
 
@@ -35,7 +42,7 @@ export default function BestTimeToVisit({content, isLoading, planId}: BestTimeTo
   return (
     <SectionWrapper id="besttimetovisit">
       <HeaderWithEditIcon
-        editMode={editMode}
+        shouldShowEditIcon={!editMode && allowEdit}
         handleToggleEditMode={handleToggleEditMode}
         hasData={typeof content === "string" && content.length > 0}
         icon={<Clock3 className="mr-2" />}

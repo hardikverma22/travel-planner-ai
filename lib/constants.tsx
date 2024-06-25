@@ -23,6 +23,7 @@ import {ReactNode} from "react";
 
 export const navlinks = [
   {text: "How it works", id: "how-it-works"},
+  {text: "Community Plans", id: "public-plans"},
   {text: "Pricing", id: "pricing"},
 ];
 
@@ -40,21 +41,28 @@ export const controlCenterSections: {
   id: string;
   title: string;
   icon: ReactNode;
+  tooltipText: string;
 }[] = [
   {
     id: "expense-tracker",
     title: "Expense Tracker",
     icon: <DollarSignIcon className="mr-2 h-4 w-4" />,
+    tooltipText:
+      "Track your travel expenses, view spending metrics, and manage your budget efficiently",
   },
   {
     id: "collaborate",
     title: "Collaborate",
     icon: <UserIcon className="mr-2 h-4 w-4" />,
+    tooltipText:
+      "Invite friends and family to your travel plan and manage access permissions easily",
   },
   {
     id: "settings",
     title: "Settings",
     icon: <SettingsIcon className="mr-2 h-4 w-4" />,
+    tooltipText:
+      "Update your display name, set your preferred currency, and manage or delete your entire travel plan",
   },
 ];
 
@@ -62,51 +70,61 @@ export const planSections: {
   id: keyof Doc<"plan">["contentGenerationState"] | "weather";
   name: string;
   icon: ReactNode;
+  isPublic: boolean;
 }[] = [
   {
     id: "imagination",
     name: "Your Imagination",
     icon: <Lightbulb className="mr-2 h-4 w-4" />,
+    isPublic: true,
   },
   {
     id: "abouttheplace",
     name: "About the Place",
     icon: <Info className="mr-2 h-4 w-4" />,
+    isPublic: true,
   },
   {
     id: "weather",
     name: "Weather",
     icon: <CloudDrizzle className="mr-2 h-4 w-4" />,
+    isPublic: false,
   },
   {
     id: "adventuresactivitiestodo",
     name: "Top Activities",
     icon: <Sailboat className="mr-2 h-4 w-4" />,
+    isPublic: true,
   },
   {
     id: "topplacestovisit",
     name: "Top places to visit",
     icon: <MapPin className="mr-2 h-4 w-4" />,
+    isPublic: true,
   },
   {
     id: "itinerary",
     name: "Itinerary",
     icon: <Navigation className="mr-2 h-4 w-4" />,
+    isPublic: true,
   },
   {
     id: "localcuisinerecommendations",
     name: "Local Cuisines",
     icon: <Utensils className="mr-2 h-4 w-4" />,
+    isPublic: true,
   },
   {
     id: "packingchecklist",
     name: "Packing Checklist",
     icon: <Backpack className="mr-2 h-4 w-4" />,
+    isPublic: true,
   },
   {
     id: "besttimetovisit",
     name: "Best time to visit",
     icon: <Clock3 className="mr-2 h-4 w-4" />,
+    isPublic: true,
   },
 ];
 

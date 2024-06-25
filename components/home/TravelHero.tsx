@@ -32,7 +32,6 @@ const TravelHero = () => {
         <polygon
           points="147.842 557.299 106.851 557.299 101.882 537.425 152.81 537.425 147.842 557.299"
           fill="#cbcbcb"
-          // className="dark:fill-current dark:text-muted-foreground"
         />
         <rect x="108.24833" y="591.28757" width="38.19588" height="19.90489" fill="#fff" />
         <path

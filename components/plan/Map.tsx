@@ -7,7 +7,7 @@ import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 
 type MapProps = {
-  topPlacesToVisit: Doc<"plan">["topplacestovisit"] | undefined;
+  topPlacesToVisit: (Doc<"plan">["topplacestovisit"][number] & {id: string})[] | undefined;
   selectedPlace: {lat: number; lng: number} | undefined;
 };
 
@@ -42,7 +42,7 @@ export default function Map({topPlacesToVisit, selectedPlace}: MapProps) {
       {topPlacesToVisit?.map((place, index) => (
         <OverlayView
           position={place.coordinates}
-          key={place.name}
+          key={place.id}
           mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
         >
           <MapPinMarker index={index} />

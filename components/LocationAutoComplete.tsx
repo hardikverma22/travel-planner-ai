@@ -9,7 +9,12 @@ import {api} from "@/convex/_generated/api";
 import {Search} from "lucide-react";
 import {useToast} from "@/components/ui/use-toast";
 
-const LocationAutoComplete = ({planId}: {planId: string}) => {
+type LocationAutoCompletePropType = {
+  planId: string;
+  addNewPlaceToTopPlaces: (lat: number, lng: number, placeName: string) => void;
+};
+
+const LocationAutoComplete = ({planId, addNewPlaceToTopPlaces}: LocationAutoCompletePropType) => {
   const [showReults, setShowResults] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const {toast} = useToast();
@@ -44,6 +49,7 @@ const LocationAutoComplete = ({planId}: {planId: string}) => {
         setSearchQuery("");
         setIsSaving(false);
         dismiss();
+        addNewPlaceToTopPlaces(lat, lng, e.name || "New Place");
       });
     });
   };

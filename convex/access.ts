@@ -9,7 +9,7 @@ export const getPlanAccessRecords = query({
     },
     handler: async (ctx, args) => {
         const admin = await getPlanAdmin(ctx, args.planId.toString());
-        if (!admin || !admin.isPlanAdmin) return [];
+        if (!admin.isPlanAdmin) return [];
 
         const accesses = await ctx.db.query("access")
             .filter(q => q.eq(q.field("planId"), args.planId))

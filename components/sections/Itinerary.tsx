@@ -10,9 +10,10 @@ type ItineraryProps = {
   itinerary: Doc<"plan">["itinerary"] | undefined;
   planId: string;
   isLoading: boolean;
+  allowEdit: boolean;
 };
 
-const Itinerary = ({itinerary, planId, isLoading}: ItineraryProps) => {
+const Itinerary = ({itinerary, planId, isLoading, allowEdit}: ItineraryProps) => {
   return (
     <SectionWrapper id="itinerary">
       <div className="mb-2 flex justify-between items-center">
@@ -22,10 +23,10 @@ const Itinerary = ({itinerary, planId, isLoading}: ItineraryProps) => {
         >
           <Navigation className="mr-2" /> Itinerary
         </h2>
-        {!isLoading && <AddIternaryDay planId={planId} />}
+        {allowEdit && !isLoading && <AddIternaryDay planId={planId} />}
       </div>
       {!isLoading ? (
-        <Timeline itinerary={itinerary} planId={planId} />
+        <Timeline itinerary={itinerary} planId={planId} allowEdit={allowEdit}/>
       ) : (
         <Skeleton className="w-full h-full" />
       )}

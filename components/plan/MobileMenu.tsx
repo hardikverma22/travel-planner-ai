@@ -10,17 +10,7 @@ import Sidebar from "@/components/plan/Sidebar";
 import {useParams} from "next/navigation";
 import {ArrowLeft} from "lucide-react";
 
-type MobileMenuProps = {
-  isCurrentPathHome: boolean;
-  isCurrentPathDashboard: boolean;
-  isAuthenticated: boolean;
-};
-
-const MobileMenu = ({
-  isCurrentPathHome,
-  isCurrentPathDashboard,
-  isAuthenticated,
-}: MobileMenuProps) => {
+const MobileMenu = ({isPublic}: {isPublic: boolean}) => {
   const [open, setOpen] = useState(false);
   const asideRef = useRef<HTMLDivElement>(null);
   const {planId} = useParams<{planId: string}>();
@@ -86,71 +76,23 @@ const MobileMenu = ({
             setOpen(false);
           }}
         >
-          {isCurrentPathHome && <HomePageMenu isAuthenticated={isAuthenticated} />}
-          {isCurrentPathDashboard && <DashboardPageMenu />}
-          {!isCurrentPathDashboard && !isCurrentPathHome && (
-            <PlanPageMenu planId={planId} setOpen={setOpen} />
-          )}
+          <li className="cursor-pointer hover:underline">
+            <Link href="/dashboard" className="flex gap-1 justify-end items-center group">
+              <ArrowLeft className="w-4 h-4 group-hover:scale-125 transition-all duration-100 ease-linear" />
+              <span>Go back to Dashboard</span>
+            </Link>
+          </li>
         </ul>
+        <div
+          className="px-5"
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen(false);
+          }}
+        >
+          <Sidebar planId={planId} isMobile isPublic={isPublic} />
+        </div>
       </aside>
-    </>
-  );
-};
-
-const HomePageMenu = ({isAuthenticated}: {isAuthenticated: boolean}) => {
-  return (
-    <>
-      {navlinks.map((link) => (
-        <li key={link.id} className="hover:underline cursor-pointer">
-          <Link href={`/#${link.id}`} scroll>
-            {link.text}
-          </Link>
-        </li>
-      ))}
-      {isAuthenticated && (
-        <li className="cursor-pointer hover:underline">
-          <Link href="/dashboard">Dashboard</Link>
-        </li>
-      )}
-    </>
-  );
-};
-
-const DashboardPageMenu = () => {
-  return (
-    <li className="cursor-pointer hover:underline">
-      <Link href="/" className="flex gap-1 justify-end items-center group">
-        <ArrowLeft className="w-4 h-4 group-hover:scale-125 transition-all duration-100 ease-linear" />
-        <span>Home</span>
-      </Link>
-    </li>
-  );
-};
-
-const PlanPageMenu = ({
-  planId,
-  setOpen,
-}: {
-  planId: string;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-}) => {
-  return (
-    <>
-      <li className="cursor-pointer hover:underline">
-        <Link href="/dashboard" className="flex gap-1 justify-end items-center group">
-          <ArrowLeft className="w-4 h-4 group-hover:scale-125 transition-all duration-100 ease-linear" />
-          <span>Go back to Dashboard</span>
-        </Link>
-      </li>
-      <div
-        className="px-5"
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen(false);
-        }}
-      >
-        <Sidebar planId={planId} isMobile isPublic={false}/>
-      </div>
     </>
   );
 };

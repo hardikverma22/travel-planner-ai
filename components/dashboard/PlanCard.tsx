@@ -8,13 +8,14 @@ import {TooltipContainer} from "@/components/shared/Toolip";
 
 type PlanCardProps = {
   plan: Doc<"plan"> & {url: string | null} & {isSharedPlan: boolean};
+  isPublic?: boolean;
 };
 
-const PlanCard = ({plan}: PlanCardProps) => {
+const PlanCard = ({plan, isPublic = false}: PlanCardProps) => {
   return (
     <Link
       role="article"
-      href={`/plans/${plan._id}/plan`}
+      href={isPublic ? `/plans/${plan._id}/community-plan` : `/plans/${plan._id}/plan`}
       className="flex justify-center items-center shadow-lg"
     >
       <Card
@@ -43,17 +44,19 @@ const PlanCard = ({plan}: PlanCardProps) => {
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <h3 className="text-lg font-semibold">{plan.nameoftheplace}</h3>
-                  <div className="flex items-center gap-2 text-sm">
-                    <CalendarDaysIcon className="h-4 w-4" />
-                    <span>
-                      {new Date(plan._creationTime).toLocaleDateString("en-us", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </span>
-                  </div>
+                  {!isPublic && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <CalendarDaysIcon className="h-4 w-4" />
+                      <span>
+                        {new Date(plan._creationTime).toLocaleDateString("en-us", {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

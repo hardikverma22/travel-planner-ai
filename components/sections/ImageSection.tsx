@@ -1,3 +1,5 @@
+import {TooltipContainer} from "@/components/shared/Toolip";
+import {Info} from "lucide-react";
 import Image from "next/image";
 
 type PromptProps = {
@@ -5,14 +7,15 @@ type PromptProps = {
   imageUrl: string | null | undefined;
   placeName: string | undefined;
   isLoading: boolean;
+  allowEdit: boolean;
 };
 
-const ImageSection = ({content, imageUrl, placeName, isLoading}: PromptProps) => {
+const ImageSection = ({content, imageUrl, placeName, isLoading, allowEdit}: PromptProps) => {
   return (
     <article
       id="imagination"
       className="shadow-md ring-1 ring-muted bg-white/50 rounded-sm 
-                flex flex-col gap-5"
+                flex flex-col gap-5 scroll-mt-20"
     >
       {isLoading ? (
         <div
@@ -41,6 +44,13 @@ const ImageSection = ({content, imageUrl, placeName, isLoading}: PromptProps) =>
                 <p className="text-white">"{content}"</p>
               </div>
             </div>
+            {!allowEdit && (
+              <div className="absolute top-3 right-3 bg-foreground rounded-full">
+                <TooltipContainer text="This is a community shared travel plans.">
+                  <Info className="text-background cursor-pointer" />
+                </TooltipContainer>
+              </div>
+            )}
           </div>
         )
       )}

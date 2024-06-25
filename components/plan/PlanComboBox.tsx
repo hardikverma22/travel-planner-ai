@@ -16,19 +16,19 @@ import {
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {useQuery} from "convex/react";
 import {api} from "@/convex/_generated/api";
-import {usePathname, useRouter} from "next/navigation";
+import {useParams, usePathname, useRouter, useSearchParams} from "next/navigation";
 
 export default function PlanComboBox() {
   const [open, setOpen] = React.useState(false);
 
   const pathname = usePathname();
   const router = useRouter();
+  const {planId} = useParams<{planId: string}>();
 
-  const planId = pathname.split("/")[2];
   const plans = useQuery(api.plan.getComboBoxPlansForAUser, {});
 
-  if (!plans || !plans.length)
-    return <div className="w-[300px] h-8 rounded-md bg-stone-200 animate-pulse" />;
+  if (!plans) return <div className="w-[300px] h-8 rounded-md bg-stone-200 animate-pulse" />;
+  if (plans && plans.length === 0) return null;
 
   const getDisplayTitle = () => {
     const label = plans?.find((plan) => plan._id === planId)?.nameoftheplace ?? "Select Plan";
@@ -63,7 +63,7 @@ export default function PlanComboBox() {
                     onSelect={(currentValue) => {
                       setOpen(false);
                       let updatedUrl = pathname.replace(/\/plans\/[^\/]+/, "/plans/" + plan._id);
-                      if (pathname.includes("join")) {
+                      if (pathname.includes("join") || pathname.includes("community-plan")) {
                         updatedUrl = `/plans/${plan._id}/plan`;
                       }
                       router.push(updatedUrl);

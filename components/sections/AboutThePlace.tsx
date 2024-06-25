@@ -1,3 +1,4 @@
+"use client";
 import SectionWrapper from "@/components/sections/SectionWrapper";
 
 import {Skeleton} from "@/components/ui/skeleton";
@@ -13,9 +14,10 @@ type AboutThePlaceProps = {
   content: string | undefined;
   isLoading: boolean;
   planId: string;
+  allowEdit: boolean;
 };
 
-export default function AboutThePlace({content, isLoading, planId}: AboutThePlaceProps) {
+export default function AboutThePlace({content, isLoading, planId, allowEdit}: AboutThePlaceProps) {
   const [editMode, setEditMode] = useState(false);
   const updateAboutThePlace = useMutation(api.plan.updatePartOfPlan);
 
@@ -36,7 +38,7 @@ export default function AboutThePlace({content, isLoading, planId}: AboutThePlac
   return (
     <SectionWrapper id="abouttheplace">
       <HeaderWithEditIcon
-        editMode={editMode}
+        shouldShowEditIcon={!editMode && allowEdit}
         handleToggleEditMode={handleToggleEditMode}
         hasData={typeof content === "string" && content.length > 0}
         icon={<Info className="mr-2" />}

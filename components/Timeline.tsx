@@ -1,5 +1,4 @@
 import ItineraryDayHeader from "@/components/ItineraryDayHeader";
-import {Button} from "@/components/ui/button";
 import {Doc} from "@/convex/_generated/dataModel";
 import {Sun, Sunrise, Sunset, TrashIcon} from "lucide-react";
 import {ReactNode} from "react";
@@ -7,9 +6,10 @@ import {ReactNode} from "react";
 type TimelineProps = {
   itinerary: Doc<"plan">["itinerary"] | undefined;
   planId: string;
+  allowEdit: boolean;
 };
 
-const Timeline = ({itinerary, planId}: TimelineProps) => {
+const Timeline = ({itinerary, planId, allowEdit}: TimelineProps) => {
   if (itinerary && itinerary.length === 0)
     return (
       <div className="flex justify-center items-center p-4">
@@ -39,7 +39,7 @@ const Timeline = ({itinerary, planId}: TimelineProps) => {
               <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
             </svg>
           </span>
-          <ItineraryDayHeader planId={planId} title={day.title} />
+          <ItineraryDayHeader planId={planId} title={day.title} allowEdit={allowEdit} />
           <div className="flex flex-col gap-5">
             <Activity
               activity={day.activities.morning}

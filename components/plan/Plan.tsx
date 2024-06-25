@@ -25,99 +25,72 @@ import Weather from "@/components/sections/Weather";
 type PlanProps = {
   planId: string;
   isNewPlan: boolean;
+  isPublic: boolean;
 };
 
-const Plan = ({planId, isNewPlan}: PlanProps) => {
-  const {shouldShowAlert, plan, isLoading, error} = usePlan(planId, isNewPlan);
-  const {setPlanState} = usePlanContext();
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isLoading || !plan) return;
-
-    setPlanState((state) => ({...plan.contentGenerationState, weather: state.weather}));
-  }, [plan]);
-
-  useEffect(() => {
-    if (isLoading) return;
-    let timer = undefined;
-    if (error) {
-      timer = setTimeout(() => {
-        router.push("/dashboard");
-      }, 4000);
-    }
-    return () => clearTimeout(timer);
-  }, [error]);
+const Plan = ({planId, isNewPlan, isPublic}: PlanProps) => {
+  const {error, isLoading, plan, shouldShowAlert} = usePlanContext();
 
   return (
     <section className="h-full flex flex-col gap-10">
-      {error ? (
-        <Alert variant="destructive">
-          <ExclamationTriangleIcon className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            {error} <br />
-            <div className="flex justify-start items-center gap-1 text-md text-gray-600">
-              <Loading className="w-4 h-4 mr-1" />
-              Redirecting you back to your dashboard...
-            </div>
-          </AlertDescription>
+      {plan?.isSharedPlan && (
+        <Alert>
+          <Users className="h-4 w-4" />
+          <AlertTitle className="font-semibold">Shared Access!</AlertTitle>
+          <AlertDescription>You are currently viewing a shared Travel Plan.</AlertDescription>
         </Alert>
-      ) : (
-        <>
-          {plan?.isSharedPlan && (
-            <Alert>
-              <Users className="h-4 w-4" />
-              <AlertTitle className="font-semibold">Shared Access!</AlertTitle>
-              <AlertDescription>You are currently viewing a shared Travel Plan.</AlertDescription>
-            </Alert>
-          )}
-          <AlertForAI show={shouldShowAlert} />
-          <ImageSection
-            content={plan?.userPrompt}
-            placeName={plan?.nameoftheplace}
-            imageUrl={plan?.url}
-            isLoading={isLoading || !plan?.contentGenerationState.imagination}
-          />
-          <AboutThePlace
-            isLoading={isLoading || !plan?.contentGenerationState.abouttheplace}
-            planId={planId}
-            content={plan?.abouttheplace}
-          />
-          <Weather placeName={plan?.nameoftheplace} />
-          <TopActivities
-            activities={plan?.adventuresactivitiestodo}
-            planId={planId}
-            isLoading={isLoading || !plan?.contentGenerationState.adventuresactivitiestodo}
-          />
-          <TopPlacesToVisit
-            topPlacesToVisit={plan?.topplacestovisit}
-            planId={planId}
-            isLoading={isLoading || !plan?.contentGenerationState.topplacestovisit}
-          />
-          <Itinerary
-            itinerary={plan?.itinerary}
-            planId={planId}
-            isLoading={isLoading || !plan?.contentGenerationState.itinerary}
-          />
-          <LocalCuisineRecommendations
-            recommendations={plan?.localcuisinerecommendations}
-            isLoading={isLoading || !plan?.contentGenerationState.localcuisinerecommendations}
-            planId={planId}
-          />
-          <PackingChecklist
-            checklist={plan?.packingchecklist}
-            isLoading={isLoading || !plan?.contentGenerationState.packingchecklist}
-            planId={planId}
-          />
-          <BestTimeToVisit
-            content={plan?.besttimetovisit}
-            planId={planId}
-            isLoading={isLoading || !plan?.contentGenerationState.besttimetovisit}
-          />
-        </>
       )}
+      <AlertForAI show={shouldShowAlert} />
+      <ImageSection
+        content={plan?.userPrompt}
+        placeName={plan?.nameoftheplace}
+        imageUrl={plan?.url}
+        isLoading={isLoading || !plan?.contentGenerationState.imagination}
+        allowEdit={true}
+      />
+      <AboutThePlace
+        isLoading={isLoading || !plan?.contentGenerationState.abouttheplace}
+        planId={planId}
+        content={plan?.abouttheplace}
+        allowEdit={true}
+      />
+      <Weather placeName={plan?.nameoftheplace} />
+      <TopActivities
+        activities={plan?.adventuresactivitiestodo}
+        planId={planId}
+        isLoading={isLoading || !plan?.contentGenerationState.adventuresactivitiestodo}
+        allowEdit={true}
+      />
+      <TopPlacesToVisit
+        topPlacesToVisit={plan?.topplacestovisit}
+        planId={planId}
+        isLoading={isLoading || !plan?.contentGenerationState.topplacestovisit}
+        allowEdit={true}
+      />
+      <Itinerary
+        itinerary={plan?.itinerary}
+        planId={planId}
+        isLoading={isLoading || !plan?.contentGenerationState.itinerary}
+        allowEdit={true}
+      />
+      <LocalCuisineRecommendations
+        recommendations={plan?.localcuisinerecommendations}
+        isLoading={isLoading || !plan?.contentGenerationState.localcuisinerecommendations}
+        planId={planId}
+        allowEdit={true}
+      />
+      <PackingChecklist
+        checklist={plan?.packingchecklist}
+        isLoading={isLoading || !plan?.contentGenerationState.packingchecklist}
+        planId={planId}
+        allowEdit={true}
+      />
+      <BestTimeToVisit
+        content={plan?.besttimetovisit}
+        planId={planId}
+        isLoading={isLoading || !plan?.contentGenerationState.besttimetovisit}
+        allowEdit={true}
+      />
     </section>
   );
 };

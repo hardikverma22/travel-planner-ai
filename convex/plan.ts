@@ -20,14 +20,14 @@ export const PlanAdmin = query({
 export const getPlanAdmin = async (ctx: QueryCtx, planId: string) => {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
-    return null;
+    return { isPlanAdmin: false, planName: "" };
   }
 
   const { subject } = identity;
 
   const plan = await ctx.db.get(planId as Id<"plan">);
   if (plan && plan.userId === subject) return { isPlanAdmin: true, planName: plan.nameoftheplace };
-  return { isPlanAdmin: false, planName: null };
+  return { isPlanAdmin: false, planName: "" };
 }
 
 const getSharedPlans = async (ctx: QueryCtx, userId: string) => {
@@ -112,6 +112,29 @@ export const getAllPlansForAUser = query({
   },
 });
 
+export const getPublicPlans = query({
+  handler: async (ctx, args) => {
+    const plans = await ctx.db
+      .query("plan")
+      .filter((q) => q.eq(q.field("userId"), "public"))
+      .order("desc")
+      .take(100);
+
+
+    const data = await Promise.all(
+      plans.map(async (plan) => ({
+        ...plan,
+        ...{ isSharedPlan: false },
+        ...(plan.storageId === null
+          ? { url: null }
+          : { url: await ctx.storage.getUrl(plan.storageId) }),
+      }))
+    );
+
+    return data;
+  },
+});
+
 export const getComboBoxPlansForAUser = query({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -135,36 +158,56 @@ export const getComboBoxPlansForAUser = query({
 });
 
 export const getSinglePlan = query({
-  args: { id: v.id("plan") },
+  args: { id: v.id("plan"), isPublic: v.boolean() },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return null;
+    if (!args.isPublic) {
+      const identity = await ctx.auth.getUserIdentity();
+      if (!identity) {
+        return null;
+      }
+
+      const { subject } = identity;
+
+      const access = await ctx.db.query("access")
+        .withIndex("by_planId_userId", q => q.eq("planId", args.id).eq("userId", subject))
+        .first();
+
+      const plan = await ctx.db.get(args.id);
+
+      if (!plan) {
+        throw new ConvexError("No Plan found");
+      }
+
+      const admin = await getPlanAdmin(ctx, args.id);
+
+      if (!admin.isPlanAdmin && !access) {
+        throw new ConvexError("The Plan you are trying to access either does not belong to you or does not exist.");
+      }
+
+      return {
+        ...plan!,
+        url: ((plan && plan.storageId) ? await ctx.storage.getUrl(plan.storageId) : null),
+        isSharedPlan: access ? true : false
+      };
+    }
+    else {
+      const plan = await ctx.db.get(args.id);
+
+      if (!plan) {
+        throw new ConvexError("No Plan found");
+      }
+
+      if (plan.userId !== "public") {
+        throw new ConvexError("Plan is not public");
+      }
+
+      return {
+        ...plan!,
+        url: ((plan && plan.storageId) ? await ctx.storage.getUrl(plan.storageId) : null),
+        isSharedPlan: false
+      };
     }
 
-    const { subject } = identity;
-
-    const access = await ctx.db.query("access")
-      .withIndex("by_planId_userId", q => q.eq("planId", args.id).eq("userId", subject))
-      .first();
-
-    const plan = await ctx.db.get(args.id);
-
-    if (!plan) {
-      throw new ConvexError("No Plan found");
-    }
-
-    const admin = getPlanAdmin(ctx, args.id);
-
-    if (!admin && !access) {
-      throw new ConvexError("The Plan you are trying to access either does not belong to you or does not exist.");
-    }
-
-    return {
-      ...plan!,
-      url: ((plan && plan.storageId) ? await ctx.storage.getUrl(plan.storageId) : null),
-      isSharedPlan: access ? true : false
-    };
   },
 });
 
