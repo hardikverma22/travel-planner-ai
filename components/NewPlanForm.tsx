@@ -21,7 +21,7 @@ import {
 import {generateEmptyPlanAction} from "@/lib/actions/generateEmptyPlanAction";
 import {useToast} from "@/components/ui/use-toast";
 
-export const formSchema = z.object({
+const formSchema = z.object({
   placeName: z
     .string({required_error: "Please select a place"})
     .min(3, "Place name should be at least 3 character long"),

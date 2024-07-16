@@ -57,7 +57,7 @@ export default function Map({topPlacesToVisit, selectedPlace}: MapProps) {
   );
 }
 
-export const MapPinMarker = ({index}: {index: number}) => {
+const MapPinMarker = ({index}: {index: number}) => {
   return (
     <div
       aria-label="Map marker"

@@ -80,7 +80,7 @@ const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
   );
 };
 
-export const CreditContent = ({
+const CreditContent = ({
   boughtCredits,
   freeCredits,
   email,
