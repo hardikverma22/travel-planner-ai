@@ -4,13 +4,22 @@ import { fetchMutation } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { getAuthToken } from "@/app/auth";
 import { redirect } from "next/navigation";
+import { differenceInDays } from "date-fns";
 
 export async function generatePlanAction(formData: formSchemaType) {
   const token = await getAuthToken();
-  const { placeName, noOfDays } = formData;
+  const { placeName, activityPreferences, datesOfTravel, companion } = formData;
 
   const planId = await fetchMutation(api.plan.createEmptyPlan,
-    { placeName, noOfDays, isGeneratedUsingAI: true },
+    {
+      placeName,
+      noOfDays: differenceInDays(datesOfTravel.to, datesOfTravel.from).toString(),
+      activityPreferences,
+      fromDate: datesOfTravel.from.getTime(),
+      toDate: datesOfTravel.to.getTime(),
+      companion,
+      isGeneratedUsingAI: true
+    },
     { token });
 
   if (planId === null)

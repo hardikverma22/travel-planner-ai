@@ -5,9 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import {CalendarDaysIcon, MapPin, PlaneIcon} from "lucide-react";
 import {TooltipContainer} from "@/components/shared/Toolip";
+import {getFormattedDateRange} from "@/lib/utils";
 
 type PlanCardProps = {
-  plan: Doc<"plan"> & {url: string | null} & {isSharedPlan: boolean};
+  plan: Doc<"plan"> & {url: string | null} & {isSharedPlan: boolean} & Pick<
+      Doc<"planSettings">,
+      "fromDate" | "toDate"
+    >;
   isPublic?: boolean;
 };
 
@@ -48,12 +52,13 @@ const PlanCard = ({plan, isPublic = false}: PlanCardProps) => {
                     <div className="flex items-center gap-2 text-sm">
                       <CalendarDaysIcon className="h-4 w-4" />
                       <span>
-                        {new Date(plan._creationTime).toLocaleDateString("en-us", {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
+                        {plan.fromDate && plan.toDate
+                          ? getFormattedDateRange(
+                              new Date(plan.fromDate),
+                              new Date(plan.toDate),
+                              "PP"
+                            )
+                          : "Select Dates from plan Page"}
                       </span>
                     </div>
                   )}

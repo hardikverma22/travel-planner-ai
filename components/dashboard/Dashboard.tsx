@@ -41,7 +41,7 @@ export default function Dashboard() {
     >
       <div
         className="flex justify-between gap-5 bg-stone-50 items-center
-                     lg:px-20 px-7 py-4 border-b dark:bg-background"
+                     lg:px-20 px-7 py-4 border-b dark:bg-background sticky top-0"
       >
         <div className="relative ml-auto flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-blue-500" />

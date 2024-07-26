@@ -18,9 +18,14 @@ type PlanContextType = {
   planState: planStateType;
   setPlanState: Dispatch<SetStateAction<planStateType>>;
   shouldShowAlert: boolean;
-  plan: (Doc<"plan"> & {url: string | null; isSharedPlan: boolean}) | null | undefined;
+  plan:
+    | (Doc<"plan"> & {url: string | null; isSharedPlan: boolean} & Pick<
+          Doc<"planSettings">,
+          "activityPreferences" | "companion" | "fromDate" | "toDate"
+        >)
+    | null
+    | undefined;
   isLoading: boolean;
-  error: string | undefined;
 };
 
 const defaultPlanState: planStateType = {
@@ -41,7 +46,6 @@ const PlanContext = createContext<PlanContextType | undefined>({
   shouldShowAlert: false,
   plan: undefined,
   isLoading: false,
-  error: undefined,
 });
 
 export const usePlanContext = () => {
@@ -76,9 +80,7 @@ const PlanContextProvider = ({
   }, [plan]);
 
   return (
-    <PlanContext.Provider
-      value={{planState, shouldShowAlert, plan, isLoading, error, setPlanState}}
-    >
+    <PlanContext.Provider value={{planState, shouldShowAlert, plan, isLoading, setPlanState}}>
       {error ? <AccessDenied /> : children}
     </PlanContext.Provider>
   );

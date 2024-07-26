@@ -4,25 +4,13 @@ import {ChangeEvent, Dispatch, MouseEvent, SetStateAction, useState} from "react
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 import {Loading} from "@/components/shared/Loading";
 import {ControllerRenderProps, UseFormReturn} from "react-hook-form";
+import {formSchemaType} from "@/components/NewPlanForm";
 
 type PlacesAutoCompleteProps = {
   selectedFromList: boolean;
   setSelectedFromList: Dispatch<SetStateAction<boolean>>;
-  form: UseFormReturn<
-    {
-      placeName: string;
-      noOfDays: string;
-    },
-    any,
-    undefined
-  >;
-  field: ControllerRenderProps<
-    {
-      placeName: string;
-      noOfDays: string;
-    },
-    "placeName"
-  >;
+  form: UseFormReturn<formSchemaType, any, undefined>;
+  field: ControllerRenderProps<formSchemaType, "placeName">;
 };
 
 const PlacesAutoComplete = ({

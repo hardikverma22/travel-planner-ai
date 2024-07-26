@@ -55,7 +55,7 @@ const DrawerWithDialog = ({shouldOpenForCreatePlan = false}) => {
           <span>{btnText}</span>
         </Button>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent>{content}</DialogContent>
+          <DialogContent className="max-w-xl">{content}</DialogContent>
         </Dialog>
       </>
     );

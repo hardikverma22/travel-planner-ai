@@ -47,7 +47,7 @@ export default defineSchema({
       localcuisinerecommendations: v.boolean(),
       packingchecklist: v.boolean(),
       besttimetovisit: v.boolean(),
-    })
+    }),
   }),
   users: defineTable({
     userId: v.string(),
@@ -114,7 +114,11 @@ export default defineSchema({
   planSettings: defineTable({
     userId: v.string(),
     planId: v.id("plan"),
-    currencyCode: v.string(),
+    currencyCode: v.optional(v.string()),
+    activityPreferences: v.optional(v.array(v.string())),
+    fromDate: v.optional(v.number()),
+    toDate: v.optional(v.number()),
+    companion: v.optional(v.string()),
   }).index("by_planId", ["planId"])
     .index("by_planId_userId", ["planId", "userId"]),
 });

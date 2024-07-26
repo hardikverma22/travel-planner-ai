@@ -9,6 +9,7 @@ import {
   generatebatch2,
   generatebatch3
 } from "../lib/openai";
+import { getCurrentPlanSettings } from "./planSettings";
 
 export const PlanAdmin = query({
   args: { planId: v.string() },
@@ -97,15 +98,23 @@ export const getAllPlansForAUser = query({
     const sharedPlans = await getSharedPlans(ctx, subject);
     const sharedPlansIds = sharedPlans.map(s => s._id);
     const combinedPlans = plans.concat(sharedPlans);
-
     const data = await Promise.all(
-      combinedPlans.map(async (plan) => ({
-        ...plan,
-        ...{ isSharedPlan: sharedPlansIds.includes(plan._id) },
-        ...(plan.storageId === null
-          ? { url: null }
-          : { url: await ctx.storage.getUrl(plan.storageId) }),
-      }))
+      combinedPlans.map(async (plan) => {
+        const url = plan.storageId === null
+          ? null : await ctx.storage.getUrl(plan.storageId);
+
+        const isSharedPlan = sharedPlansIds.includes(plan._id);
+        const planSettings = await ctx.db.query("planSettings").withIndex("by_planId", q => q.eq("planId", plan._id)).unique();
+
+        return {
+          ...plan,
+          ...{ isSharedPlan, url },
+          ...{
+            fromDate: planSettings?.fromDate,
+            toDate: planSettings?.toDate,
+          }
+        }
+      })
     );
 
     return data;
@@ -157,6 +166,7 @@ export const getComboBoxPlansForAUser = query({
   },
 });
 
+
 export const getSinglePlan = query({
   args: { id: v.id("plan"), isPublic: v.boolean() },
   handler: async (ctx, args) => {
@@ -184,10 +194,16 @@ export const getSinglePlan = query({
         throw new ConvexError("The Plan you are trying to access either does not belong to you or does not exist.");
       }
 
+      const planSettings = await getCurrentPlanSettings(ctx, plan._id);
+
       return {
-        ...plan!,
+        ...plan! as Doc<"plan">,
         url: ((plan && plan.storageId) ? await ctx.storage.getUrl(plan.storageId) : null),
-        isSharedPlan: access ? true : false
+        isSharedPlan: access ? true : false,
+        activityPreferences: planSettings?.activityPreferences ?? [],
+        fromDate: planSettings?.fromDate ?? undefined,
+        toDate: planSettings?.toDate ?? undefined,
+        companion: planSettings?.companion ?? undefined,
       };
     }
     else {
@@ -292,9 +308,23 @@ export const prepareBatch2 = action({
         return null;
       };
 
-      const completion = await generatebatch2(
-        emptyPlan.userPrompt,
-      );
+      const planMetadata = await ctx.runQuery(internal.planSettings.getPlanSettings, {
+        planId: emptyPlan._id
+      });
+
+      if (!planMetadata) {
+        console.error("Unable to find the plan metadata while preparing a new one");
+        return null;
+      };
+      const { activityPreferences, companion, fromDate, toDate } = planMetadata;
+
+      const completion = await generatebatch2({
+        userPrompt: emptyPlan.userPrompt,
+        activityPreferences,
+        companion,
+        fromDate,
+        toDate
+      });
 
       const nameMsg = completion?.choices[0]?.message?.function_call
         ?.arguments as string;
@@ -336,9 +366,18 @@ export const prepareBatch3 = action({
         console.error("Unable to find the empty plan while preparing a new one");
         return null;
       };
+      const planMetadata = await ctx.runQuery(internal.planSettings.getPlanSettings, {
+        planId: emptyPlan._id
+      });
+
+      if (!planMetadata) {
+        console.error("Unable to find the plan metadata while preparing a new one");
+        return null;
+      };
+      const { activityPreferences, companion, fromDate, toDate } = planMetadata;
 
       const completion = await generatebatch3(
-        emptyPlan.userPrompt,
+        { userPrompt: emptyPlan.userPrompt, activityPreferences, companion, fromDate, toDate }
       );
 
       const nameMsg = completion?.choices[0]?.message?.function_call
@@ -547,6 +586,10 @@ export const createEmptyPlan = mutation({
   args: {
     placeName: v.string(),
     noOfDays: v.string(),
+    activityPreferences: v.array(v.string()),
+    fromDate: v.number(),
+    toDate: v.number(),
+    companion: v.optional(v.string()),
     isGeneratedUsingAI: v.boolean()
   },
   handler: async (ctx, args) => {
@@ -582,6 +625,16 @@ export const createEmptyPlan = mutation({
         topplacestovisit: state
       }
     });
+
+    await ctx.db.insert("planSettings", {
+      planId: newPlan,
+      userId: identity.subject,
+      activityPreferences: args.activityPreferences,
+      fromDate: args.fromDate,
+      toDate: args.toDate,
+      companion: args.companion,
+    })
+
     return newPlan;
   },
 });
@@ -600,7 +653,7 @@ export const deletePlan = mutation({
     const plan = await ctx.db.get(planId);
 
     if (!plan) {
-      throw new ConvexError("There is no such plan to dlete with the given Id")
+      throw new ConvexError("There is no such plan to delete with the given Id")
     }
 
     if (plan.userId !== identity.subject) {
@@ -618,6 +671,10 @@ export const deletePlan = mutation({
     const inviteIds = (await ctx.db.query("invites").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
     await Promise.all(inviteIds.map((id) => ctx.db.delete(id)));
 
+    const planSettings = await ctx.db.query("planSettings").withIndex("by_planId", q => q.eq("planId", planId)).unique();
+    if (planSettings)
+      await ctx.db.delete(planSettings?._id);
+
     await ctx.db.delete(planId);
   }
-})
+});

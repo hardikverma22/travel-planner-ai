@@ -29,11 +29,16 @@ export default async function CommunityPlan({planId}: PlanProps) {
       return (
         <section className="h-full flex flex-col gap-10">
           <ImageSection
-            content={plan.userPrompt}
-            placeName={plan.nameoftheplace}
-            imageUrl={plan.url}
+            userPrompt={plan?.userPrompt}
+            companion={undefined}
+            activityPreferences={[]}
+            fromDate={undefined}
+            toDate={undefined}
+            placeName={plan?.nameoftheplace}
+            imageUrl={plan?.url}
             isLoading={false}
             allowEdit={false}
+            planId={planId}
           />
           <AboutThePlace
             isLoading={false}

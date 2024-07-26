@@ -29,7 +29,7 @@ type PlanProps = {
 };
 
 const Plan = ({planId, isNewPlan, isPublic}: PlanProps) => {
-  const {error, isLoading, plan, shouldShowAlert} = usePlanContext();
+  const {isLoading, plan, shouldShowAlert} = usePlanContext();
 
   return (
     <section className="h-full flex flex-col gap-10">
@@ -42,11 +42,16 @@ const Plan = ({planId, isNewPlan, isPublic}: PlanProps) => {
       )}
       <AlertForAI show={shouldShowAlert} />
       <ImageSection
-        content={plan?.userPrompt}
+        userPrompt={plan?.userPrompt}
+        companion={plan?.companion}
+        activityPreferences={plan?.activityPreferences ?? []}
+        fromDate={plan?.fromDate ?? undefined}
+        toDate={plan?.toDate ?? undefined}
         placeName={plan?.nameoftheplace}
         imageUrl={plan?.url}
         isLoading={isLoading || !plan?.contentGenerationState.imagination}
         allowEdit={true}
+        planId={planId}
       />
       <AboutThePlace
         isLoading={isLoading || !plan?.contentGenerationState.abouttheplace}

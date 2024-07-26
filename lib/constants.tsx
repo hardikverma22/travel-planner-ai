@@ -18,6 +18,18 @@ import {
   UserIcon,
   SettingsIcon,
   CloudDrizzle,
+  MapPinned,
+  Palette,
+  PersonStanding,
+  Castle,
+  ShoppingBag,
+  MoonStar,
+  Users,
+  HeartHandshake,
+  Heart,
+  Contact,
+  User,
+  Users2,
 } from "lucide-react";
 import {ReactNode} from "react";
 
@@ -348,4 +360,21 @@ export const FEEDBACK_LABELS = [
   {id: "complaint", displayName: "Complaint"},
   {id: "featurerequest", displayName: "Feature Request"},
   {id: "other", displayName: "Other"},
+];
+
+export const ACTIVITY_PREFERENCES = [
+  {id: "sightseeing", displayName: "Sightseeing", icon: MapPinned},
+  {id: "adventure", displayName: "Adventure", icon: Sailboat},
+  {id: "culturalexperiences", displayName: "Cultural Experiences", icon: Palette},
+  {id: "historical", displayName: "Historical", icon: Castle},
+  {id: "relaxationwellness", displayName: "Relaxation", icon: PersonStanding},
+  {id: "shopping", displayName: "Shopping", icon: ShoppingBag},
+  {id: "nightlife", displayName: "Nightlife", icon: MoonStar},
+];
+
+export const COMPANION_PREFERENCES = [
+  {id: "solo", displayName: "Solo", icon: MapPinned},
+  {id: "couple", displayName: "Couple", icon: Heart},
+  {id: "family", displayName: "Family", icon: Users2},
+  {id: "group", displayName: "Group", icon: Contact},
 ];

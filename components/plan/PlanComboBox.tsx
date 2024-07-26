@@ -59,7 +59,7 @@ export default function PlanComboBox() {
                 {plans.map((plan) => (
                   <CommandItem
                     key={plan._id}
-                    value={plan.nameoftheplace}
+                    value={plan._id}
                     onSelect={(currentValue) => {
                       setOpen(false);
                       let updatedUrl = pathname.replace(/\/plans\/[^\/]+/, "/plans/" + plan._id);
@@ -71,12 +71,6 @@ export default function PlanComboBox() {
                     className="cursor-pointer"
                   >
                     {plan.nameoftheplace}
-                    <CheckIcon
-                      className={cn(
-                        "ml-auto h-4 w-4",
-                        status === plan.nameoftheplace ? "opacity-100" : "opacity-0"
-                      )}
-                    />
                   </CommandItem>
                 ))}
               </CommandGroup>
