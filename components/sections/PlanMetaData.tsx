@@ -79,15 +79,18 @@ const PlanMetaData = ({
           className="bg-foreground/70 text-white tracking-wide text-sm p-2 rounded-xl 
                 flex flex-col gap-4 mt-2 transition-all duration-500 ease-in-out group w-8 hover:w-full"
         >
-          <div className="flex justify-end group-hover:hidden">
-            <Settings2 className="w-4 h-4" />
+          <div className="flex justify-end group-hover:hidden bg-foreground/50 text-background">
+            <Settings2 className="w-4 h-4 opacity-50 " />
           </div>
           {selectedCompanion && (
             <div className="hidden group-hover:block">
-              <div className="font-bold uppercase">Travelling Mode</div>
-              <div className="flex gap-1 justify-start items-center">
+              <div className="font-bold uppercase text-black">Travelling Mode</div>
+              <div
+                className="flex gap-1 justify-center items-center bg-background select-none
+                     text-foreground font-semibold rounded-full py-1 px-2 w-fit"
+              >
                 <selectedCompanion.icon className="h-4 w-4" />
-                <span className="text-gray-200">{selectedCompanion.displayName}</span>
+                <span>{selectedCompanion.displayName}</span>
               </div>
             </div>
           )}
@@ -97,17 +100,15 @@ const PlanMetaData = ({
                     hidden flex-col gap-2
                     transition-all duration-700 ease-in-out delay-1000 group-hover:flex"
             >
-              <div className="font-bold uppercase">Activity Preferences</div>
+              <div className="font-bold uppercase text-black">Activity Preferences</div>
               <div className="grid justify-start items-center grid-cols-2 gap-2">
                 {preferences.map((activity, index) => (
                   <div
-                    className="flex gap-1 bg-background hover:bg-background duration-300 transition-all ease-in-out select-none
-                     text-foreground font-semibold rounded-full p-1 justify-start items-center"
+                    className="flex gap-1 bg-background select-none
+                     text-foreground font-semibold rounded-full p-1 justify-center items-center"
                   >
                     <activity.icon className="h-4 w-4" />
-                    <span className="" key={activity.id}>
-                      {activity.displayName}
-                    </span>
+                    <span key={activity.id}>{activity.displayName}</span>
                   </div>
                 ))}
               </div>
