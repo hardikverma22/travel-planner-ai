@@ -16,7 +16,7 @@ const promptSuffix = `generate travel data according to the schema and in json f
 const callOpenAIApi = (prompt: string, schema: any, description: string) => {
   console.log({ prompt, schema });
   return openai.chat.completions.create({
-    model: "gpt-3.5-turbo-0613",
+    model: "gpt-4o-mini",
     messages: [
       { role: "system", content: "You are a helpful travel assistant." },
       { role: "user", content: prompt },
