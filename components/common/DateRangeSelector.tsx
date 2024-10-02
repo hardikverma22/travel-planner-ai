@@ -45,7 +45,7 @@ const DateRangeSelector = ({value, onChange, forGeneratePlan}: DateRangeSelector
               Pick Travel Dates
             </span>
           )}
-          <CalendarIcon className="ml-2 h-4 w-4 opacity-50" />
+          <CalendarIcon className="ml-2 h-4 w-4 text-background" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">

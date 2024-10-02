@@ -49,43 +49,41 @@ const ImageSection = ({
         </div>
       ) : (
         imageUrl && (
-          <>
-            <div className="relative w-full overflow-hidden h-[300px] md:h-[400px] flex items-end">
-              <Image
-                src={imageUrl}
-                alt="Image for the place"
-                sizes="100vw"
-                className="w-full rounded-t-md object-cover z-0"
-                fill
-                priority={true}
-              />
-              <div className="px-5 py-2 z-10 relative flex justify-between w-full bg-black/40">
-                <h2 className="text-2xl text-white font-bold tracking-wide text-balance text-left">
-                  {placeName}
-                </h2>
-                <div className="rounded-md w-fit ml-8">
-                  <p className="text-white text-balance  text-right">"{userPrompt}"</p>
-                </div>
-              </div>
-              <div className="absolute top-3 right-3 flex flex-col gap-1 justify-end">
-                {!allowEdit && (
-                  <div className="bg-foreground rounded-full">
-                    <TooltipContainer text="This is a community shared travel plans.">
-                      <Info className="text-background cursor-pointer" />
-                    </TooltipContainer>
-                  </div>
-                )}
-                <PlanMetaData
-                  allowEdit={allowEdit}
-                  companion={companion}
-                  activityPreferences={activityPreferences}
-                  fromDate={fromDate}
-                  toDate={toDate}
-                  planId={planId}
-                />
+          <div className="relative w-full overflow-hidden h-[300px] md:h-[400px] flex items-end">
+            <Image
+              src={imageUrl}
+              alt="Image for the place"
+              sizes="100vw"
+              className="w-full rounded-t-md object-cover z-0"
+              fill
+              priority={true}
+            />
+            <div className="px-5 py-2 z-10 relative flex justify-between w-full bg-black/40">
+              <h2 className="text-2xl text-white font-bold tracking-wide text-balance text-left">
+                {placeName}
+              </h2>
+              <div className="rounded-md w-fit ml-8">
+                <p className="text-white text-balance  text-right">"{userPrompt}"</p>
               </div>
             </div>
-          </>
+            <div className="absolute top-3 right-3 flex flex-col gap-1 justify-end">
+              {!allowEdit && (
+                <div className="bg-foreground rounded-full">
+                  <TooltipContainer text="This is a community shared travel plans.">
+                    <Info className="text-background cursor-pointer" />
+                  </TooltipContainer>
+                </div>
+              )}
+              <PlanMetaData
+                allowEdit={allowEdit}
+                companion={companion}
+                activityPreferences={activityPreferences}
+                fromDate={fromDate}
+                toDate={toDate}
+                planId={planId}
+              />
+            </div>
+          </div>
         )
       )}
     </article>

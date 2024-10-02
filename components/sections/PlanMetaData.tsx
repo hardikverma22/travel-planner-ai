@@ -76,15 +76,19 @@ const PlanMetaData = ({
 
       {shouldShowPlanMetaData && (
         <div
-          className="bg-foreground/70 text-white tracking-wide text-sm p-2 rounded-xl 
+          className="bg-foreground/50 tracking-wide text-sm p-2 rounded-xl 
                 flex flex-col gap-4 mt-2 transition-all duration-500 ease-in-out group w-8 hover:w-full"
         >
-          <div className="flex justify-end group-hover:hidden bg-foreground/50 text-background">
-            <Settings2 className="w-4 h-4 opacity-50 " />
+          <div className="flex justify-end group-hover:hidden">
+            <Settings2 className="w-4 h-4 text-background" />
           </div>
           {selectedCompanion && (
-            <div className="hidden group-hover:block">
-              <div className="font-bold uppercase text-black">Travelling Mode</div>
+            <div
+              className="group-hover:opacity-100 opacity-0 
+                    hidden flex-col gap-1
+                    transition-all duration-700 ease-in-out delay-1000 group-hover:flex"
+            >
+              <div className="font-bold text-background pb-1">Travelling Mode</div>
               <div
                 className="flex gap-1 justify-center items-center bg-background select-none
                      text-foreground font-semibold rounded-full py-1 px-2 w-fit"
@@ -97,10 +101,10 @@ const PlanMetaData = ({
           {preferences.length > 0 && (
             <div
               className="group-hover:opacity-100 opacity-0 
-                    hidden flex-col gap-2
+                    hidden flex-col gap-1
                     transition-all duration-700 ease-in-out delay-1000 group-hover:flex"
             >
-              <div className="font-bold uppercase text-black">Activity Preferences</div>
+              <div className="font-bold text-background pb-1">Activity Preferences</div>
               <div className="grid justify-start items-center grid-cols-2 gap-2">
                 {preferences.map((activity, index) => (
                   <div
