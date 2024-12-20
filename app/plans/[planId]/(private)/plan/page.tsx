@@ -4,10 +4,12 @@ export default async function PlanPage({
   params,
   searchParams,
 }: {
-  params: {planId: string};
-  searchParams?: {isNewPlan: string};
+  params: { planId: string };
+  searchParams?: { isNewPlan: string };
 }) {
   const isNewPlan =
-    searchParams && searchParams.isNewPlan ? Boolean(searchParams.isNewPlan) : false;
+    searchParams && searchParams.isNewPlan
+      ? Boolean(searchParams.isNewPlan)
+      : false;
   return <Plan planId={params.planId} isNewPlan={isNewPlan} isPublic={false} />;
 }

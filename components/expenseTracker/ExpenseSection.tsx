@@ -2,18 +2,20 @@
 
 import DataTable from "@/components/expenseTracker/DataTable";
 
-import {api} from "@/convex/_generated/api";
-import {useQuery} from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useQuery } from "convex-helpers/react/cache/hooks";
 import LoadingComponent from "@/app/plans/[planId]/(private)/expense-tracker/loading";
 import dynamic from "next/dynamic";
 
 import ExpenseMetrics from "@/components/expenseTracker/ExpenseMetrics";
-import {Id} from "@/convex/_generated/dataModel";
+import { Id } from "@/convex/_generated/dataModel";
 
-const ExpenseSheet = dynamic(() => import("@/components/expenseTracker/ExpenseSheet"));
+const ExpenseSheet = dynamic(
+  () => import("@/components/expenseTracker/ExpenseSheet")
+);
 
-const ExpenseSection = ({planId}: {planId: string}) => {
-  const data = useQuery(api.expenses.getExpenses, {planId: planId});
+const ExpenseSection = ({ planId }: { planId: string }) => {
+  const data = useQuery(api.expenses.getExpenses, { planId: planId });
 
   const preferredCurrency = useQuery(api.planSettings.getPreferredCurrency, {
     planId: planId as Id<"plan">,
@@ -28,7 +30,9 @@ const ExpenseSection = ({planId}: {planId: string}) => {
                       border-2 border-border rounded-xl w-full h-full
                       shadow-xl font-sans"
       >
-        <p className="font-semibold text-lg md:text-xl">You haven't added any Expenses yet!</p>
+        <p className="font-semibold text-lg md:text-xl">
+          You haven't added any Expenses yet!
+        </p>
         <p className="px-8 max-w-xl text-base text-center text-muted-foreground">
           Effortlessly Track Your Expenses and Stay On Budget!
         </p>
@@ -156,7 +160,10 @@ const ExpenseSection = ({planId}: {planId: string}) => {
             fill="#3f3d56"
           />
         </svg>
-        <ExpenseSheet planId={planId} preferredCurrency={preferredCurrency || "INR"} />
+        <ExpenseSheet
+          planId={planId}
+          preferredCurrency={preferredCurrency || "INR"}
+        />
       </div>
     );
 
@@ -164,10 +171,18 @@ const ExpenseSection = ({planId}: {planId: string}) => {
     return (
       <>
         <div className="flex justify-between items-end w-full border-b-2 pb-1">
-          <h2 className="font-semibold font-sans text-xl align-bottom">Expenses</h2>
-          <ExpenseSheet planId={planId} preferredCurrency={preferredCurrency || "INR"} />
+          <h2 className="font-semibold font-sans text-xl align-bottom">
+            Expenses
+          </h2>
+          <ExpenseSheet
+            planId={planId}
+            preferredCurrency={preferredCurrency || "INR"}
+          />
         </div>
-        <ExpenseMetrics expenses={data} preferredCurrency={preferredCurrency || "INR"} />
+        <ExpenseMetrics
+          expenses={data}
+          preferredCurrency={preferredCurrency || "INR"}
+        />
         <DataTable data={data} preferredCurrency={preferredCurrency || "INR"} />
       </>
     );

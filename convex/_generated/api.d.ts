@@ -1,5 +1,3 @@
-/* prettier-ignore-start */
-
 /* eslint-disable */
 /**
  * Generated `api` utility.
@@ -31,6 +29,7 @@ import type * as razorpay from "../razorpay.js";
 import type * as retrier from "../retrier.js";
 import type * as token from "../token.js";
 import type * as users from "../users.js";
+import type * as utils from "../utils.js";
 import type * as weather from "../weather.js";
 
 /**
@@ -58,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   retrier: typeof retrier;
   token: typeof token;
   users: typeof users;
+  utils: typeof utils;
   weather: typeof weather;
 }>;
 export declare const api: FilterApi<
@@ -68,5 +68,3 @@ export declare const internal: FilterApi<
   typeof fullApi,
   FunctionReference<any, "internal">
 >;
-
-/* prettier-ignore-end */

@@ -1,12 +1,12 @@
 "use client";
-import {NoPlans} from "@/components/dashboard/NoPlans";
+import { NoPlans } from "@/components/dashboard/NoPlans";
 import PlanCard from "@/components/dashboard/PlanCard";
 import DrawerDialog from "@/components/shared/DrawerWithDialog";
-import {Input} from "@/components/ui/input";
-import {api} from "@/convex/_generated/api";
-import {useQuery} from "convex/react";
-import {Search} from "lucide-react";
-import {ChangeEvent, useState} from "react";
+import { Input } from "@/components/ui/input";
+import { api } from "@/convex/_generated/api";
+import { useQuery } from "convex-helpers/react/cache/hooks";
+import { Search } from "lucide-react";
+import { ChangeEvent, useState } from "react";
 
 export default function Dashboard() {
   const [searchPlanText, setSearchPlanText] = useState("");
@@ -62,7 +62,7 @@ export default function Dashboard() {
       <div className="flex h-full w-full px-4 lg:px-20 flex-1">
         <div
           className="mt-5 mx-auto bg-background dark:border-2 dark:border-border/50 rounded-sm flex-1"
-          style={{flex: "1 1 auto"}}
+          style={{ flex: "1 1 auto" }}
         >
           {!finalPlans || finalPlans.length === 0 ? (
             <NoPlans isLoading={!plans} />

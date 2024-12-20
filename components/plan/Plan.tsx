@@ -12,14 +12,9 @@ import {
   PackingChecklist,
 } from "@/components/sections";
 
-import usePlan from "@/hooks/usePlan";
-import {usePlanContext} from "../../contexts/PlanContextProvider";
-import {useEffect} from "react";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
-import {Users} from "lucide-react";
-import {ExclamationTriangleIcon} from "@radix-ui/react-icons";
-import {useRouter} from "next/navigation";
-import {Loading} from "@/components/shared/Loading";
+import { usePlanContext } from "../../contexts/PlanContextProvider";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Users } from "lucide-react";
 import Weather from "@/components/sections/Weather";
 
 type PlanProps = {
@@ -28,8 +23,8 @@ type PlanProps = {
   isPublic: boolean;
 };
 
-const Plan = ({planId, isNewPlan, isPublic}: PlanProps) => {
-  const {isLoading, plan, shouldShowAlert} = usePlanContext();
+const Plan = ({ planId, isNewPlan, isPublic }: PlanProps) => {
+  const { isLoading, plan, shouldShowAlert } = usePlanContext();
 
   return (
     <section className="h-full flex flex-col gap-10">
@@ -37,7 +32,9 @@ const Plan = ({planId, isNewPlan, isPublic}: PlanProps) => {
         <Alert>
           <Users className="h-4 w-4" />
           <AlertTitle className="font-semibold">Shared Access!</AlertTitle>
-          <AlertDescription>You are currently viewing a shared Travel Plan.</AlertDescription>
+          <AlertDescription>
+            You are currently viewing a shared Travel Plan.
+          </AlertDescription>
         </Alert>
       )}
       <AlertForAI show={shouldShowAlert} />
@@ -63,7 +60,9 @@ const Plan = ({planId, isNewPlan, isPublic}: PlanProps) => {
       <TopActivities
         activities={plan?.adventuresactivitiestodo}
         planId={planId}
-        isLoading={isLoading || !plan?.contentGenerationState.adventuresactivitiestodo}
+        isLoading={
+          isLoading || !plan?.contentGenerationState.adventuresactivitiestodo
+        }
         allowEdit={true}
       />
       <TopPlacesToVisit
@@ -80,7 +79,9 @@ const Plan = ({planId, isNewPlan, isPublic}: PlanProps) => {
       />
       <LocalCuisineRecommendations
         recommendations={plan?.localcuisinerecommendations}
-        isLoading={isLoading || !plan?.contentGenerationState.localcuisinerecommendations}
+        isLoading={
+          isLoading || !plan?.contentGenerationState.localcuisinerecommendations
+        }
         planId={planId}
         allowEdit={true}
       />

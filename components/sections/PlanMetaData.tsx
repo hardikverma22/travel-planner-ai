@@ -1,12 +1,12 @@
 import DateRangeSelector from "@/components/common/DateRangeSelector";
-import {useToast} from "@/components/ui/use-toast";
-import {api} from "@/convex/_generated/api";
-import {Id} from "@/convex/_generated/dataModel";
-import {ACTIVITY_PREFERENCES, COMPANION_PREFERENCES} from "@/lib/constants";
-import {useMutation} from "convex/react";
-import {Settings2} from "lucide-react";
-import {useEffect, useState} from "react";
-import {DateRange} from "react-day-picker";
+import { useToast } from "@/components/ui/use-toast";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { ACTIVITY_PREFERENCES, COMPANION_PREFERENCES } from "@/lib/constants";
+import { useMutation } from "convex/react";
+import { Settings2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { DateRange } from "react-day-picker";
 
 type PlanMetaDataProps = {
   allowEdit: boolean;
@@ -31,7 +31,7 @@ const PlanMetaData = ({
   });
 
   const updateTravelDates = useMutation(api.planSettings.updateTravelDates);
-  const {toast} = useToast();
+  const { toast } = useToast();
 
   const onChangeTravelDates = async (e: DateRange | undefined) => {
     if (!e) return;
@@ -64,7 +64,9 @@ const PlanMetaData = ({
     (act) => ACTIVITY_PREFERENCES.find((a) => a.id === act)!
   );
 
-  const selectedCompanion = COMPANION_PREFERENCES.find((c) => c.id === companion);
+  const selectedCompanion = COMPANION_PREFERENCES.find(
+    (c) => c.id === companion
+  );
 
   return (
     <div className="lg:flex hidden flex-col items-end">
@@ -88,7 +90,9 @@ const PlanMetaData = ({
                     hidden flex-col gap-1
                     transition-all duration-700 ease-in-out delay-1000 group-hover:flex"
             >
-              <div className="font-bold text-background pb-1">Travelling Mode</div>
+              <div className="font-bold text-background pb-1">
+                Travelling Mode
+              </div>
               <div
                 className="flex gap-1 justify-center items-center bg-background select-none
                      text-foreground font-semibold rounded-full py-1 px-2 w-fit"
@@ -104,10 +108,13 @@ const PlanMetaData = ({
                     hidden flex-col gap-1
                     transition-all duration-700 ease-in-out delay-1000 group-hover:flex"
             >
-              <div className="font-bold text-background pb-1">Activity Preferences</div>
+              <div className="font-bold text-background pb-1">
+                Activity Preferences
+              </div>
               <div className="grid justify-start items-center grid-cols-2 gap-2">
                 {preferences.map((activity, index) => (
                   <div
+                    key={activity.id}
                     className="flex gap-1 bg-background select-none
                      text-foreground font-semibold rounded-full p-1 justify-center items-center"
                   >

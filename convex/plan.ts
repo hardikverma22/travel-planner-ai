@@ -1,20 +1,26 @@
-import { ActionCtx, MutationCtx, QueryCtx, action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import {
+  ActionCtx,
+  MutationCtx,
+  QueryCtx,
+  action,
+  internalMutation,
+  internalQuery,
+  mutation,
+  query,
+} from "./_generated/server";
 import { internal } from "./_generated/api";
-import { Doc, Id } from './_generated/dataModel';
+import { Doc, Id } from "./_generated/dataModel";
 
 import { ConvexError, v } from "convex/values";
 
-import {
-  generatebatch1,
-  generatebatch2,
-  generatebatch3
-} from "../lib/openai";
+import { generatebatch1, generatebatch2, generatebatch3 } from "../lib/openai";
 import { getCurrentPlanSettings } from "./planSettings";
+import { getIdentityOrThrow } from "./utils";
 
 export const PlanAdmin = query({
   args: { planId: v.string() },
   handler: async (ctx, args) => {
-    return getPlanAdmin(ctx, args.planId)
+    return getPlanAdmin(ctx, args.planId);
   },
 });
 
@@ -27,93 +33,102 @@ export const getPlanAdmin = async (ctx: QueryCtx, planId: string) => {
   const { subject } = identity;
 
   const plan = await ctx.db.get(planId as Id<"plan">);
-  if (plan && plan.userId === subject) return { isPlanAdmin: true, planName: plan.nameoftheplace };
+  if (plan && plan.userId === subject)
+    return { isPlanAdmin: true, planName: plan.nameoftheplace };
   return { isPlanAdmin: false, planName: "" };
-}
+};
 
 const getSharedPlans = async (ctx: QueryCtx, userId: string) => {
+  const accessRecords = await ctx.db
+    .query("access")
+    .withIndex("by_userId", (q) => q.eq("userId", userId))
+    .collect();
 
-  const access = await ctx.db.query("access")
-    .withIndex("by_userId", q => q.eq("userId", userId))
-    .take(100);
+  if (!accessRecords.length) return [];
 
-  const planIds = access.map(a => a.planId);
+  // Batch fetch plans
+  const planIds = accessRecords.map((record) => record.planId);
+  const plans = await Promise.all(planIds.map((id) => ctx.db.get(id)));
 
-  const promises = planIds.map(async planId => {
-    const plan = await ctx.db.get(planId);
-    return plan!;
-  })
-
-  return Promise.all(promises);
-}
+  return plans.filter((plan): plan is Doc<"plan"> => plan !== null);
+};
 
 export const getAllUsersForAPlan = query({
   args: {
     planId: v.id("plan"),
   },
   handler: async (ctx, args) => {
+    const identity = await getIdentityOrThrow(ctx);
 
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return null;
-    }
+    // Parallel fetch of plan and access records using proper indexing
+    const [planRecord, accessRecords] = await Promise.all([
+      ctx.db.get(args.planId),
+      ctx.db
+        .query("access")
+        .withIndex("by_planId_userId", (q) =>
+          q.eq("planId", args.planId).eq("userId", identity.subject)
+        )
+        .collect(),
+    ]);
 
-    const access = await ctx.db.query("access")
-      .filter(q => q.eq(q.field("planId"), args.planId))
-      .collect();
-
-    const sharedAccessUserIds = access.map(a => a.userId);
-
-    const planRecord = await ctx.db.get(args.planId);
     if (!planRecord) {
-      throw new ConvexError("Plan Admin Not found");
+      throw new ConvexError("Plan not found");
     }
 
-    sharedAccessUserIds.push(planRecord.userId);
+    const userIds = [planRecord.userId, ...accessRecords.map((a) => a.userId)];
 
-    const result = await Promise.all(sharedAccessUserIds.map(userId => ctx.db.query("users")
-      .withIndex("by_clerk_id", q => q.eq("userId", userId))
-      .first())) as Doc<"users">[];
+    // Batch fetch all users in a single query using IN operator
+    const users = await Promise.all(
+      userIds.map((userId) =>
+        ctx.db
+          .query("users")
+          .withIndex("by_clerk_id", (q) => q.eq("userId", userId))
+          .unique()
+      )
+    );
 
-    var final = result.map(r => ({ ...r, IsCurrentUser: r.userId == identity.subject }));
-    return final;
+    return users
+      .filter((user): user is Doc<"users"> => user !== null)
+      .map((user) => ({
+        ...user,
+        IsCurrentUser: user.userId === identity.subject,
+      }));
   },
 });
 
 export const getAllPlansForAUser = query({
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return null;
-    }
-
+    const identity = await getIdentityOrThrow(ctx);
     const { subject } = identity;
+    const [ownPlans, sharedPlans] = await Promise.all([
+      ctx.db
+        .query("plan")
+        .withIndex("by_userId", (q) => q.eq("userId", subject))
+        .collect(),
+      getSharedPlans(ctx, subject),
+    ]);
 
-    const plans = await ctx.db
-      .query("plan")
-      .filter((q) => q.eq(q.field("userId"), subject))
-      .order("desc")
-      .take(100);
-
-    const sharedPlans = await getSharedPlans(ctx, subject);
-    const sharedPlansIds = sharedPlans.map(s => s._id);
-    const combinedPlans = plans.concat(sharedPlans);
+    const sharedPlansIds = sharedPlans.map((s) => s._id);
+    const combinedPlans = ownPlans.concat(sharedPlans);
     const data = await Promise.all(
       combinedPlans.map(async (plan) => {
-        const url = plan.storageId === null
-          ? null : await ctx.storage.getUrl(plan.storageId);
-
-        const isSharedPlan = sharedPlansIds.includes(plan._id);
-        const planSettings = await ctx.db.query("planSettings").withIndex("by_planId", q => q.eq("planId", plan._id)).unique();
+        const [url, planSettings] = await Promise.all([
+          plan.storageId ? ctx.storage.getUrl(plan.storageId) : null,
+          ctx.db
+            .query("planSettings")
+            .withIndex("by_planId_userId", (q) =>
+              q.eq("planId", plan._id).eq("userId", plan.userId)
+            )
+            .unique(),
+        ]);
 
         return {
           ...plan,
-          ...{ isSharedPlan, url },
-          ...{
-            fromDate: planSettings?.fromDate,
-            toDate: planSettings?.toDate,
-          }
-        }
+          isSharedPlan: sharedPlansIds.includes(plan._id),
+          url,
+          fromDate: planSettings?.fromDate,
+          toDate: planSettings?.toDate,
+        };
       })
     );
 
@@ -123,41 +138,67 @@ export const getAllPlansForAUser = query({
 
 export const getPublicPlans = query({
   handler: async (ctx, args) => {
-    const plans = await ctx.db
-      .query("plan")
-      .filter((q) => q.eq(q.field("userId"), "public"))
-      .order("desc")
-      .take(100);
-
-
-    const data = await Promise.all(
-      plans.map(async (plan) => ({
-        ...plan,
-        ...{ isSharedPlan: false },
-        ...(plan.storageId === null
-          ? { url: null }
-          : { url: await ctx.storage.getUrl(plan.storageId) }),
-      }))
+    //DEV
+    // const PUBLIC_PLAN_IDS = [
+    //   "j976a67c74q3xc7y2qsmb604nx6vmezb",
+    //   "j97ca9yx3tb060fzn4q5vkcp9n6vmjrx",
+    //   "j97b73bvd01yz48vee5m4f7qzh6vm5se",
+    //   "j973yvgba3kj2fx4fnzzsyq6rh6vgx2r",
+    //   "j979zkt2b9t48dnd3krfw01rvx6vhavh",
+    //   "j975a4bq83amm742n5k10vfm1s6vgk9p",
+    //   "j979ptn9m6pzvbqx26nmfdhst56vgk45",
+    //   "j9767ymcmq280qjkabpys8ge6s6vgyc1",
+    // ] as Id<"plan">[];
+    //PROD
+    const PUBLIC_PLAN_IDS = [
+      "jd73xpv2e417cnt5fs60w8vwbn6vqfdj",
+      "jd75gwr8yhbqmbq0fkssdppry16vpdk3",
+      "jd72kt9m26299j0d5f97mr3qds6vqtce",
+      "jd7bfx1pet9e4909b29j93qrxx6vpsey",
+      "jd78qtw04cspjvq34y1r3athj96vqa37",
+      "jd7et3d9vqv3y76j5yjmja9qjx6vq85s",
+      "jd74j1rpwdsy0hrk5cv0b0v8416vpm41",
+      "jd7ek50gqv72was2q4fdmmy6n96vqwc8",
+    ] as Id<"plan">[];
+    const plans = await Promise.all(
+      PUBLIC_PLAN_IDS.map((id) => ctx.db.get(id as Id<"plan">))
     );
 
-    return data;
+    console.log(plans);
+
+    // Filter out null plans and prepare URL fetching
+    const validPlans = plans.filter(
+      (plan): plan is Doc<"plan"> => plan !== null
+    );
+
+    // Batch process plans with their URLs
+    const processedPlans = await Promise.all(
+      validPlans.map(async (plan) => {
+        const url = plan.storageId
+          ? await ctx.storage.getUrl(plan.storageId)
+          : null;
+
+        return {
+          ...plan,
+          isSharedPlan: false,
+          url,
+        };
+      })
+    );
+
+    return processedPlans;
   },
 });
 
 export const getComboBoxPlansForAUser = query({
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return null;
-    }
-
+    const identity = await getIdentityOrThrow(ctx);
     const { subject } = identity;
 
     const ownPlans = await ctx.db
       .query("plan")
-      .filter((q) => q.eq(q.field("userId"), subject))
-      .order("desc")
-      .take(100);
+      .withIndex("by_userId", (q) => q.eq("userId", subject))
+      .collect();
 
     const sharedPlans = await getSharedPlans(ctx, subject);
     const allPlans = ownPlans.concat(sharedPlans);
@@ -166,64 +207,70 @@ export const getComboBoxPlansForAUser = query({
   },
 });
 
+const validatePlanAccess = async (
+  ctx: QueryCtx | MutationCtx,
+  planId: Id<"plan">,
+  userId: string
+) => {
+  const plan = await ctx.db.get(planId);
+  if (!plan) {
+    throw new ConvexError("Plan not found");
+  }
+
+  const isPlanAdmin = plan.userId === userId;
+  if (!isPlanAdmin) {
+    const access = await ctx.db
+      .query("access")
+      .withIndex("by_planId_userId", (q) =>
+        q.eq("planId", planId).eq("userId", userId)
+      )
+      .first();
+
+    if (!access) {
+      throw new ConvexError("Unauthorized access to plan");
+    }
+  }
+  return { plan, isPlanAdmin };
+};
 
 export const getSinglePlan = query({
   args: { id: v.id("plan"), isPublic: v.boolean() },
   handler: async (ctx, args) => {
     if (!args.isPublic) {
-      const identity = await ctx.auth.getUserIdentity();
-      if (!identity) {
-        return null;
-      }
+      const identity = await getIdentityOrThrow(ctx);
+      const { plan, isPlanAdmin } = await validatePlanAccess(
+        ctx,
+        args.id,
+        identity.subject
+      );
 
-      const { subject } = identity;
-
-      const access = await ctx.db.query("access")
-        .withIndex("by_planId_userId", q => q.eq("planId", args.id).eq("userId", subject))
-        .first();
-
-      const plan = await ctx.db.get(args.id);
-
-      if (!plan) {
-        throw new ConvexError("No Plan found");
-      }
-
-      const admin = await getPlanAdmin(ctx, args.id);
-
-      if (!admin.isPlanAdmin && !access) {
-        throw new ConvexError("The Plan you are trying to access either does not belong to you or does not exist.");
-      }
-
-      const planSettings = await getCurrentPlanSettings(ctx, plan._id);
+      const [url, planSettings] = await Promise.all([
+        plan.storageId ? ctx.storage.getUrl(plan.storageId) : null,
+        getCurrentPlanSettings(ctx, plan._id),
+      ]);
 
       return {
-        ...plan! as Doc<"plan">,
-        url: ((plan && plan.storageId) ? await ctx.storage.getUrl(plan.storageId) : null),
-        isSharedPlan: access ? true : false,
+        ...plan,
+        url,
+        isSharedPlan: !isPlanAdmin,
         activityPreferences: planSettings?.activityPreferences ?? [],
-        fromDate: planSettings?.fromDate ?? undefined,
-        toDate: planSettings?.toDate ?? undefined,
-        companion: planSettings?.companion ?? undefined,
+        fromDate: planSettings?.fromDate,
+        toDate: planSettings?.toDate,
+        companion: planSettings?.companion,
       };
-    }
-    else {
+    } else {
       const plan = await ctx.db.get(args.id);
 
-      if (!plan) {
-        throw new ConvexError("No Plan found");
+      if (!plan || plan.userId !== "public") {
+        throw new ConvexError("Plan not found or not public");
       }
 
-      if (plan.userId !== "public") {
-        throw new ConvexError("Plan is not public");
-      }
+      const url = plan.storageId
+        ? await ctx.storage.getUrl(plan.storageId)
+        : null;
 
-      return {
-        ...plan!,
-        url: ((plan && plan.storageId) ? await ctx.storage.getUrl(plan.storageId) : null),
-        isSharedPlan: false
-      };
+      return { ...plan, url, isSharedPlan: false };
     }
-
   },
 });
 
@@ -235,55 +282,46 @@ export const readPlanData = internalQuery({
   },
 });
 
-export const IsAuthenticated = async (ctx: ActionCtx | QueryCtx | MutationCtx) => {
-  const identity = await ctx.auth.getUserIdentity();
-  if (identity === null) {
-    throw new ConvexError("Could not authenticate the request");
-  }
-  return true;
-}
-
 const fetchEmptyPlan = async (ctx: ActionCtx, planId: string) => {
   return ctx.runQuery(internal.plan.readPlanData, {
-    id: planId as Doc<"plan">["_id"]
+    id: planId as Doc<"plan">["_id"],
   });
-}
+};
 
 //Actions to be called for prepareing the plan
 export const prepareBatch1 = action({
   args: {
     planId: v.string(),
   },
-  handler: async (
-    ctx,
-    { planId }
-  ) => {
+  handler: async (ctx, { planId }) => {
     try {
       const emptyPlan = await fetchEmptyPlan(ctx, planId);
 
       if (!emptyPlan) {
-        throw new ConvexError("Unable to find the empty plan while preparing a new one");
-        return;
-      };
+        throw new ConvexError(
+          "Unable to find the empty plan while preparing a new one"
+        );
+      }
 
-      const completion = await generatebatch1(
-        emptyPlan.userPrompt,
-      );
+      const completion = await generatebatch1(emptyPlan.userPrompt);
 
       const nameMsg = completion?.choices[0]?.message?.function_call
         ?.arguments as string;
 
-      const modelName = JSON.parse(nameMsg) as
-        Pick<Doc<"plan">, "abouttheplace" |
-          "besttimetovisit">;
+      const modelName = JSON.parse(nameMsg) as Pick<
+        Doc<"plan">,
+        "abouttheplace" | "besttimetovisit"
+      >;
 
       await ctx.runMutation(internal.plan.updateAboutThePlaceBestTimeToVisit, {
         abouttheplace: modelName.abouttheplace,
         besttimetovisit: modelName.besttimetovisit,
-        planId: emptyPlan._id
+        planId: emptyPlan._id,
       });
     } catch (error) {
-      throw new ConvexError(`Error occured in prepare Plan Convex action: ${error}`);
+      throw new ConvexError(
+        `Error occured in prepare Plan Convex action: ${error}`
+      );
     }
   },
 });
@@ -292,30 +330,32 @@ export const prepareBatch2 = action({
   args: {
     planId: v.string(),
   },
-  handler: async (
-    ctx,
-    { planId }
-  ) => {
+  handler: async (ctx, { planId }) => {
     try {
       console.log({ planId });
-
-      // if (!IsAuthenticated(ctx)) { return null }
 
       const emptyPlan = await fetchEmptyPlan(ctx, planId);
 
       if (!emptyPlan) {
-        console.error("Unable to find the empty plan while preparing a new one");
+        console.error(
+          "Unable to find the empty plan while preparing a new one"
+        );
         return null;
-      };
+      }
 
-      const planMetadata = await ctx.runQuery(internal.planSettings.getPlanSettings, {
-        planId: emptyPlan._id
-      });
+      const planMetadata = await ctx.runQuery(
+        internal.planSettings.getPlanSettings,
+        {
+          planId: emptyPlan._id,
+        }
+      );
 
       if (!planMetadata) {
-        console.error("Unable to find the plan metadata while preparing a new one");
+        console.error(
+          "Unable to find the plan metadata while preparing a new one"
+        );
         return null;
-      };
+      }
       const { activityPreferences, companion, fromDate, toDate } = planMetadata;
 
       const completion = await generatebatch2({
@@ -323,24 +363,29 @@ export const prepareBatch2 = action({
         activityPreferences,
         companion,
         fromDate,
-        toDate
+        toDate,
       });
 
       const nameMsg = completion?.choices[0]?.message?.function_call
         ?.arguments as string;
 
-      const modelName = JSON.parse(nameMsg) as
-        Pick<Doc<"plan">, "adventuresactivitiestodo" |
-          "localcuisinerecommendations" |
-          "packingchecklist">;
+      const modelName = JSON.parse(nameMsg) as Pick<
+        Doc<"plan">,
+        | "adventuresactivitiestodo"
+        | "localcuisinerecommendations"
+        | "packingchecklist"
+      >;
 
-      await ctx.runMutation(internal.plan.updateActivitiesToDoPackingChecklistLocalCuisineRecommendations, {
-        adventuresactivitiestodo: modelName.adventuresactivitiestodo,
-        localcuisinerecommendations: modelName.localcuisinerecommendations,
-        packingchecklist: modelName.packingchecklist,
-        planId: emptyPlan._id,
-      });
-
+      await ctx.runMutation(
+        internal.plan
+          .updateActivitiesToDoPackingChecklistLocalCuisineRecommendations,
+        {
+          adventuresactivitiestodo: modelName.adventuresactivitiestodo,
+          localcuisinerecommendations: modelName.localcuisinerecommendations,
+          packingchecklist: modelName.packingchecklist,
+          planId: emptyPlan._id,
+        }
+      );
     } catch (error) {
       throw new Error(`Error occured in prepare Plan Convex action: ${error}`);
     }
@@ -351,49 +396,56 @@ export const prepareBatch3 = action({
   args: {
     planId: v.string(),
   },
-  handler: async (
-    ctx,
-    { planId }
-  ) => {
+  handler: async (ctx, { planId }) => {
     try {
-      console.log({ planId });
-
-      // if (!IsAuthenticated(ctx)) { return null }
-
       const emptyPlan = await fetchEmptyPlan(ctx, planId);
 
       if (!emptyPlan) {
-        console.error("Unable to find the empty plan while preparing a new one");
+        console.error(
+          "Unable to find the empty plan while preparing a new one"
+        );
         return null;
-      };
-      const planMetadata = await ctx.runQuery(internal.planSettings.getPlanSettings, {
-        planId: emptyPlan._id
-      });
+      }
+      const planMetadata = await ctx.runQuery(
+        internal.planSettings.getPlanSettings,
+        {
+          planId: emptyPlan._id,
+        }
+      );
 
       if (!planMetadata) {
-        console.error("Unable to find the plan metadata while preparing a new one");
+        console.error(
+          "Unable to find the plan metadata while preparing a new one"
+        );
         return null;
-      };
+      }
       const { activityPreferences, companion, fromDate, toDate } = planMetadata;
 
-      const completion = await generatebatch3(
-        { userPrompt: emptyPlan.userPrompt, activityPreferences, companion, fromDate, toDate }
-      );
+      const completion = await generatebatch3({
+        userPrompt: emptyPlan.userPrompt,
+        activityPreferences,
+        companion,
+        fromDate,
+        toDate,
+      });
 
       const nameMsg = completion?.choices[0]?.message?.function_call
         ?.arguments as string;
 
-      const modelName = JSON.parse(nameMsg) as
-        Pick<Doc<"plan">, "itinerary" | "topplacestovisit">;
+      const modelName = JSON.parse(nameMsg) as Pick<
+        Doc<"plan">,
+        "itinerary" | "topplacestovisit"
+      >;
 
       await ctx.runMutation(internal.plan.updateItineraryTopPlacesToVisit, {
         itinerary: modelName.itinerary,
         topplacestovisit: modelName.topplacestovisit,
         planId: emptyPlan._id,
       });
-
     } catch (error) {
-      throw new ConvexError(`Error occured in prepare Plan Convex action: ${error}`);
+      throw new ConvexError(
+        `Error occured in prepare Plan Convex action: ${error}`
+      );
     }
   },
 });
@@ -414,64 +466,74 @@ export const updateAboutThePlaceBestTimeToVisit = internalMutation({
       contentGenerationState: {
         ...plan!.contentGenerationState,
         abouttheplace: true,
-        besttimetovisit: true
-      }
+        besttimetovisit: true,
+      },
     });
   },
 });
 
-export const updateActivitiesToDoPackingChecklistLocalCuisineRecommendations = internalMutation({
-  args: {
-    planId: v.id("plan"),
-    adventuresactivitiestodo: v.array(v.string()),
-    packingchecklist: v.array(v.string()),
-    localcuisinerecommendations: v.array(v.string()),
-  },
-  handler: async (ctx, args) => {
-    const plan = await ctx.db.get(args.planId);
+export const updateActivitiesToDoPackingChecklistLocalCuisineRecommendations =
+  internalMutation({
+    args: {
+      planId: v.id("plan"),
+      adventuresactivitiestodo: v.array(v.string()),
+      packingchecklist: v.array(v.string()),
+      localcuisinerecommendations: v.array(v.string()),
+    },
+    handler: async (ctx, args) => {
+      const plan = await ctx.db.get(args.planId);
 
-    await ctx.db.patch(args.planId, {
-      adventuresactivitiestodo: args.adventuresactivitiestodo,
-      packingchecklist: args.packingchecklist,
-      localcuisinerecommendations: args.localcuisinerecommendations,
-      contentGenerationState: {
-        ...plan!.contentGenerationState,
-        adventuresactivitiestodo: true,
-        packingchecklist: true,
-        localcuisinerecommendations: true
-      }
-    });
-  },
-});
+      await ctx.db.patch(args.planId, {
+        adventuresactivitiestodo: args.adventuresactivitiestodo,
+        packingchecklist: args.packingchecklist,
+        localcuisinerecommendations: args.localcuisinerecommendations,
+        contentGenerationState: {
+          ...plan!.contentGenerationState,
+          adventuresactivitiestodo: true,
+          packingchecklist: true,
+          localcuisinerecommendations: true,
+        },
+      });
+    },
+  });
 
 export const updateItineraryTopPlacesToVisit = internalMutation({
   args: {
     planId: v.id("plan"),
-    topplacestovisit: v.array(v.object({
-      name: v.string(),
-      coordinates: v.object({
-        lat: v.float64(),
-        lng: v.float64()
+    topplacestovisit: v.array(
+      v.object({
+        name: v.string(),
+        coordinates: v.object({
+          lat: v.float64(),
+          lng: v.float64(),
+        }),
       })
-    })),
-    itinerary: v.array(v.object({
-      title: v.string(),
-      activities: v.object({
-        morning: v.array(v.object({
-          itineraryItem: v.string(),
-          briefDescription: v.string()
-        })),
-        afternoon: v.array(v.object({
-          itineraryItem: v.string(),
-          briefDescription: v.string()
-        })),
-        evening: v.array(v.object({
-          itineraryItem: v.string(),
-          briefDescription: v.string()
-        })),
+    ),
+    itinerary: v.array(
+      v.object({
+        title: v.string(),
+        activities: v.object({
+          morning: v.array(
+            v.object({
+              itineraryItem: v.string(),
+              briefDescription: v.string(),
+            })
+          ),
+          afternoon: v.array(
+            v.object({
+              itineraryItem: v.string(),
+              briefDescription: v.string(),
+            })
+          ),
+          evening: v.array(
+            v.object({
+              itineraryItem: v.string(),
+              briefDescription: v.string(),
+            })
+          ),
+        }),
       })
-    })),
-
+    ),
   },
   handler: async (ctx, args) => {
     const plan = await ctx.db.get(args.planId);
@@ -483,7 +545,7 @@ export const updateItineraryTopPlacesToVisit = internalMutation({
         ...plan!.contentGenerationState,
         topplacestovisit: true,
         itinerary: true,
-      }
+      },
     });
   },
 });
@@ -493,26 +555,34 @@ export const updateItineraryTopPlacesToVisit = internalMutation({
 export const updatePartOfPlan = mutation({
   args: {
     planId: v.id("plan"),
-    data: v.union(v.string(), v.array(v.string()), v.array(v.object({
-      name: v.string(),
-      coordinates: v.object({
-        lat: v.float64(),
-        lng: v.float64()
-      })
-    }))),
-    key: v.union(v.literal("abouttheplace"),
+    data: v.union(
+      v.string(),
+      v.array(v.string()),
+      v.array(
+        v.object({
+          name: v.string(),
+          coordinates: v.object({
+            lat: v.float64(),
+            lng: v.float64(),
+          }),
+        })
+      )
+    ),
+    key: v.union(
+      v.literal("abouttheplace"),
       v.literal("besttimetovisit"),
       v.literal("packingchecklist"),
       v.literal("localcuisinerecommendations"),
       v.literal("adventuresactivitiestodo"),
-      v.literal("topplacestovisit"))
+      v.literal("topplacestovisit")
+    ),
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.planId, {
       [args.key]: args.data,
     });
   },
-})
+});
 
 export const updatePlaceToVisit = mutation({
   args: {
@@ -526,29 +596,31 @@ export const updatePlaceToVisit = mutation({
     if (!plan) return;
     const existing = plan?.topplacestovisit;
     await ctx.db.patch(plan?._id, {
-      topplacestovisit: [...existing, {
-        name: args.placeName,
-        coordinates: {
-          lat: args.lat,
-          lng: args.lng
-        }
-      }]
-    })
+      topplacestovisit: [
+        ...existing,
+        {
+          name: args.placeName,
+          coordinates: {
+            lat: args.lat,
+            lng: args.lng,
+          },
+        },
+      ],
+    });
   },
-})
+});
 
 export const deleteDayInItinerary = mutation({
-  args: { dayName: v.string(), planId: v.id("plan"), },
+  args: { dayName: v.string(), planId: v.id("plan") },
   handler: async (ctx, args) => {
-    if (!IsAuthenticated(ctx)) { return null }
+    await getIdentityOrThrow(ctx);
     const data = await ctx.db.get(args.planId);
-    if (!data)
-      return;
+    if (!data) return;
     await ctx.db.patch(args.planId, {
-      itinerary: data.itinerary.filter(d => !d.title.includes(args.dayName)),
+      itinerary: data.itinerary.filter((d) => !d.title.includes(args.dayName)),
     });
-  }
-})
+  },
+});
 
 export const addDayInItinerary = mutation({
   args: {
@@ -556,28 +628,36 @@ export const addDayInItinerary = mutation({
     itineraryDay: v.object({
       title: v.string(),
       activities: v.object({
-        morning: v.array(v.object({
-          itineraryItem: v.string(),
-          briefDescription: v.string()
-        })),
-        afternoon: v.array(v.object({
-          itineraryItem: v.string(),
-          briefDescription: v.string()
-        })),
-        evening: v.array(v.object({
-          itineraryItem: v.string(),
-          briefDescription: v.string()
-        })),
-      })
+        morning: v.array(
+          v.object({
+            itineraryItem: v.string(),
+            briefDescription: v.string(),
+          })
+        ),
+        afternoon: v.array(
+          v.object({
+            itineraryItem: v.string(),
+            briefDescription: v.string(),
+          })
+        ),
+        evening: v.array(
+          v.object({
+            itineraryItem: v.string(),
+            briefDescription: v.string(),
+          })
+        ),
+      }),
     }),
   },
   handler: async (ctx, { planId, itineraryDay }) => {
     const data = await ctx.db.get(planId);
-    if (!data)
-      return;
+    if (!data) return;
 
     await ctx.db.patch(planId, {
-      itinerary: [...data.itinerary, { ...itineraryDay, title: `Day ${data.itinerary.length + 1}` }],
+      itinerary: [
+        ...data.itinerary,
+        { ...itineraryDay, title: `Day ${data.itinerary.length + 1}` },
+      ],
     });
   },
 });
@@ -590,16 +670,11 @@ export const createEmptyPlan = mutation({
     fromDate: v.number(),
     toDate: v.number(),
     companion: v.optional(v.string()),
-    isGeneratedUsingAI: v.boolean()
+    isGeneratedUsingAI: v.boolean(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      console.log("no identity");
-      return null;
-    }
-
-    const state = args.isGeneratedUsingAI ? false : true;
+    const identity = await getIdentityOrThrow(ctx);
+    const state = !args.isGeneratedUsingAI;
 
     const newPlan = await ctx.db.insert("plan", {
       nameoftheplace: args.placeName,
@@ -622,8 +697,8 @@ export const createEmptyPlan = mutation({
         itinerary: state,
         localcuisinerecommendations: state,
         packingchecklist: state,
-        topplacestovisit: state
-      }
+        topplacestovisit: state,
+      },
     });
 
     await ctx.db.insert("planSettings", {
@@ -633,7 +708,7 @@ export const createEmptyPlan = mutation({
       fromDate: args.fromDate,
       toDate: args.toDate,
       companion: args.companion,
-    })
+    });
 
     return newPlan;
   },
@@ -653,28 +728,47 @@ export const deletePlan = mutation({
     const plan = await ctx.db.get(planId);
 
     if (!plan) {
-      throw new ConvexError("There is no such plan to delete with the given Id")
+      throw new ConvexError(
+        "There is no such plan to delete with the given Id"
+      );
     }
 
     if (plan.userId !== identity.subject) {
-      throw new ConvexError("You are not the owner of this plan.")
+      throw new ConvexError("You are not the owner of this plan.");
     }
     if (plan.storageId)
       await ctx.storage.delete(plan.storageId as Id<"_storage">);
 
-    const expenseIds = (await ctx.db.query("expenses").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
+    const expenseIds = (
+      await ctx.db
+        .query("expenses")
+        .withIndex("by_planId", (q) => q.eq("planId", planId))
+        .collect()
+    ).map((ex) => ex._id);
     await Promise.all(expenseIds.map((id) => ctx.db.delete(id)));
 
-    const accessIds = (await ctx.db.query("access").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
+    const accessIds = (
+      await ctx.db
+        .query("access")
+        .withIndex("by_planId", (q) => q.eq("planId", planId))
+        .collect()
+    ).map((ex) => ex._id);
     await Promise.all(accessIds.map((id) => ctx.db.delete(id)));
 
-    const inviteIds = (await ctx.db.query("invites").withIndex("by_planId", q => q.eq("planId", planId)).collect()).map(ex => ex._id);
+    const inviteIds = (
+      await ctx.db
+        .query("invites")
+        .withIndex("by_planId", (q) => q.eq("planId", planId))
+        .collect()
+    ).map((ex) => ex._id);
     await Promise.all(inviteIds.map((id) => ctx.db.delete(id)));
 
-    const planSettings = await ctx.db.query("planSettings").withIndex("by_planId", q => q.eq("planId", planId)).unique();
-    if (planSettings)
-      await ctx.db.delete(planSettings?._id);
+    const planSettings = await ctx.db
+      .query("planSettings")
+      .withIndex("by_planId", (q) => q.eq("planId", planId))
+      .unique();
+    if (planSettings) await ctx.db.delete(planSettings?._id);
 
     await ctx.db.delete(planId);
-  }
+  },
 });

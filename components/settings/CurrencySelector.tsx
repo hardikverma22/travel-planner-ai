@@ -1,6 +1,6 @@
 "use client";
-import {useEffect, useState} from "react";
-import {z} from "zod";
+import { useEffect, useState } from "react";
+import { z } from "zod";
 
 import {
   Select,
@@ -12,29 +12,40 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {Loading} from "@/components/shared/Loading";
-import {Button} from "@/components/ui/button";
-import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
-import {api} from "@/convex/_generated/api";
-import {Id} from "@/convex/_generated/dataModel";
-import {cn} from "@/lib/utils";
+import { Loading } from "@/components/shared/Loading";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { cn } from "@/lib/utils";
 
-import {useToast} from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import currencies from "@/lib/currencies.json";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useMutation, useQuery} from "convex/react";
-import {ConvexError} from "convex/values";
-import {useForm} from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache/hooks";
+import { ConvexError } from "convex/values";
+import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
-  currency: z.string().min(1, {message: "You will have to pick a preffered currency."}),
+  currency: z
+    .string()
+    .min(1, { message: "You will have to pick a preffered currency." }),
 });
 
-const CurrencySelector = ({planId}: {planId: string}) => {
+const CurrencySelector = ({ planId }: { planId: string }) => {
   const [isSending, setIsSending] = useState(false);
-  const {toast} = useToast();
+  const { toast } = useToast();
 
-  const addPreferredCurrency = useMutation(api.planSettings.addPreferredCurrency);
+  const addPreferredCurrency = useMutation(
+    api.planSettings.addPreferredCurrency
+  );
   const preferredCurrency = useQuery(api.planSettings.getPreferredCurrency, {
     planId: planId as Id<"plan">,
   });
@@ -85,10 +96,13 @@ const CurrencySelector = ({planId}: {planId: string}) => {
 
   return (
     <article className="bg-background shadow-sm rounded-lg p-4 border-2 border-border">
-      <h2 className="border-b-2 border-b-border pb-2 mb-2 font-bold font-md">Preffered Currency</h2>
+      <h2 className="border-b-2 border-b-border pb-2 mb-2 font-bold font-md">
+        Preffered Currency
+      </h2>
 
       <h3 className="text-neutral-500 dark:text-neutral-400 mb-4 flex text-sm sm:text-base">
-        Select your preffered currency for this plan which can be used in expenses section.
+        Select your preffered currency for this plan which can be used in
+        expenses section.
       </h3>
       <Form {...form}>
         <form
@@ -98,14 +112,16 @@ const CurrencySelector = ({planId}: {planId: string}) => {
           <FormField
             control={form.control}
             name="currency"
-            render={({field}) => (
+            render={({ field }) => (
               <FormItem>
                 <FormControl>
                   <Select
                     disabled={isSending || preferredCurrency === undefined}
                     onValueChange={field.onChange}
                     value={field.value}
-                    defaultValue={preferredCurrency == null ? undefined : preferredCurrency}
+                    defaultValue={
+                      preferredCurrency == null ? undefined : preferredCurrency
+                    }
                   >
                     <SelectTrigger className="max-w-md">
                       <SelectValue
@@ -136,7 +152,9 @@ const CurrencySelector = ({planId}: {planId: string}) => {
           <Button
             type="submit"
             disabled={isSending || preferredCurrency === undefined}
-            className={cn("text-white hover:text-white bg-blue-500 hover:bg-blue-700")}
+            className={cn(
+              "text-white hover:text-white bg-blue-500 hover:bg-blue-700"
+            )}
           >
             {isSending ? (
               <div className="flex justify-center items-center gap-2">

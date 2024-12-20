@@ -1,23 +1,24 @@
 "use client";
 
-import {useToast} from "@/components/ui/use-toast";
-import {api} from "@/convex/_generated/api";
-import {useUser} from "@clerk/nextjs";
-import {useMutation, useQuery} from "convex/react";
-import {ConvexError} from "convex/values";
+import { useToast } from "@/components/ui/use-toast";
+import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
+import { useMutation } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache/hooks";
+import { ConvexError } from "convex/values";
 import Image from "next/image";
-import {useRouter, useSearchParams} from "next/navigation";
-import {useEffect} from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import joinNow from "@/public/join-now.svg";
 
 const Join = () => {
-  const {isLoaded, isSignedIn, user} = useUser();
+  const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
   const grantAccessByToken = useMutation(api.token.grantAccessByToken);
-  const {toast} = useToast();
+  const { toast } = useToast();
 
   const currentUser = useQuery(api.users.currentUser);
 
@@ -65,7 +66,9 @@ const Join = () => {
           height={300}
           className="bg-contain"
         />
-        <h2 className="text-foreground animate-pulse font-bold text-lg">Joining the Plan...</h2>
+        <h2 className="text-foreground animate-pulse font-bold text-lg">
+          Joining the Plan...
+        </h2>
       </div>
     </div>
   );

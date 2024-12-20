@@ -1,18 +1,19 @@
 "use client";
 
-import {Button} from "@/components/ui/button";
-import {useToast} from "@/components/ui/use-toast";
-import {api} from "@/convex/_generated/api";
-import {Id} from "@/convex/_generated/dataModel";
-import {useMutation, useQuery} from "convex/react";
-import {ConvexError} from "convex/values";
-import {getDisplayName} from "@/lib/utils";
-import {useTransition} from "react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { useMutation } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache/hooks";
+import { ConvexError } from "convex/values";
+import { getDisplayName } from "@/lib/utils";
+import { useTransition } from "react";
 
-const PendingInvites = ({planId}: {planId: string}) => {
-  const invites = useQuery(api.invite.getInvites, {planId});
+const PendingInvites = ({ planId }: { planId: string }) => {
+  const invites = useQuery(api.invite.getInvites, { planId });
   const revokeInvite = useMutation(api.invite.revokeInvite);
-  const {toast} = useToast();
+  const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
 
   if (!invites || invites.length == 0) return null;
@@ -20,7 +21,7 @@ const PendingInvites = ({planId}: {planId: string}) => {
   const revokeEmailInvite = async (id: Id<"invites">, email: string) => {
     try {
       startTransition(async () => {
-        await revokeInvite({inviteId: id});
+        await revokeInvite({ inviteId: id });
       });
       toast({
         variant: "default",
@@ -30,7 +31,7 @@ const PendingInvites = ({planId}: {planId: string}) => {
       if (error instanceof ConvexError) {
         toast({
           title: "Error",
-          description: (error.data as {message: string}).message,
+          description: (error.data as { message: string }).message,
         });
       }
     }
@@ -49,7 +50,11 @@ const PendingInvites = ({planId}: {planId: string}) => {
                         flex gap-5 justify-between items-center"
           >
             <span className="text-sm text-muted-foreground">
-              {getDisplayName(invite.firstName, invite?.lastName, invite?.email)}
+              {getDisplayName(
+                invite.firstName,
+                invite?.lastName,
+                invite?.email
+              )}
             </span>
             <Button
               variant="destructive"
