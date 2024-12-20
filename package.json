@@ -35,7 +35,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "0.2.1",
-    "convex": "^1.8.0",
+    "convex": "^1.17.4",
     "convex-helpers": "^0.1.67",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.312.0",
