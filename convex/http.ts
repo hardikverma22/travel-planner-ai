@@ -1,6 +1,6 @@
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
-import { internal } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import type { WebhookEvent } from "@clerk/backend";
 import { Webhook } from "svix";
 
@@ -10,7 +10,7 @@ export const ensureEnvironmentVariable = (name: string): string => {
     throw new Error(`missing environment variable ${name}`);
   }
   return value;
-}
+};
 
 const handleClerkWebhook = httpAction(async (ctx, request) => {
   const event = await validateRequest(request);
@@ -25,7 +25,14 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
         userId: event.data.id,
         email: event.data.email_addresses[0]?.email_address,
         firstName: event.data?.first_name ?? "",
-        lastName: event.data?.last_name ?? ""
+        lastName: event.data?.last_name ?? "",
+      });
+      break;
+    }
+    case "user.updated": {
+      await ctx.runMutation(api.users.updateDisplayName, {
+        firstName: event.data?.first_name ?? "",
+        lastName: event.data?.last_name ?? "",
       });
       break;
     }
@@ -102,14 +109,19 @@ http.route({
   path: "/razorpay",
   method: "POST",
   handler: httpAction(async (ctx, request) => {
-    const signature: string = request.headers.get("X-Razorpay-Signature") as string;
+    const signature: string = request.headers.get(
+      "X-Razorpay-Signature"
+    ) as string;
     const body = await request.text();
 
     // Calling the action that will perform our fulfillment
-    const result = await ctx.runAction(internal.razorpay.handleRazorPayWebhook, {
-      signature,
-      body: body,
-    });
+    const result = await ctx.runAction(
+      internal.razorpay.handleRazorPayWebhook,
+      {
+        signature,
+        body: body,
+      }
+    );
 
     if (result.success) {
       // We make sure to confirm the successful processing
@@ -125,9 +137,7 @@ http.route({
         status: 400,
       });
     }
-  })
+  }),
 });
-
-
 
 export default http;
