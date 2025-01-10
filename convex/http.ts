@@ -21,6 +21,9 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
   }
   switch (event.type) {
     case "user.created": {
+      console.log(
+        `user.created reeived from clerk for ${event.data.id} | email: ${event.data.email_addresses[0]?.email_address}`
+      );
       await ctx.runMutation(internal.users.createUser, {
         userId: event.data.id,
         email: event.data.email_addresses[0]?.email_address,
@@ -30,7 +33,11 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
       break;
     }
     case "user.updated": {
-      await ctx.runMutation(api.users.updateDisplayName, {
+      console.log(
+        `user.updated reeived from clerk for ${event.data.id} | firstname: ${event.data?.first_name} | lastnam: ${event.data?.last_name}`
+      );
+      await ctx.runMutation(api.users.updateDisplayNameFromClerk, {
+        userId: event.data.id,
         firstName: event.data?.first_name ?? "",
         lastName: event.data?.last_name ?? "",
       });

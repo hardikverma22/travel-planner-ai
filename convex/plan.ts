@@ -25,7 +25,7 @@ export const PlanAdmin = query({
 });
 
 export const getPlanAdmin = async (ctx: QueryCtx, planId: string) => {
-  const identity = await ctx.auth.getUserIdentity();
+  const identity = await getIdentityOrThrow(ctx);
   if (!identity) {
     return { isPlanAdmin: false, planName: "" };
   }
@@ -107,6 +107,8 @@ export const getAllPlansForAUser = query({
         .collect(),
       getSharedPlans(ctx, subject),
     ]);
+
+    console.log(`getAllPlansForAUser called by ${identity.subject}`);
 
     const sharedPlansIds = sharedPlans.map((s) => s._id);
     const combinedPlans = ownPlans.concat(sharedPlans);
@@ -191,7 +193,7 @@ export const getPublicPlans = query({
 });
 
 export const getComboBoxPlansForAUser = query({
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     const identity = await getIdentityOrThrow(ctx);
     const { subject } = identity;
 
@@ -199,7 +201,7 @@ export const getComboBoxPlansForAUser = query({
       .query("plan")
       .withIndex("by_userId", (q) => q.eq("userId", subject))
       .collect();
-
+    console.log(`getComboBoxPlansForAUser called by ${subject}`);
     const sharedPlans = await getSharedPlans(ctx, subject);
     const allPlans = ownPlans.concat(sharedPlans);
 
@@ -248,7 +250,9 @@ export const getSinglePlan = query({
         plan.storageId ? ctx.storage.getUrl(plan.storageId) : null,
         getCurrentPlanSettings(ctx, plan._id),
       ]);
-
+      console.log(
+        `getSinglePlan called by ${identity.subject} for planid: ${args.id}`
+      );
       return {
         ...plan,
         url,
@@ -458,8 +462,11 @@ export const updateAboutThePlaceBestTimeToVisit = internalMutation({
     besttimetovisit: v.string(),
   },
   handler: async (ctx, args) => {
+    const { subject } = await getIdentityOrThrow(ctx);
     const plan = await ctx.db.get(args.planId);
-
+    console.log(
+      `updateAboutThePlaceBestTimeToVisit called by ${subject} on planId : ${args.planId}`
+    );
     await ctx.db.patch(args.planId, {
       abouttheplace: args.abouttheplace,
       besttimetovisit: args.besttimetovisit,
@@ -481,8 +488,11 @@ export const updateActivitiesToDoPackingChecklistLocalCuisineRecommendations =
       localcuisinerecommendations: v.array(v.string()),
     },
     handler: async (ctx, args) => {
+      const { subject } = await getIdentityOrThrow(ctx);
       const plan = await ctx.db.get(args.planId);
-
+      console.log(
+        `updateActivitiesToDoPackingChecklistLocalCuisineRecommendations called by ${subject} on planId : ${args.planId}`
+      );
       await ctx.db.patch(args.planId, {
         adventuresactivitiestodo: args.adventuresactivitiestodo,
         packingchecklist: args.packingchecklist,
@@ -536,8 +546,11 @@ export const updateItineraryTopPlacesToVisit = internalMutation({
     ),
   },
   handler: async (ctx, args) => {
+    const { subject } = await getIdentityOrThrow(ctx);
     const plan = await ctx.db.get(args.planId);
-
+    console.log(
+      `updateItineraryTopPlacesToVisit called by ${subject} on planId : ${args.planId}`
+    );
     await ctx.db.patch(args.planId, {
       topplacestovisit: args.topplacestovisit,
       itinerary: args.itinerary,
@@ -578,6 +591,10 @@ export const updatePartOfPlan = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    const { subject } = await getIdentityOrThrow(ctx);
+    console.log(
+      `updatePartOfPlan called by ${subject} on planId : ${args.planId}`
+    );
     await ctx.db.patch(args.planId, {
       [args.key]: args.data,
     });
@@ -592,6 +609,10 @@ export const updatePlaceToVisit = mutation({
     placeName: v.string(),
   },
   handler: async (ctx, args) => {
+    const { subject } = await getIdentityOrThrow(ctx);
+    console.log(
+      `updatePlaceToVisit called by ${subject} on planId : ${args.planId}`
+    );
     const plan = await ctx.db.get(args.planId);
     if (!plan) return;
     const existing = plan?.topplacestovisit;
@@ -613,7 +634,11 @@ export const updatePlaceToVisit = mutation({
 export const deleteDayInItinerary = mutation({
   args: { dayName: v.string(), planId: v.id("plan") },
   handler: async (ctx, args) => {
-    await getIdentityOrThrow(ctx);
+    const { subject } = await getIdentityOrThrow(ctx);
+    console.log(
+      `deleteDayInItinerary called by ${subject} on planId : ${args.planId}`
+    );
+
     const data = await ctx.db.get(args.planId);
     if (!data) return;
     await ctx.db.patch(args.planId, {
@@ -650,6 +675,9 @@ export const addDayInItinerary = mutation({
     }),
   },
   handler: async (ctx, { planId, itineraryDay }) => {
+    const { subject } = await getIdentityOrThrow(ctx);
+    console.log(`addDayInItinerary called by ${subject} on planId : ${planId}`);
+
     const data = await ctx.db.get(planId);
     if (!data) return;
 
@@ -674,6 +702,7 @@ export const createEmptyPlan = mutation({
   },
   handler: async (ctx, args) => {
     const identity = await getIdentityOrThrow(ctx);
+
     const state = !args.isGeneratedUsingAI;
 
     const newPlan = await ctx.db.insert("plan", {
@@ -701,7 +730,7 @@ export const createEmptyPlan = mutation({
       },
     });
 
-    await ctx.db.insert("planSettings", {
+    const planId = await ctx.db.insert("planSettings", {
       planId: newPlan,
       userId: identity.subject,
       activityPreferences: args.activityPreferences,
@@ -709,7 +738,9 @@ export const createEmptyPlan = mutation({
       toDate: args.toDate,
       companion: args.companion,
     });
-
+    console.log(
+      `createEmptyPlan called by ${identity.subject} on planId : ${planId}`
+    );
     return newPlan;
   },
 });
@@ -717,12 +748,10 @@ export const createEmptyPlan = mutation({
 export const deletePlan = mutation({
   args: { planId: v.string() },
   async handler(ctx, args) {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      console.log("Not logged in to delete a user");
-      return null;
-    }
-
+    const identity = await getIdentityOrThrow(ctx);
+    console.log(
+      `deletePlan called by ${identity.subject} on planId : ${args.planId}`
+    );
     const planId = args.planId as Id<"plan">;
 
     const plan = await ctx.db.get(planId);
@@ -736,8 +765,13 @@ export const deletePlan = mutation({
     if (plan.userId !== identity.subject) {
       throw new ConvexError("You are not the owner of this plan.");
     }
-    if (plan.storageId)
-      await ctx.storage.delete(plan.storageId as Id<"_storage">);
+    try {
+      if (plan.storageId) {
+        await ctx.storage.delete(plan.storageId as Id<"_storage">);
+      }
+    } catch (e) {
+      console.log(e);
+    }
 
     const expenseIds = (
       await ctx.db

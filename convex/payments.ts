@@ -1,6 +1,7 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation } from "./_generated/server";
 import { updateUserCredits } from "./users";
+import { getIdentityOrThrow } from "./utils";
 
 // export const createEmptyPaymentRecord = internalMutation({
 //     handler: async (ctx) => {
@@ -45,57 +46,64 @@ import { updateUserCredits } from "./users";
 // });
 
 export const authoRizedRazorPay = internalMutation({
-    args: {
-        paymentId: v.string(),
-        email: v.string(),
-        phone: v.string(),
-        amount: v.number(),
-        created_at: v.number(),
-        method: v.string(),
-        status: v.union(v.literal("authorized"), v.literal("captured"), v.literal("failed")),
-        currency: v.string(),
-    },
-    handler: async (ctx, args) => {
-        const record = (await ctx.db
-            .query("payments")
-            .withIndex("by_paymentId", (q) => q.eq("paymentId", args.paymentId))
-            .unique());
+  args: {
+    paymentId: v.string(),
+    email: v.string(),
+    phone: v.string(),
+    amount: v.number(),
+    created_at: v.number(),
+    method: v.string(),
+    status: v.union(
+      v.literal("authorized"),
+      v.literal("captured"),
+      v.literal("failed")
+    ),
+    currency: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const record = await ctx.db
+      .query("payments")
+      .withIndex("by_paymentId", (q) => q.eq("paymentId", args.paymentId))
+      .unique();
 
-        if (!record) {
-            await ctx.db.insert("payments", {
-                ...args
-            })
-        }
-    },
+    if (!record) {
+      await ctx.db.insert("payments", {
+        ...args,
+      });
+    }
+  },
 });
 
 export const captureRazorPay = internalMutation({
-    args: {
-        paymentId: v.string(),
-        email: v.string(),
-        phone: v.string(),
-        amount: v.number(),
-        created_at: v.number(),
-        method: v.string(),
-        status: v.union(v.literal("authorized"), v.literal("captured"), v.literal("failed")),
-        currency: v.string(),
-    },
-    handler: async (ctx, args) => {
-        const record = await ctx.db
-            .query("payments")
-            .withIndex("by_paymentId", (q) => q.eq("paymentId", args.paymentId))
-            .unique();
+  args: {
+    paymentId: v.string(),
+    email: v.string(),
+    phone: v.string(),
+    amount: v.number(),
+    created_at: v.number(),
+    method: v.string(),
+    status: v.union(
+      v.literal("authorized"),
+      v.literal("captured"),
+      v.literal("failed")
+    ),
+    currency: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const record = await ctx.db
+      .query("payments")
+      .withIndex("by_paymentId", (q) => q.eq("paymentId", args.paymentId))
+      .unique();
 
-        if (!record) {
-            await ctx.db.insert("payments", {
-                ...args
-            })
-
-        } else {
-            ctx.db.patch(record._id, { status: args.status });
-        }
-
-        if (args.status === "captured")
-            await updateUserCredits(ctx, args.email, args.amount);
+    if (!record) {
+      await ctx.db.insert("payments", {
+        ...args,
+      });
+    } else {
+      ctx.db.patch(record._id, { status: args.status });
     }
+
+    if (args.status === "captured")
+      await updateUserCredits(ctx, args.email, args.amount);
+  },
 });

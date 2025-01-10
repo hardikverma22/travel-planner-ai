@@ -1,6 +1,7 @@
 import { mutation } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { getPlanAdmin } from "./plan";
+import { getIdentityOrThrow } from "./utils";
 
 export function generateToken() {
   const array = new Uint8Array(12);
@@ -14,6 +15,7 @@ export function generateToken() {
 export const createToken = mutation({
   args: { planId: v.id("plan"), email: v.string() },
   async handler(ctx, args) {
+    const identity = await getIdentityOrThrow(ctx);
     const invite = await ctx.db
       .query("invites")
       .withIndex("by_planId_email", (q) =>
@@ -32,6 +34,11 @@ export const createToken = mutation({
       email: args.email,
       token,
     });
+
+    console.log(
+      `createToken and save invite called by ${identity.subject} on planId : ${args.planId}`
+    );
+
     return { token, id };
   },
 });
@@ -39,6 +46,10 @@ export const createToken = mutation({
 export const deletInvite = mutation({
   args: { id: v.id("invites") },
   async handler(ctx, args) {
+    const identity = await getIdentityOrThrow(ctx);
+    console.log(
+      `deletInvite called by ${identity.subject} on inviteId : ${args.id}`
+    );
     await ctx.db.delete(args.id);
   },
 });
@@ -46,12 +57,7 @@ export const deletInvite = mutation({
 export const grantAccessByToken = mutation({
   args: { token: v.string() },
   async handler(ctx, args) {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError(
-        "Not authorized to perform to check for Plan Admin"
-      );
-    }
+    const identity = await getIdentityOrThrow(ctx);
 
     const invite = await ctx.db
       .query("invites")
@@ -86,7 +92,9 @@ export const grantAccessByToken = mutation({
     if (adminAccess.isPlanAdmin) {
       throw new ConvexError(`You can't join the plan you already own.`);
     }
-
+    console.log(
+      `grantAccessByToken called by ${identity.subject} on planId : ${plan._id} | userId: ${userToAdd.userId} | email: ${userToAdd.email}`
+    );
     await ctx.db.insert("access", {
       planId: plan._id,
       userId: userToAdd.userId,
