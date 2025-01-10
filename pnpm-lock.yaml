@@ -14,6 +14,9 @@ importers:
       '@clerk/nextjs':
         specifier: ^4.29.3
         version: 4.29.9(next@14.0.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@convex-dev/rate-limiter':
+        specifier: ^0.2.4
+        version: 0.2.4(convex@1.17.4(@clerk/clerk-react@4.30.7(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@hookform/resolvers':
         specifier: ^3.3.4
         version: 3.3.4(react-hook-form@7.51.0(react@18.2.0))
@@ -224,6 +227,11 @@ packages:
   '@clerk/types@3.62.1':
     resolution: {integrity: sha512-RmQhWB7EMZw2nE24viQG79VyEUULZYWndYew5oXiZx06DyvysMNCorDyEGRmgBbprv7bnbYhHdOtKmx8Wj0jug==}
     engines: {node: '>=14'}
+
+  '@convex-dev/rate-limiter@0.2.4':
+    resolution: {integrity: sha512-hFyqEeQOKcXGLF9MmgG4AvC3pkMoaPfRpvFE80eR1DY3Ik5dsuaIbOinS7QRjKuPQMBWbReieogDcFGVy1qdmQ==}
+    peerDependencies:
+      convex: ~1.16.5 || ~1.17.0
 
   '@esbuild/aix-ppc64@0.23.0':
     resolution: {integrity: sha512-3sG8Zwa5fMcA9bgqB8AfWPQ+HFke6uD3h1s3RIwUNK8EG7a4buxvuFTs3j1IMs2NXAk9F30C/FF4vxRgQCcmoQ==}
@@ -2748,6 +2756,10 @@ snapshots:
   '@clerk/types@3.62.1':
     dependencies:
       csstype: 3.1.1
+
+  '@convex-dev/rate-limiter@0.2.4(convex@1.17.4(@clerk/clerk-react@4.30.7(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+    dependencies:
+      convex: 1.17.4(@clerk/clerk-react@4.30.7(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
   '@esbuild/aix-ppc64@0.23.0':
     optional: true
