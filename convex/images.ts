@@ -14,7 +14,6 @@ const unsplashApi = createApi({
 export const generateAndStore = action({
   args: { prompt: v.string(), planId: v.id("plan") },
   handler: async (ctx, args) => {
-    const identity = await getIdentityOrThrow(ctx);
     const name = args.prompt.split(",")[0] ?? args.prompt;
 
     // Not shown: generate imageUrl from `prompt`
@@ -27,9 +26,7 @@ export const generateAndStore = action({
       imageObject?.response?.results &&
       imageObject?.response?.results.length > 0;
     if (!imageUrlExist) {
-      console.log(
-        `Error getting image from unsplash userId: ${identity}| planId: ${args.planId}`
-      );
+      console.log(`Error getting image from unsplash planId: ${args.planId}`);
       return null;
     }
 

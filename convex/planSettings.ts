@@ -47,11 +47,6 @@ export const getCurrentPlanSettings = async (
   ctx: QueryCtx,
   planId: Id<"plan">
 ) => {
-  const identity = await getIdentityOrThrow(ctx);
-  console.log(
-    `getCurrentPlanSettings called by ${identity.subject} on planId : ${planId}`
-  );
-
   const planSetting = await ctx.db
     .query("planSettings")
     .withIndex("by_planId", (q) => q.eq("planId", planId as Id<"plan">))
