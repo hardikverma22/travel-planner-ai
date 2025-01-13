@@ -66,9 +66,8 @@ export const getPlanSettings = internalQuery({
     planId: v.id("plan"),
   },
   handler: async (ctx, { planId }) => {
-    const identity = await getIdentityOrThrow(ctx);
     console.log(
-      `getPlanSettings called by ${identity.subject} on planId : ${planId}`
+      `getPlanSettings called by prepare batch internally for planId : ${planId}`
     );
     const planSetting = await getCurrentPlanSettings(ctx, planId);
     return planSetting;
