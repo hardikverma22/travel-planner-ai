@@ -462,10 +462,9 @@ export const updateAboutThePlaceBestTimeToVisit = internalMutation({
     besttimetovisit: v.string(),
   },
   handler: async (ctx, args) => {
-    const { subject } = await getIdentityOrThrow(ctx);
     const plan = await ctx.db.get(args.planId);
     console.log(
-      `updateAboutThePlaceBestTimeToVisit called by ${subject} on planId : ${args.planId}`
+      `updateAboutThePlaceBestTimeToVisit called on planId : ${args.planId}`
     );
     await ctx.db.patch(args.planId, {
       abouttheplace: args.abouttheplace,
@@ -488,10 +487,9 @@ export const updateActivitiesToDoPackingChecklistLocalCuisineRecommendations =
       localcuisinerecommendations: v.array(v.string()),
     },
     handler: async (ctx, args) => {
-      const { subject } = await getIdentityOrThrow(ctx);
       const plan = await ctx.db.get(args.planId);
       console.log(
-        `updateActivitiesToDoPackingChecklistLocalCuisineRecommendations called by ${subject} on planId : ${args.planId}`
+        `updateActivitiesToDoPackingChecklistLocalCuisineRecommendations called on planId : ${args.planId}`
       );
       await ctx.db.patch(args.planId, {
         adventuresactivitiestodo: args.adventuresactivitiestodo,
@@ -546,10 +544,9 @@ export const updateItineraryTopPlacesToVisit = internalMutation({
     ),
   },
   handler: async (ctx, args) => {
-    const { subject } = await getIdentityOrThrow(ctx);
     const plan = await ctx.db.get(args.planId);
     console.log(
-      `updateItineraryTopPlacesToVisit called by ${subject} on planId : ${args.planId}`
+      `updateItineraryTopPlacesToVisit called on planId : ${args.planId}`
     );
     await ctx.db.patch(args.planId, {
       topplacestovisit: args.topplacestovisit,
