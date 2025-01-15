@@ -22,6 +22,24 @@ export const fixImages = mutation({
   },
 });
 
+export const updateImageUrlInPlan = mutation({
+  args: {},
+  handler: async (ctx, args) => {
+    const plans = await ctx.db.query("plan").collect();
+
+    plans?.forEach(async (plan) => {
+      if (plan.storageId && !plan.imageUrl) {
+        const url = await ctx.storage.getUrl(plan.storageId);
+        if (url) {
+          await ctx.db.patch(plan._id, {
+            imageUrl: url,
+          });
+        }
+      }
+    });
+  },
+});
+
 export const deleteOrphanImnages = mutation({
   async handler(ctx, args) {
     const planStorageIds = (await ctx.db.query("plan").collect()).map(

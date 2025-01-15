@@ -57,6 +57,7 @@ export default defineSchema({
       packingchecklist: v.boolean(),
       besttimetovisit: v.boolean(),
     }),
+    imageUrl: v.optional(v.string()),
   }).index("by_userId", ["userId"]),
   users: defineTable({
     userId: v.string(),
@@ -135,6 +136,7 @@ export default defineSchema({
     fromDate: v.optional(v.number()),
     toDate: v.optional(v.number()),
     companion: v.optional(v.string()),
+    isPublished: v.optional(v.boolean()),
   })
     .index("by_planId", ["planId"])
     .index("by_planId_userId", ["planId", "userId"]),

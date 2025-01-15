@@ -13,8 +13,8 @@ const unsplashApi = createApi({
 
 export const generateAndStore = action({
   args: { prompt: v.string(), planId: v.id("plan") },
-  handler: async (ctx, args) => {
-    const name = args.prompt.split(",")[0] ?? args.prompt;
+  handler: async (ctx, { planId, prompt }) => {
+    const name = prompt.split(",")[0] ?? prompt;
 
     // Not shown: generate imageUrl from `prompt`
     const imageObject = await unsplashApi.search.getPhotos({
@@ -26,7 +26,7 @@ export const generateAndStore = action({
       imageObject?.response?.results &&
       imageObject?.response?.results.length > 0;
     if (!imageUrlExist) {
-      console.log(`Error getting image from unsplash planId: ${args.planId}`);
+      console.log(`Error getting image from unsplash planId: ${planId}`);
       return null;
     }
 
@@ -39,10 +39,17 @@ export const generateAndStore = action({
     // Store the image in Convex
     const storageId: Id<"_storage"> = await ctx.storage.store(image);
 
+    const imageUrl = await ctx.storage.getUrl(storageId);
+    if (!imageUrl && !imageUrl) {
+      console.log(`could not generate image url from convex planId: ${planId}`);
+      return;
+    }
+
     // Write `storageId` to a document
     await ctx.runMutation(internal.images.updateStorageId, {
       storageId,
-      planId: args.planId,
+      planId,
+      imageUrl,
     });
   },
 });
@@ -51,11 +58,13 @@ export const updateStorageId = internalMutation({
   args: {
     storageId: v.id("_storage"),
     planId: v.id("plan"),
+    imageUrl: v.string(),
   },
-  handler: async (ctx, { storageId, planId }) => {
+  handler: async (ctx, { storageId, planId, imageUrl }) => {
     const plan = await ctx.db.get(planId);
     await ctx.db.patch(planId, {
       storageId: storageId,
+      imageUrl,
       contentGenerationState: {
         ...plan!.contentGenerationState,
         imagination: true,
