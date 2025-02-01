@@ -97,7 +97,7 @@ export const getAllUsersForAPlan = query({
 });
 
 export const getAllPlansForAUser = query({
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     const identity = await getIdentityOrThrow(ctx);
     const { subject } = identity;
     const [ownPlans, sharedPlans] = await Promise.all([
@@ -114,20 +114,16 @@ export const getAllPlansForAUser = query({
     const combinedPlans = ownPlans.concat(sharedPlans);
     const data = await Promise.all(
       combinedPlans.map(async (plan) => {
-        const [url, planSettings] = await Promise.all([
-          plan.storageId ? ctx.storage.getUrl(plan.storageId) : null,
-          ctx.db
-            .query("planSettings")
-            .withIndex("by_planId_userId", (q) =>
-              q.eq("planId", plan._id).eq("userId", plan.userId)
-            )
-            .unique(),
-        ]);
+        const planSettings = await ctx.db
+          .query("planSettings")
+          .withIndex("by_planId_userId", (q) =>
+            q.eq("planId", plan._id).eq("userId", plan.userId)
+          )
+          .unique();
 
         return {
           ...plan,
           isSharedPlan: sharedPlansIds.includes(plan._id),
-          url,
           fromDate: planSettings?.fromDate,
           toDate: planSettings?.toDate,
         };
@@ -246,34 +242,38 @@ export const getSinglePlan = query({
         identity.subject
       );
 
-      const [url, planSettings] = await Promise.all([
-        plan.storageId ? ctx.storage.getUrl(plan.storageId) : null,
-        getCurrentPlanSettings(ctx, plan._id),
-      ]);
+      const planSettings = await getCurrentPlanSettings(ctx, plan._id);
       console.log(
         `getSinglePlan called by ${identity.subject} for planid: ${args.id}`
       );
       return {
         ...plan,
-        url,
         isSharedPlan: !isPlanAdmin,
         activityPreferences: planSettings?.activityPreferences ?? [],
         fromDate: planSettings?.fromDate,
         toDate: planSettings?.toDate,
         companion: planSettings?.companion,
+        isPublished: planSettings?.isPublished ?? false,
       };
     } else {
       const plan = await ctx.db.get(args.id);
-
-      if (!plan || plan.userId !== "public") {
+      const planSettings = await ctx.db
+        .query("planSettings")
+        .withIndex("by_planId", (q) => q.eq("planId", args.id))
+        .unique();
+      if (!plan || !planSettings?.isPublished) {
         throw new ConvexError("Plan not found or not public");
       }
 
-      const url = plan.storageId
-        ? await ctx.storage.getUrl(plan.storageId)
-        : null;
-
-      return { ...plan, url, isSharedPlan: false };
+      return {
+        ...plan,
+        isSharedPlan: false,
+        activityPreferences: planSettings?.activityPreferences ?? [],
+        fromDate: planSettings?.fromDate,
+        toDate: planSettings?.toDate,
+        companion: planSettings?.companion,
+        isPublished: true,
+      };
     }
   },
 });
@@ -734,7 +734,9 @@ export const createEmptyPlan = mutation({
       fromDate: args.fromDate,
       toDate: args.toDate,
       companion: args.companion,
+      isPublished: false,
     });
+
     console.log(
       `createEmptyPlan called by ${identity.subject} on planId : ${planId}`
     );

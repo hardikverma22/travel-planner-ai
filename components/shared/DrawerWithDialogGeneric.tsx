@@ -7,11 +7,12 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import empty_cart from "@/public/empty_cart.svg";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import NewPlanForm from "@/components/NewPlanForm";
@@ -19,55 +20,84 @@ import { Backpack, LockIcon } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-const DrawerWithDialog = ({ shouldOpenForCreatePlan = false }) => {
+export const CreditsDrawerWithDialog = () => {
   const user = useQuery(api.users.currentUser);
   const boughtCredits = user?.credits ?? 0;
   const freeCredits = user?.freeCredits ?? 0;
   const totalCredits = freeCredits + boughtCredits;
 
+  const dialogTriggerBtn = (
+    <Button
+      aria-label={`open dialog button for Credits ${totalCredits ?? 0}`}
+      variant="link"
+      className="text-foreground"
+    >
+      Credits {totalCredits}
+    </Button>
+  );
+
+  return (
+    <DrawerWithDialog dialogTriggerBtn={dialogTriggerBtn}>
+      <CreditContent
+        boughtCredits={boughtCredits}
+        freeCredits={freeCredits}
+        email={user?.email}
+      />
+    </DrawerWithDialog>
+  );
+};
+
+export const GeneratePlanDrawerWithDialog = () => {
+  const dialogTriggerBtn = (
+    <Button
+      aria-label={`open dialog button for Create Travel Plan`}
+      className="bg-blue-500  hover:bg-blue-600 text-white flex gap-1 justify-center items-center"
+    >
+      <Backpack className="h-4 w-4" />
+      <span>Create Travel Plan</span>
+    </Button>
+  );
+  return (
+    <DrawerWithDialog dialogTriggerBtn={dialogTriggerBtn}>
+      {({ setOpen }) => (
+        <>
+          <DialogHeader>
+            <DialogTitle>Create Travel Plan</DialogTitle>
+          </DialogHeader>
+          <NewPlanForm closeModal={setOpen} />
+        </>
+      )}
+    </DrawerWithDialog>
+  );
+};
+
+const DrawerWithDialog = ({
+  dialogTriggerBtn,
+  children,
+}: {
+  dialogTriggerBtn: ReactNode;
+  children:
+    | React.ReactNode
+    | ((props: {
+        setOpen: Dispatch<SetStateAction<boolean>>;
+      }) => React.ReactNode);
+}) => {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  const btnText = shouldOpenForCreatePlan
-    ? "Create Travel Plan"
-    : `Credits ${totalCredits ?? 0}`;
-
-  const shouldShowCreatePlanForm = shouldOpenForCreatePlan && totalCredits > 0;
-
-  const content = shouldShowCreatePlanForm ? (
-    <>
-      <DialogHeader>
-        <DialogTitle>Create Travel Plan</DialogTitle>
-      </DialogHeader>
-      <NewPlanForm closeModal={setOpen} />
-    </>
-  ) : (
-    <CreditContent
-      boughtCredits={boughtCredits}
-      freeCredits={freeCredits}
-      email={user?.email}
-    />
-  );
+  const renderContent = () => {
+    if (typeof children === "function") {
+      return children({ setOpen });
+    }
+    return children;
+  };
 
   if (isDesktop) {
     return (
       <>
-        <Button
-          aria-label={`open dialog button for ${btnText}`}
-          variant={`${!shouldOpenForCreatePlan ? "link" : "default"}`}
-          className={`${
-            shouldOpenForCreatePlan &&
-            "bg-blue-500  hover:bg-blue-600 text-white flex gap-1"
-          }`}
-          onClick={() => {
-            setOpen(true);
-          }}
-        >
-          {shouldOpenForCreatePlan && <Backpack className="h-4 w-4" />}
-          <span>{btnText}</span>
-        </Button>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent className="max-w-xl">{content}</DialogContent>
+          <DialogTrigger asChild>{dialogTriggerBtn}</DialogTrigger>
+          <DialogContent className="max-w-xl">{renderContent()}</DialogContent>
         </Dialog>
       </>
     );
@@ -75,21 +105,9 @@ const DrawerWithDialog = ({ shouldOpenForCreatePlan = false }) => {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button
-          variant="outline"
-          aria-label={`open drawer for ${btnText}`}
-          className={`${
-            shouldOpenForCreatePlan &&
-            "bg-blue-500 text-white hover:bg-blue-600 flex gap-1"
-          }`}
-        >
-          {shouldOpenForCreatePlan && <Backpack className="h-4 w-4" />}
-          <span>{btnText}</span>
-        </Button>
-      </DrawerTrigger>
+      <DrawerTrigger asChild>{dialogTriggerBtn}</DrawerTrigger>
       <DrawerContent className="flex flex-col gap-10 p-5">
-        {content}
+        {renderContent()}
       </DrawerContent>
     </Drawer>
   );

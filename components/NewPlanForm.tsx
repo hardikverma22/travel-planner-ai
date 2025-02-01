@@ -1,25 +1,34 @@
 "use client";
 
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useForm} from "react-hook-form";
-import {useAuth} from "@clerk/nextjs";
-import {Dispatch, SetStateAction, useState, useTransition} from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useAuth } from "@clerk/nextjs";
+import { Dispatch, SetStateAction, useState, useTransition } from "react";
 import * as z from "zod";
 
-import {Button} from "@/components/ui/button";
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {Loader2, MessageSquarePlus, Wand2} from "lucide-react";
-import {generatePlanAction} from "@/lib/actions/generateplanAction";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Loader2, MessageSquarePlus, Wand2 } from "lucide-react";
+import { generatePlanAction } from "@/lib/actions/generateplanAction";
 import PlacesAutoComplete from "@/components/PlacesAutoComplete";
 
-import {generateEmptyPlanAction} from "@/lib/actions/generateEmptyPlanAction";
-import {useToast} from "@/components/ui/use-toast";
-import {ACTIVITY_PREFERENCES, COMPANION_PREFERENCES} from "@/lib/constants";
+import { generateEmptyPlanAction } from "@/lib/actions/generateEmptyPlanAction";
+import { useToast } from "@/components/ui/use-toast";
+import { ACTIVITY_PREFERENCES, COMPANION_PREFERENCES } from "@/lib/constants";
 import DateRangeSelector from "@/components/common/DateRangeSelector";
+import CompanionControl from "@/components/plan/CompanionControl";
+import ActivityPreferences from "@/components/plan/ActivityPreferences";
 
 const formSchema = z.object({
   placeName: z
-    .string({required_error: "Please select a place"})
+    .string({ required_error: "Please select a place" })
     .min(3, "Place name should be at least 3 character long"),
   datesOfTravel: z.object({
     from: z.date(),
@@ -31,8 +40,12 @@ const formSchema = z.object({
 
 export type formSchemaType = z.infer<typeof formSchema>;
 
-const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>>}) => {
-  const {isSignedIn} = useAuth();
+const NewPlanForm = ({
+  closeModal,
+}: {
+  closeModal: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const { isSignedIn } = useAuth();
   if (!isSignedIn) return null;
 
   const [pendingEmptyPlan, startTransactionEmptyPlan] = useTransition();
@@ -40,7 +53,7 @@ const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>
 
   const [selectedFromList, setSelectedFromList] = useState(false);
 
-  const {toast} = useToast();
+  const { toast } = useToast();
 
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
@@ -100,7 +113,7 @@ const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>
         <FormField
           control={form.control}
           name="placeName"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Search for your destination city</FormLabel>
               <FormControl>
@@ -118,7 +131,7 @@ const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>
         <FormField
           control={form.control}
           name="datesOfTravel"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Select Dates</FormLabel>
               <DateRangeSelector
@@ -133,46 +146,17 @@ const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>
         <FormField
           control={form.control}
           name="activityPreferences"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>
                 Select the kind of activities you want to do
                 <span className="font-medium ml-1">(Optional)</span>
               </FormLabel>
               <FormControl>
-                <div className="flex gap-2 flex-wrap">
-                  {ACTIVITY_PREFERENCES.map((activity) => (
-                    <label
-                      key={activity.id}
-                      className="flex-grow p-1 opacity-50 hover:opacity-100 dark:opacity-40 dark:hover:opacity-100 
-                      has-[:checked]:bg-blue-100 has-[:checked]:opacity-100 dark:has-[:checked]:opacity-100
-                      duration-200 transition-all ease-in-out
-                      rounded-md cursor-pointer select-none
-                      flex justify-center items-center
-                      bg-gray-100 has-[:checked]:shadow-sm dark:bg-transparent dark:border dark:border-foreground
-                      "
-                    >
-                      <input
-                        type="checkbox"
-                        className="hidden"
-                        checked={field.value?.includes(activity.id) ?? false}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            field.onChange([...field.value, activity.id]);
-                          } else {
-                            field.onChange(
-                              field.value.filter(
-                                (selectedActivity) => selectedActivity !== activity.id
-                              )
-                            );
-                          }
-                        }}
-                      />
-                      <activity.icon className="w-5 h-5 pr-1" />
-                      <span>{activity.displayName}</span>
-                    </label>
-                  ))}
-                </div>
+                <ActivityPreferences
+                  values={field.value}
+                  onChange={(e) => field.onChange(e)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -181,41 +165,17 @@ const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>
         <FormField
           control={form.control}
           name="companion"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>
                 Who are you travelling with
                 <span className="font-medium ml-1">(Optional)</span>
               </FormLabel>
               <FormControl>
-                <div className="flex gap-2 flex-wrap">
-                  {COMPANION_PREFERENCES.map((companion) => (
-                    <label
-                      key={companion.id}
-                      className="flex-1 p-1 opacity-50 hover:opacity-100 dark:opacity-40 dark:hover:opacity-100 
-                has-[:checked]:bg-blue-100 has-[:checked]:opacity-100 dark:has-[:checked]:opacity-100
-                duration-200 transition-all ease-in-out
-                rounded-md cursor-pointer select-none
-                flex justify-center items-center
-                bg-gray-100 has-[:checked]:shadow-sm dark:bg-transparent dark:border dark:border-foreground
-                "
-                    >
-                      <input
-                        type="radio"
-                        className="hidden"
-                        name="companion"
-                        checked={field.value == companion.id ?? false}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            field.onChange(companion.id);
-                          }
-                        }}
-                      />
-                      <companion.icon className="w-5 h-5 pr-1" />
-                      <span>{companion.displayName}</span>
-                    </label>
-                  ))}
-                </div>
+                <CompanionControl
+                  value={field.value}
+                  onChange={(id: string) => field.onChange(id)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -226,7 +186,9 @@ const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>
             onClick={() => form.handleSubmit(onSubmitEmptyPlan)()}
             aria-label="generate plan"
             type="submit"
-            disabled={pendingEmptyPlan || pendingAIPlan || !form.formState.isValid}
+            disabled={
+              pendingEmptyPlan || pendingAIPlan || !form.formState.isValid
+            }
             className="bg-blue-500 text-white hover:bg-blue-600 w-full"
           >
             {pendingEmptyPlan ? (
@@ -246,7 +208,9 @@ const NewPlanForm = ({closeModal}: {closeModal: Dispatch<SetStateAction<boolean>
             onClick={() => form.handleSubmit(onSubmitAIPlan)()}
             aria-label="generate AI plan"
             type="submit"
-            disabled={pendingAIPlan || pendingEmptyPlan || !form.formState.isValid}
+            disabled={
+              pendingAIPlan || pendingEmptyPlan || !form.formState.isValid
+            }
             className="bg-indigo-500 text-white hover:bg-indigo-600 w-full group"
           >
             {pendingAIPlan ? (

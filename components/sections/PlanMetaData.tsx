@@ -1,11 +1,31 @@
 import DateRangeSelector from "@/components/common/DateRangeSelector";
+import ActivityPreferences from "@/components/plan/ActivityPreferences";
+import CompanionControl from "@/components/plan/CompanionControl";
+import { TooltipContainer } from "@/components/shared/Toolip";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useToast } from "@/components/ui/use-toast";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { ACTIVITY_PREFERENCES, COMPANION_PREFERENCES } from "@/lib/constants";
+import { COMPANION_PREFERENCES } from "@/lib/constants";
+import { cn, getFormattedDateRange } from "@/lib/utils";
 import { useMutation } from "convex/react";
-import { Settings2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Eye, Send, Settings2, Users2 } from "lucide-react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
 
 type PlanMetaDataProps = {
@@ -13,24 +33,31 @@ type PlanMetaDataProps = {
   fromDate: number | undefined;
   toDate: number | undefined;
   planId: string;
-  companion: string | undefined;
-  activityPreferences: string[];
+  companionId: string | undefined;
+  activityPreferencesIds: string[];
+  isPublished: boolean;
+  isLoading: boolean;
 };
+
+const Icon_ClassName =
+  "rounded-full bg-background border-2 text-white shadow-sm p-3 h-auto transition-colors duration-300";
 
 const PlanMetaData = ({
   allowEdit,
   fromDate,
   toDate,
   planId,
-  companion,
-  activityPreferences,
+  companionId,
+  activityPreferencesIds,
+  isPublished,
+  isLoading,
 }: PlanMetaDataProps) => {
   const [selectedDates, setSelectedDates] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,
   });
-
   const updateTravelDates = useMutation(api.planSettings.updateTravelDates);
+
   const { toast } = useToast();
 
   const onChangeTravelDates = async (e: DateRange | undefined) => {
@@ -56,79 +83,319 @@ const PlanMetaData = ({
     });
   }, [fromDate, toDate]);
 
-  if (!allowEdit) return null;
-
-  const shouldShowPlanMetaData = companion || activityPreferences.length > 0;
-
-  const preferences = activityPreferences.map(
-    (act) => ACTIVITY_PREFERENCES.find((a) => a.id === act)!
-  );
-
-  const selectedCompanion = COMPANION_PREFERENCES.find(
-    (c) => c.id === companion
-  );
-
   return (
-    <div className="lg:flex hidden flex-col items-end">
-      <DateRangeSelector
-        value={selectedDates}
-        onChange={onChangeTravelDates}
-        forGeneratePlan={false}
-      />
-
-      {shouldShowPlanMetaData && (
-        <div
-          className="bg-foreground/50 tracking-wide text-sm p-2 rounded-xl 
-                flex flex-col gap-4 mt-2 transition-all duration-500 ease-in-out group w-8 hover:w-full"
-        >
-          <div className="flex justify-end group-hover:hidden">
-            <Settings2 className="w-4 h-4 text-background" />
+    <article
+      id="imagination"
+      className={cn(
+        `scroll-mt-20 
+                flex gap-1 w-full justify-between items-center
+                rounded-full 
+                bg-blue-50/40 dark:bg-black dark:border-2 dark:border-border
+                py-2 px-3 shadow-lg`,
+        {
+          "animate-pulse": isLoading,
+        }
+      )}
+    >
+      {allowEdit ? (
+        <>
+          <div className="flex gap-1 justify-end items-center">
+            <DateRangeSelector
+              value={selectedDates}
+              onChange={onChangeTravelDates}
+              forGeneratePlan={false}
+              className={Icon_ClassName}
+              isLoading={isLoading}
+            />
+            <Preferences
+              activityPreferencesIds={activityPreferencesIds}
+              planId={planId}
+              allowEdit={allowEdit}
+              isLoading={isLoading}
+            />
+            <Companion
+              planId={planId}
+              companionId={companionId}
+              allowEdit={allowEdit}
+              isLoading={isLoading}
+            />
           </div>
-          {selectedCompanion && (
-            <div
-              className="group-hover:opacity-100 opacity-0 
-                    hidden flex-col gap-1
-                    transition-all duration-700 ease-in-out delay-1000 group-hover:flex"
-            >
-              <div className="font-bold text-background pb-1">
-                Travelling Mode
-              </div>
-              <div
-                className="flex gap-1 justify-center items-center bg-background select-none
-                     text-foreground font-semibold rounded-full py-1 px-2 w-fit"
-              >
-                <selectedCompanion.icon className="h-4 w-4" />
-                <span>{selectedCompanion.displayName}</span>
-              </div>
-            </div>
+          <PublishPlan
+            planId={planId}
+            isPublished={isPublished}
+            isLoading={isLoading}
+          />
+        </>
+      ) : (
+        <div className="flex justify-between items-center w-full">
+          {selectedDates?.from && selectedDates?.to && (
+            <span className="text-xs font-semibold shadow-sm px-2 py-2 border border-border select-none bg-background rounded-full">
+              {getFormattedDateRange(
+                selectedDates.from,
+                selectedDates.to,
+                "PP"
+              )}
+            </span>
           )}
-          {preferences.length > 0 && (
-            <div
-              className="group-hover:opacity-100 opacity-0 
-                    hidden flex-col gap-1
-                    transition-all duration-700 ease-in-out delay-1000 group-hover:flex"
-            >
-              <div className="font-bold text-background pb-1">
-                Activity Preferences
-              </div>
-              <div className="grid justify-start items-center grid-cols-2 gap-2">
-                {preferences.map((activity, index) => (
-                  <div
-                    key={activity.id}
-                    className="flex gap-1 bg-background select-none
-                     text-foreground font-semibold rounded-full p-1 justify-center items-center"
-                  >
-                    <activity.icon className="h-4 w-4" />
-                    <span key={activity.id}>{activity.displayName}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+
+          <div className="flex gap-1 justify-end items-center">
+            <Preferences
+              activityPreferencesIds={activityPreferencesIds}
+              planId={planId}
+              allowEdit={allowEdit}
+              isLoading={isLoading}
+            />
+            <Companion
+              planId={planId}
+              companionId={companionId}
+              allowEdit={allowEdit}
+              isLoading={isLoading}
+            />
+          </div>
         </div>
       )}
-    </div>
+    </article>
   );
+};
+
+const PublishPlan = ({
+  planId,
+  isPublished,
+  isLoading,
+}: {
+  isPublished: boolean;
+  planId: string;
+  isLoading: boolean;
+}) => {
+  const updatePlanPrivacy = useMutation(api.planSettings.updatePlanPrivacy);
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+
+  const onClickChangePrivacy = async () => {
+    await updatePlanPrivacy({
+      planId: planId as Id<"plan">,
+      isPublished: !isPublished,
+    });
+    toast({
+      title: `Your plan has been ${isPublished ? "Unpublished" : "published"}`,
+    });
+    setOpen(false);
+  };
+
+  const publishStatusContent = isPublished ? (
+    <>
+      <Eye className="size-4 " />
+      <span>Unpublish</span>
+    </>
+  ) : (
+    <>
+      <Send className="size-4 " />
+      <span>Publish</span>
+    </>
+  );
+
+  const alertText = isPublished
+    ? "You're about to stop sharing your travel plan with others, "
+    : "You're about to share your travel plan with others in read-only mode!";
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <Button
+          disabled={isLoading}
+          className="flex gap-1 justify-center items-center bg-background rounded-full text-foreground shadow-sm 
+                    hover:bg-background/50 dark:border-border dark:border dark:hover:bg-background/90 border-2"
+        >
+          {publishStatusContent}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete Travel Plan</AlertDialogTitle>
+          <AlertDialogDescription>
+            {alertText} Don't worry, you can change its privacy whenever you
+            want.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <Button
+            className="flex gap-1 justify-center items-center bg-blue-500 hover:bg-blue-600"
+            size="sm"
+            onClick={onClickChangePrivacy}
+          >
+            {publishStatusContent}
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+const Companion = ({
+  companionId,
+  planId,
+  allowEdit,
+  isLoading,
+}: {
+  companionId: string | undefined;
+  planId: string;
+  allowEdit: boolean;
+  isLoading: boolean;
+}) => {
+  const [selectedCompanionId, setSelectedCompanionId] = useState(companionId);
+
+  const updateCompanionId = useMutation(api.planSettings.updateCompanionId);
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+
+  const selectedCompanion = useMemo(
+    () => COMPANION_PREFERENCES.find((c) => c.id === selectedCompanionId),
+    [selectedCompanionId]
+  );
+
+  useEffect(() => {
+    setSelectedCompanionId(companionId);
+  }, [companionId]);
+
+  const saveCompanionId = async () => {
+    if (!selectedCompanionId) return;
+    await updateCompanionId({
+      planId: planId as Id<"plan">,
+      companionId: selectedCompanionId,
+    });
+    toast({
+      title: `Companion saved as ${selectedCompanion?.displayName}`,
+    });
+    setOpen(false);
+  };
+
+  const tooltip = selectedCompanion
+    ? `Travelling as ${selectedCompanion.displayName}`
+    : "Select Companion";
+
+  const icon = selectedCompanion ? (
+    <selectedCompanion.icon className="size-4 text-foreground" />
+  ) : (
+    <Users2 className="size-4 text-foreground" />
+  );
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger>
+        <IconWithToolTip tooltipText={tooltip}>
+          <Button
+            disabled={isLoading}
+            className={cn("px-3 py-2 hover:bg-background", Icon_ClassName)}
+          >
+            {icon}
+          </Button>
+        </IconWithToolTip>
+      </PopoverTrigger>
+      <PopoverContent className="w-fit px-5">
+        <CompanionControl
+          value={selectedCompanionId}
+          onChange={(companionId) => {
+            if (!allowEdit) return;
+            setSelectedCompanionId(companionId);
+          }}
+          className="flex-col"
+        />
+        {allowEdit && (
+          <Button
+            className="mt-2 w-full "
+            size="sm"
+            onClick={saveCompanionId}
+            disabled={!selectedCompanionId}
+          >
+            Save
+          </Button>
+        )}
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+const Preferences = ({
+  activityPreferencesIds,
+  allowEdit,
+  planId,
+  isLoading,
+}: {
+  activityPreferencesIds: string[];
+  allowEdit: boolean;
+  planId: string;
+  isLoading: boolean;
+}) => {
+  const [selectedActivityPreferencesIds, setSelectedActivityPreferencesIds] =
+    useState(activityPreferencesIds);
+  const updateActivityPreferences = useMutation(
+    api.planSettings.updateActivityPreferences
+  );
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setSelectedActivityPreferencesIds(activityPreferencesIds);
+  }, [activityPreferencesIds]);
+
+  const saveActivityPreferences = async () => {
+    if (!selectedActivityPreferencesIds.length) return;
+
+    await updateActivityPreferences({
+      planId: planId as Id<"plan">,
+      activityPreferencesIds: selectedActivityPreferencesIds,
+    });
+    toast({
+      title: `Activity Preferences Saved!`,
+    });
+    setOpen(false);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger>
+        <IconWithToolTip tooltipText="Click to see the preferences">
+          <Button
+            disabled={isLoading}
+            className={cn("px-3 py-2 hover:bg-background", Icon_ClassName)}
+          >
+            <Settings2 className="size-4 text-foreground" />
+          </Button>
+        </IconWithToolTip>
+      </PopoverTrigger>
+      <PopoverContent className="w-fit px-5">
+        <ActivityPreferences
+          values={selectedActivityPreferencesIds}
+          onChange={(ids) => {
+            if (!allowEdit) return;
+            setSelectedActivityPreferencesIds(ids);
+          }}
+          className="flex-col"
+          activityClassName="w-full"
+        />
+        {allowEdit && (
+          <Button
+            className="mt-2 w-full"
+            size="sm"
+            onClick={saveActivityPreferences}
+            disabled={!selectedActivityPreferencesIds.length}
+          >
+            Save
+          </Button>
+        )}
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+const IconWithToolTip = ({
+  children,
+  tooltipText,
+}: {
+  children: ReactNode;
+  tooltipText: string;
+}) => {
+  return <TooltipContainer text={tooltipText}>{children}</TooltipContainer>;
 };
 
 export default PlanMetaData;

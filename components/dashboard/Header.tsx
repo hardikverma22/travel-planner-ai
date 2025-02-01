@@ -1,20 +1,16 @@
 "use client";
 
-import Link from "next/link";
-import {AuthLoading, Authenticated, Unauthenticated} from "convex/react";
-import {SignInButton, UserButton} from "@clerk/nextjs";
+import { AuthLoading, Authenticated, Unauthenticated } from "convex/react";
+import { SignInButton, UserButton } from "@clerk/nextjs";
 
-import {Loading} from "@/components/shared/Loading";
-import DrawerWithDialog from "@/components/shared/DrawerWithDialog";
-import PlanComboBox from "@/components/plan/PlanComboBox";
-import {navlinks} from "@/lib/constants";
-import {cn} from "@/lib/utils";
-import useAuth from "@/hooks/useAuth";
-import {MapPinIcon} from "lucide-react";
-import {ThemeDropdown} from "@/components/ThemeDropdown";
+import { Loading } from "@/components/shared/Loading";
+import { cn } from "@/lib/utils";
+import { ThemeDropdown } from "@/components/ThemeDropdown";
 import FeedbackSheet from "@/components/common/FeedbackSheet";
 import Logo from "@/components/common/Logo";
 import MobileMenu from "@/components/dashboard/MobileMenu";
+import { CreditsDrawerWithDialog } from "@/components/shared/DrawerWithDialogGeneric";
+import Link from "next/link";
 
 const Header = () => {
   return (
@@ -40,7 +36,15 @@ const Header = () => {
             </Unauthenticated>
             <Authenticated>
               <div className="flex justify-center items-center gap-2">
-                <DrawerWithDialog />
+                <Link
+                  href="community-plans"
+                  className="whitespace-nowrap hidden md:block hover:underline cursor-pointer hover:underline-offset-4 text-foreground text-sm"
+                  scroll
+                >
+                  Community Plans
+                </Link>
+
+                <CreditsDrawerWithDialog />
                 <FeedbackSheet />
                 <ThemeDropdown />
                 <UserButton afterSignOutUrl="/" />

@@ -13,7 +13,7 @@ export const getPlanAccessRecords = query({
 
     const accesses = await ctx.db
       .query("access")
-      .filter((q) => q.eq(q.field("planId"), args.planId))
+      .withIndex("by_planId", (q) => q.eq("planId", args.planId))
       .collect();
 
     if (!accesses) return [];

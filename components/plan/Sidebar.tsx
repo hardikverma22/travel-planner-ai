@@ -3,14 +3,13 @@
 import Link from "next/link";
 
 import Pulse from "@/components/shared/Pulse";
-import {Button} from "@/components/ui/button";
-import {usePlanContext} from "@/contexts/PlanContextProvider";
+import { Button } from "@/components/ui/button";
+import { usePlanContext } from "@/contexts/PlanContextProvider";
 
-import {controlCenterSections, planSections} from "@/lib/constants";
-import {LockIcon} from "lucide-react";
-import {TooltipContainer} from "@/components/shared/Toolip";
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
-import {useMemo} from "react";
+import { controlCenterSections, planSections } from "@/lib/constants";
+import { LockIcon } from "lucide-react";
+import { TooltipContainer } from "@/components/shared/Toolip";
+import { useMemo } from "react";
 
 const Sidebar = ({
   planId,
@@ -21,17 +20,20 @@ const Sidebar = ({
   isMobile?: boolean;
   isPublic: boolean;
 }) => {
-  const {planState} = usePlanContext();
+  const { planState } = usePlanContext();
 
   const sections = useMemo(() => {
-    if (isPublic) return planSections.filter((section) => section.isPublic === isPublic);
+    if (isPublic)
+      return planSections.filter((section) => section.isPublic === isPublic);
     else return planSections;
   }, [planSections, isPublic]);
 
   return (
     <aside className="space-y-6 sticky top-[5.6rem] h-fit">
       <div className="space-y-2">
-        <h2 className="mb-2 md:text-lg text-base font-semibold tracking-tight">Your Plan</h2>
+        <h2 className="mb-2 md:text-lg text-base font-semibold tracking-tight">
+          Your Plan
+        </h2>
         <div className="flex flex-col">
           {sections.map((section) => (
             <Link
@@ -48,14 +50,19 @@ const Sidebar = ({
               >
                 {section.icon}
                 <span className="text-left">{section.name}</span>
-                {!isPublic && !isMobile && planState && !planState[section.id] && <Pulse />}
+                {!isPublic &&
+                  !isMobile &&
+                  planState &&
+                  !planState[section.id] && <Pulse />}
               </Button>
             </Link>
           ))}
         </div>
       </div>
       <div className="space-y-2">
-        <h2 className="mb-2 text-lg font-semibold tracking-tight">Control Center</h2>
+        <h2 className="mb-2 text-lg font-semibold tracking-tight">
+          Control Center
+        </h2>
         <div className="flex flex-col">
           {controlCenterSections.map((link) => {
             if (isPublic)
@@ -76,7 +83,10 @@ const Sidebar = ({
               );
 
             return (
-              <Link href={isPublic ? `#` : `/plans/${planId}/${link.id}`} key={link.id}>
+              <Link
+                href={isPublic ? `#` : `/plans/${planId}/${link.id}`}
+                key={link.id}
+              >
                 <TooltipContainer text={link.tooltipText}>
                   <Button
                     disabled={isPublic}

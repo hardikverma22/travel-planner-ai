@@ -1,22 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import {AuthLoading, Authenticated, Unauthenticated} from "convex/react";
-import {SignInButton, UserButton} from "@clerk/nextjs";
+import { AuthLoading, Authenticated, Unauthenticated } from "convex/react";
+import { SignInButton, UserButton } from "@clerk/nextjs";
 
-import {Loading} from "@/components/shared/Loading";
+import { Loading } from "@/components/shared/Loading";
 import MobileMenu from "@/components/MobileMenu";
-import DrawerWithDialog from "@/components/shared/DrawerWithDialog";
 import PlanComboBox from "@/components/plan/PlanComboBox";
-import {navlinks} from "@/lib/constants";
-import {cn} from "@/lib/utils";
+import { navlinks } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
-import {MapPinIcon} from "lucide-react";
-import {ThemeDropdown} from "@/components/ThemeDropdown";
+import { MapPinIcon } from "lucide-react";
+import { ThemeDropdown } from "@/components/ThemeDropdown";
 import FeedbackSheet from "@/components/common/FeedbackSheet";
+import { CreditsDrawerWithDialog } from "@/components/shared/DrawerWithDialogGeneric";
 
 const Header = () => {
-  const {isCurrentPathDashboard, isCurrentPathHome, isAuthenticated} = useAuth();
+  const { isCurrentPathDashboard, isCurrentPathHome, isAuthenticated } =
+    useAuth();
 
   return (
     <header
@@ -47,7 +48,10 @@ const Header = () => {
               {isCurrentPathHome && (
                 <>
                   {navlinks.map((link) => (
-                    <li key={link.id} className="hover:underline cursor-pointer">
+                    <li
+                      key={link.id}
+                      className="hover:underline cursor-pointer"
+                    >
                       <Link href={`/#${link.id}`}>{link.text}</Link>
                     </li>
                   ))}
@@ -77,8 +81,10 @@ const Header = () => {
             </Unauthenticated>
             <Authenticated>
               <div className="flex justify-center items-center gap-2">
-                {!isCurrentPathDashboard && !isCurrentPathHome && <PlanComboBox />}
-                <DrawerWithDialog />
+                {!isCurrentPathDashboard && !isCurrentPathHome && (
+                  <PlanComboBox />
+                )}
+                <CreditsDrawerWithDialog />
                 <FeedbackSheet />
                 <ThemeDropdown />
                 <UserButton afterSignOutUrl="/" />

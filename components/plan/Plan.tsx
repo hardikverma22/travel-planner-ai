@@ -14,8 +14,11 @@ import {
 
 import { usePlanContext } from "../../contexts/PlanContextProvider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Users } from "lucide-react";
+import { Send, Users, X } from "lucide-react";
 import Weather from "@/components/sections/Weather";
+import PlanMetaData from "@/components/sections/PlanMetaData";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 type PlanProps = {
   planId: string;
@@ -23,11 +26,46 @@ type PlanProps = {
   isPublic: boolean;
 };
 
-const Plan = ({ planId, isNewPlan, isPublic }: PlanProps) => {
+const Plan = ({ planId }: PlanProps) => {
   const { isLoading, plan, shouldShowAlert } = usePlanContext();
+  const [showAlert, setShowAlert] = useState(false);
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+    if (window.localStorage) {
+      localStorage.setItem("showPublishAlert", "false");
+    }
+  };
+
+  useEffect(() => {
+    if (window.localStorage) {
+      const showPublishAlert =
+        localStorage.getItem("showPublishAlert") ?? "true";
+      setShowAlert(showPublishAlert === "false" ? false : true);
+    }
+  }, []);
 
   return (
-    <section className="h-full flex flex-col gap-10">
+    <section className="h-full flex flex-col gap-5">
+      {showAlert && (
+        <Alert className="relative">
+          <Button
+            className="absolute right-1 top-1"
+            variant="link"
+            onClick={handleCloseAlert}
+          >
+            <X className="size-4" />
+          </Button>
+          <Send className="h-4 w-4" />
+          <AlertTitle className="font-semibold text-sm">
+            Share Your Travel Plans
+          </AlertTitle>
+          <AlertDescription className="text-xs">
+            Help fellow travelers by sharing your travel plans! Your experiences
+            could inspire and guide others on their journeys.
+          </AlertDescription>
+        </Alert>
+      )}
       {plan?.isSharedPlan && (
         <Alert>
           <Users className="h-4 w-4" />
@@ -38,17 +76,21 @@ const Plan = ({ planId, isNewPlan, isPublic }: PlanProps) => {
         </Alert>
       )}
       <AlertForAI show={shouldShowAlert} />
-      <ImageSection
-        userPrompt={plan?.userPrompt}
-        companion={plan?.companion}
-        activityPreferences={plan?.activityPreferences ?? []}
+      <PlanMetaData
+        allowEdit={true}
+        companionId={plan?.companion}
+        activityPreferencesIds={plan?.activityPreferences ?? []}
         fromDate={plan?.fromDate ?? undefined}
         toDate={plan?.toDate ?? undefined}
-        placeName={plan?.nameoftheplace}
-        imageUrl={plan?.url}
-        isLoading={isLoading || !plan?.contentGenerationState.imagination}
-        allowEdit={true}
         planId={planId}
+        isPublished={plan?.isPublished ?? false}
+        isLoading={isLoading}
+      />
+      <ImageSection
+        userPrompt={plan?.userPrompt}
+        placeName={plan?.nameoftheplace}
+        imageUrl={plan?.imageUrl}
+        isLoading={isLoading || !plan?.contentGenerationState.imagination}
       />
       <AboutThePlace
         isLoading={isLoading || !plan?.contentGenerationState.abouttheplace}

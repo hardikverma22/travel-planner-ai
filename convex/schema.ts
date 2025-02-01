@@ -139,5 +139,10 @@ export default defineSchema({
     isPublished: v.optional(v.boolean()),
   })
     .index("by_planId", ["planId"])
-    .index("by_planId_userId", ["planId", "userId"]),
+    .index("by_planId_userId", ["planId", "userId"])
+    .index("by_isPublished", ["isPublished"])
+    .index("by_isPublished_companion_creationTime", [
+      "isPublished",
+      "companion",
+    ]),
 });

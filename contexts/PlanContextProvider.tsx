@@ -1,6 +1,7 @@
-import {Doc} from "@/convex/_generated/dataModel";
+"use client";
+import { Doc } from "@/convex/_generated/dataModel";
 import usePlan from "@/hooks/usePlan";
-import {useSearchParams} from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React, {
   createContext,
   useContext,
@@ -12,16 +13,22 @@ import React, {
 
 import AccessDenied from "@/components/plan/AccessDenied";
 
-type planStateType = Doc<"plan">["contentGenerationState"] & {weather: boolean};
+type planStateType = Doc<"plan">["contentGenerationState"] & {
+  weather: boolean;
+};
 
 type PlanContextType = {
   planState: planStateType;
   setPlanState: Dispatch<SetStateAction<planStateType>>;
   shouldShowAlert: boolean;
   plan:
-    | (Doc<"plan"> & {url: string | null; isSharedPlan: boolean} & Pick<
+    | (Doc<"plan"> & { isSharedPlan: boolean } & Pick<
           Doc<"planSettings">,
-          "activityPreferences" | "companion" | "fromDate" | "toDate"
+          | "activityPreferences"
+          | "companion"
+          | "fromDate"
+          | "toDate"
+          | "isPublished"
         >)
     | null
     | undefined;
@@ -71,16 +78,25 @@ const PlanContextProvider = ({
 
   const isNewPlan = Boolean(searchParams.get("isNewPlan"));
 
-  const {shouldShowAlert, plan, isLoading, error} = usePlan(planId, isNewPlan, isPublic);
+  const { shouldShowAlert, plan, isLoading, error } = usePlan(
+    planId,
+    isNewPlan,
+    isPublic
+  );
 
   useEffect(() => {
     if (isLoading || !plan) return;
 
-    setPlanState((state) => ({...plan.contentGenerationState, weather: state.weather}));
+    setPlanState((state) => ({
+      ...plan.contentGenerationState,
+      weather: state.weather,
+    }));
   }, [plan]);
 
   return (
-    <PlanContext.Provider value={{planState, shouldShowAlert, plan, isLoading, setPlanState}}>
+    <PlanContext.Provider
+      value={{ planState, shouldShowAlert, plan, isLoading, setPlanState }}
+    >
       {error ? <AccessDenied /> : children}
     </PlanContext.Provider>
   );

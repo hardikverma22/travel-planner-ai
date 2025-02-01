@@ -1,0 +1,9 @@
+#Default GitHub 
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile id_ed25519_hardikverma22
+
+[user]
+    name = Hardik Verma
+    email = hardikverma22@rediffmail.com

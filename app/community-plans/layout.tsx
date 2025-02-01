@@ -1,10 +1,11 @@
-import Header from "@/components/dashboard/Header";
+import Header from "@/app/community-plans/Header";
+import Progress from "@/components/Progress";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.travelplannerai.online"),
   title: {
-    default: "Dashboard",
+    default: "Community Plans",
     template: "%s | Travel Planner AI - Your Smart Travel Planner",
   },
   description:
@@ -37,9 +38,10 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      <main className="flex min-h-[calc(100svh-4rem)] flex-col items-center bg-blue-50/40">
+      <main className="flex min-h-[calc(100svh-4rem)] flex-col items-center relative lg:px-20 px-5 mx-auto">
         {children}
       </main>
+      <Progress />
     </>
   );
 }

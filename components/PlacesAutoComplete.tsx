@@ -1,10 +1,16 @@
 "use client";
-import {Input} from "@/components/ui/input";
-import {ChangeEvent, Dispatch, MouseEvent, SetStateAction, useState} from "react";
+import { Input } from "@/components/ui/input";
+import {
+  ChangeEvent,
+  Dispatch,
+  MouseEvent,
+  SetStateAction,
+  useState,
+} from "react";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
-import {Loading} from "@/components/shared/Loading";
-import {ControllerRenderProps, UseFormReturn} from "react-hook-form";
-import {formSchemaType} from "@/components/NewPlanForm";
+import { Loading } from "@/components/shared/Loading";
+import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
+import { formSchemaType } from "@/components/NewPlanForm";
 
 type PlacesAutoCompleteProps = {
   selectedFromList: boolean;
@@ -21,16 +27,23 @@ const PlacesAutoComplete = ({
 }: PlacesAutoCompleteProps) => {
   const [showReults, setShowResults] = useState(false);
 
-  const {placesService, placePredictions, getPlacePredictions, isPlacePredictionsLoading} =
-    usePlacesService({
-      apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-      options: {
-        types: ["(cities)"],
-        input: field.value,
-      },
-    });
+  const {
+    placesService,
+    placePredictions,
+    getPlacePredictions,
+    isPlacePredictionsLoading,
+  } = usePlacesService({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    options: {
+      types: ["(regions)"],
+      input: field.value,
+    },
+  });
 
-  const hadleSelectItem = (e: MouseEvent<HTMLLIElement>, description: string) => {
+  const hadleSelectItem = (
+    e: MouseEvent<HTMLLIElement>,
+    description: string
+  ) => {
     e.stopPropagation();
     form.clearErrors("placeName");
 
@@ -54,7 +67,7 @@ const PlacesAutoComplete = ({
 
     //predictions
     if (value) {
-      getPlacePredictions({input: value});
+      getPlacePredictions({ input: value });
       setShowResults(true);
     } else {
       setShowResults(false);
@@ -84,7 +97,10 @@ const PlacesAutoComplete = ({
         z-50"
           onMouseDown={(e) => e.preventDefault()}
         >
-          <ul className="w-full flex flex-col gap-2" onMouseDown={(e) => e.preventDefault()}>
+          <ul
+            className="w-full flex flex-col gap-2"
+            onMouseDown={(e) => e.preventDefault()}
+          >
             {placePredictions.map((item) => (
               <li
                 className="cursor-pointer

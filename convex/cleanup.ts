@@ -108,3 +108,30 @@ export const fixPlanGenerations = mutation({
     }
   },
 });
+
+export const denormalizeImageUrl = mutation({
+  async handler(ctx, args) {
+    const plans = await ctx.db.query("plan").collect();
+
+    // Use Promise.all with map instead of forEach
+    await Promise.all(
+      plans.map(async (plan) => {
+        try {
+          if (!plan.imageUrl) {
+            const imageUrl = plan.storageId
+              ? await ctx.storage.getUrl(plan.storageId)
+              : null;
+
+            if (imageUrl) {
+              console.log("inside");
+              await ctx.db.patch(plan._id, { imageUrl });
+            }
+          }
+        } catch (error) {
+          console.error(`Failed to process plan ${plan._id}:`, error);
+          // You might want to handle the error differently depending on your needs
+        }
+      })
+    );
+  },
+});

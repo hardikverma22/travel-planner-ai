@@ -1,16 +1,17 @@
 "use client";
 
-import {AuthLoading, Authenticated, Unauthenticated} from "convex/react";
-import {SignInButton, UserButton} from "@clerk/nextjs";
+import { AuthLoading, Authenticated, Unauthenticated } from "convex/react";
+import { SignInButton, UserButton } from "@clerk/nextjs";
 
-import {Loading} from "@/components/shared/Loading";
-import DrawerWithDialog from "@/components/shared/DrawerWithDialog";
-import {cn} from "@/lib/utils";
-import {ThemeDropdown} from "@/components/ThemeDropdown";
+import { Loading } from "@/components/shared/Loading";
+import { cn } from "@/lib/utils";
+import { ThemeDropdown } from "@/components/ThemeDropdown";
 import FeedbackSheet from "@/components/common/FeedbackSheet";
 import Logo from "@/components/common/Logo";
 import MenuItems from "@/components/home/MenuItems";
 import MobileMenu from "@/components/home/MobileMenu";
+import { CreditsDrawerWithDialog } from "@/components/shared/DrawerWithDialogGeneric";
+import Link from "next/link";
 
 const Header = () => {
   return (
@@ -41,8 +42,14 @@ const Header = () => {
             </Unauthenticated>
             <Authenticated>
               <div className="flex justify-center items-center gap-2">
-                <DrawerWithDialog />
-                <FeedbackSheet />
+                <Link
+                  href="dashboard"
+                  className="hover:underline cursor-pointer hover:underline-offset-4 text-sm text-foreground"
+                  scroll
+                >
+                  Dashboard
+                </Link>
+
                 <ThemeDropdown />
                 <UserButton afterSignOutUrl="/" />
               </div>

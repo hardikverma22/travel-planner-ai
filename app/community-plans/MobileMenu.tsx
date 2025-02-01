@@ -6,6 +6,7 @@ import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
+import { Authenticated } from "convex/react";
 
 const MobileMenu = () => {
   const [open, setOpen] = useState(false);
@@ -64,23 +65,37 @@ const MobileMenu = () => {
             <AiOutlineClose />
           </Button>
         </div>
-        <ul
-          className="w-full flex flex-col gap-7 justify-center items-start
-                      p-5  text-sm font-medium"
-          onClick={(e) => {
-            e.stopPropagation();
-            setOpen(false);
-          }}
-        >
-          <li className="cursor-pointer hover:underline">
-            <Link
-              href="/community-plans"
-              className="flex gap-1 justify-end items-center group"
-            >
-              <span>Community Plans</span>
-            </Link>
-          </li>
-        </ul>
+        <div className="p-5">
+          <h2 className="mb-2 md:text-lg text-base font-semibold tracking-tight">
+            Navigation
+          </h2>
+          <ul
+            className="w-full flex flex-col gap-4 justify-center items-start
+                      text-sm font-medium pt-1"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(false);
+            }}
+          >
+            <li className="cursor-pointer hover:underline px-2">
+              <Link href="/" className="flex gap-4 justify-end items-center">
+                <ArrowLeft className="w-4 h-4 group-hover:scale-125 transition-all duration-100 ease-linear" />
+                <span>Home</span>
+              </Link>
+            </li>
+            <Authenticated>
+              <li className="cursor-pointer hover:underline px-2">
+                <Link
+                  href="/dashboard"
+                  className="flex gap-4 justify-end items-center"
+                >
+                  <ArrowLeft className="w-4 h-4 group-hover:scale-125 transition-all duration-100 ease-linear" />
+                  <span>Dashboard</span>
+                </Link>
+              </li>
+            </Authenticated>
+          </ul>
+        </div>
       </aside>
     </>
   );

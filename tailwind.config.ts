@@ -1,12 +1,12 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -52,6 +52,16 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -68,29 +78,28 @@ const config = {
           to: { height: "0" },
         },
         wiggle1: {
-          '0%, 100%': { translate: "25px" },
-          '50%': { translate: "-25px" },
+          "0%, 100%": { translate: "25px" },
+          "50%": { translate: "-25px" },
         },
         wiggle2: {
-          '0%, 100%': { translate: "-25px" },
-          '50%': { translate: "25px" },
+          "0%, 100%": { translate: "-25px" },
+          "50%": { translate: "25px" },
         },
         wiggle3: {
-          '0%, 100%': { translate: "40px" },
-          '50%': { translate: "-40px" },
-        }
+          "0%, 100%": { translate: "40px" },
+          "50%": { translate: "-40px" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "wiggle1-left-right": "wiggle1 12s infinite ease-in-out forwards",
         "wiggle2-left-right": "wiggle2 12s infinite ease-in-out forwards",
-        "wiggle3-left-right": "wiggle3 12s infinite ease-in-out forwards"
+        "wiggle3-left-right": "wiggle3 12s infinite ease-in-out forwards",
       },
-
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;
