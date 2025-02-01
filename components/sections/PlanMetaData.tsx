@@ -24,7 +24,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { COMPANION_PREFERENCES } from "@/lib/constants";
 import { cn, getFormattedDateRange } from "@/lib/utils";
 import { useMutation } from "convex/react";
-import { Eye, Send, Settings2, Users2 } from "lucide-react";
+import { Calendar, Eye, Send, Settings2, Users2 } from "lucide-react";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
 
@@ -129,13 +129,16 @@ const PlanMetaData = ({
       ) : (
         <div className="flex justify-between items-center w-full">
           {selectedDates?.from && selectedDates?.to && (
-            <span className="text-xs font-semibold shadow-sm px-2 py-2 border border-border select-none bg-background rounded-full">
-              {getFormattedDateRange(
-                selectedDates.from,
-                selectedDates.to,
-                "PP"
-              )}
-            </span>
+            <div className="flex gap-1 justify-center items-center px-2 py-3 border border-border shadow-sm select-none bg-background rounded-full">
+              <Calendar className="size-4" />
+              <span className="text-xs font-semibold ">
+                {getFormattedDateRange(
+                  selectedDates.from,
+                  selectedDates.to,
+                  "PP"
+                )}
+              </span>
+            </div>
           )}
 
           <div className="flex gap-1 justify-end items-center">

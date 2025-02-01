@@ -26,18 +26,20 @@ const Header = ({ isPublic }: { isPublic: boolean }) => {
           <div className="flex gap-8 justify-center items-center">
             <Logo />
             <ul className="gap-4 text-sm hidden lg:flex items-center justify-center">
-              <li
-                className="hover:underline hover:underline-offset-4 transition-all duration-300 cursor-pointer 
+              <Authenticated>
+                <li
+                  className="hover:underline hover:underline-offset-4 transition-all duration-300 cursor-pointer 
           text-foreground"
-              >
-                <Link
-                  href="/dashboard"
-                  className="hidden md:block hover:underline cursor-pointer hover:underline-offset-4 text-foreground text-sm"
-                  scroll
                 >
-                  Dashboard
-                </Link>
-              </li>
+                  <Link
+                    href="/dashboard"
+                    className="hidden md:block hover:underline cursor-pointer hover:underline-offset-4 text-foreground text-sm"
+                    scroll
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+              </Authenticated>
               <li
                 className="hover:underline hover:underline-offset-4 transition-all duration-300 cursor-pointer 
           text-foreground"
