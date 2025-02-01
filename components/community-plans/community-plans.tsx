@@ -21,6 +21,7 @@ export default function CommunityPlans({
   totalPlans: number;
 }) {
   const totalPages = useMemo(() => Math.ceil(totalPlans / 8), [totalPlans]);
+  console.log({ pageNumber, totalPlans, initialPlans });
   return (
     <SidebarProvider>
       <AppSidebar />
