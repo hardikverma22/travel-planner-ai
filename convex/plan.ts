@@ -261,7 +261,7 @@ export const getSinglePlan = query({
         .query("planSettings")
         .withIndex("by_planId", (q) => q.eq("planId", args.id))
         .unique();
-      if (!plan || !planSettings?.isPublished) {
+      if (!plan || !planSettings || !planSettings.isPublished) {
         throw new ConvexError("Plan not found or not public");
       }
 
