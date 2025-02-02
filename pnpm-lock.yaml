@@ -14,9 +14,6 @@ importers:
       '@clerk/nextjs':
         specifier: ^4.29.3
         version: 4.29.9(next@14.0.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@convex-dev/aggregate':
-        specifier: ^0.1.18
-        version: 0.1.18(convex@1.17.4(@clerk/clerk-react@4.30.7(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@convex-dev/rate-limiter':
         specifier: ^0.2.4
         version: 0.2.4(convex@1.17.4(@clerk/clerk-react@4.30.7(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
@@ -236,11 +233,6 @@ packages:
   '@clerk/types@3.62.1':
     resolution: {integrity: sha512-RmQhWB7EMZw2nE24viQG79VyEUULZYWndYew5oXiZx06DyvysMNCorDyEGRmgBbprv7bnbYhHdOtKmx8Wj0jug==}
     engines: {node: '>=14'}
-
-  '@convex-dev/aggregate@0.1.18':
-    resolution: {integrity: sha512-S7yJf96+AqL82S0JKItRZx0KbonkYI3IYEIcRF/rgw48uzQhOmAV0AA4RR0Bkir00Sdtj7dcHTLZQnQF75HR+g==}
-    peerDependencies:
-      convex: ~1.16.5 || ~1.17.0
 
   '@convex-dev/rate-limiter@0.2.4':
     resolution: {integrity: sha512-hFyqEeQOKcXGLF9MmgG4AvC3pkMoaPfRpvFE80eR1DY3Ik5dsuaIbOinS7QRjKuPQMBWbReieogDcFGVy1qdmQ==}
@@ -2852,10 +2844,6 @@ snapshots:
   '@clerk/types@3.62.1':
     dependencies:
       csstype: 3.1.1
-
-  '@convex-dev/aggregate@0.1.18(convex@1.17.4(@clerk/clerk-react@4.30.7(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
-    dependencies:
-      convex: 1.17.4(@clerk/clerk-react@4.30.7(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
   '@convex-dev/rate-limiter@0.2.4(convex@1.17.4(@clerk/clerk-react@4.30.7(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
     dependencies:

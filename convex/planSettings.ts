@@ -159,7 +159,7 @@ export const updatePlanPrivacy = mutation({
 
     const planSettings = await getCurrentPlanSettings(ctx, planId);
     if (!planSettings) {
-      const id = await ctx.db.insert("planSettings", {
+      await ctx.db.insert("planSettings", {
         planId,
         userId: identity.subject,
         isPublished,
