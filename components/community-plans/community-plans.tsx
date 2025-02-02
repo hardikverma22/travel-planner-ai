@@ -44,13 +44,13 @@ export default function CommunityPlans({
             </p>
           </div>
         </header>
-        <div className="flex flex-col gap-4 p-4 pt-0">
+        <div className="flex flex-col gap-2 pt-0">
           {results && results.length ? (
             <div
               className="grid grid-cols-1 
                       md:grid-cols-2 lg:grid-cols-3
                       2xl:grid-cols-4 4xl:grid-cols-6
-                      gap-5 p-10 justify-center"
+                      gap-5 px-10 py-2 justify-center"
             >
               {results?.map((plan) => (
                 <PlanCard key={plan._id} plan={plan} isPublic />
@@ -61,7 +61,7 @@ export default function CommunityPlans({
           {status === "LoadingFirstPage" && <LoadingPlans />}
           {status === "CanLoadMore" && (
             <Button
-              className="w-fit rounded-full mx-auto"
+              className="w-fit rounded-full mx-auto bg-indigo-500 text-white hover:bg-indigo-600"
               onClick={() => loadMore(8)}
             >
               Load More

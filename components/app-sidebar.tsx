@@ -6,6 +6,7 @@ import { FiltersType, NavMain } from "@/components/nav-main";
 import {
   Sidebar,
   SidebarContent,
+  SidebarHeader,
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";

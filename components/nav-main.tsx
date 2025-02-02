@@ -85,9 +85,14 @@ export function NavMain({
           filters={filters}
           clearFilters={resetAllFilters}
         /> */}
-        <SidebarMenuItem className="mt-5">
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <span className="text-sm font-bold">Companion</span>
+        <SidebarMenuItem
+        // className="mt-5"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex h-16 gap-2 items-center">
+              <span className="text-md font-bold">Filter by Companion</span>
+            </div>
+
             {filters.companionId && (
               <Button
                 variant="ghost"
