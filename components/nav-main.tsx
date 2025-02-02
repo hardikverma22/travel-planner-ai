@@ -97,7 +97,7 @@ export function NavMain({
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-6 px-2 text-muted-foreground hover:text-red-500 cursor-pointer"
+                className="h-6 px-2 text-red-500 cursor-pointer"
                 onClick={() => clearFilter("companionId")}
               >
                 <FilterX className="h-4 w-4" />

@@ -61,7 +61,8 @@ export default function CommunityPlans({
           {status === "LoadingFirstPage" && <LoadingPlans />}
           {status === "CanLoadMore" && (
             <Button
-              className="w-fit rounded-full mx-auto bg-indigo-500 text-white hover:bg-indigo-600"
+              className="w-fit rounded-full mx-auto bg-blue-500 text-white 
+              hover:bg-blue-800 dark:bg-background dark:text-foreground dark:border-2 dark:border-border hover:scale-105 transition-all duration-100"
               onClick={() => loadMore(8)}
             >
               Load More
