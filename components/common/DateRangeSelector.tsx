@@ -5,10 +5,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn, getFormattedDateRange } from "@/lib/utils";
-import { format, formatDate } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { DateRange } from "react-day-picker";
 
 type DateRangeSelectorProps = {
@@ -27,7 +27,7 @@ const DateRangeSelector = ({
   isLoading,
 }: DateRangeSelectorProps) => {
   const [dateRangePopoverOpen, setDateRangePopoverOpen] = useState(false);
-
+  const isMobile = useIsMobile();
   const resetControl = () => {
     onChange({ from: undefined, to: undefined });
   };
@@ -57,24 +57,44 @@ const DateRangeSelector = ({
           <CalendarIcon className={cn("h-4 w-4 text-foreground")} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent
+        className="w-auto p-0 touch-pan-y"
+        align={isMobile ? "center" : "start"}
+        side={isMobile ? "bottom" : undefined}
+        collisionPadding={16}
+      >
         <Calendar
           month={value?.from}
           mode="range"
-          numberOfMonths={2}
+          numberOfMonths={isMobile ? 1 : 2} // Responsive month count
           max={10}
           selected={value}
           onSelect={(e) => {
             onChange(e);
-            if (e?.from && e.to) {
+            if (!isMobile && e?.from && e.to) {
               setDateRangePopoverOpen(false);
             }
           }}
           disabled={(date) => date < new Date("1900-01-01")}
-          initialFocus
+          initialFocus={!isMobile} // Disable auto-focus on mobile
+          classNames={{
+            day: "h-10 w-10 text-sm", // Larger touch targets
+            cell: "py-1 px-0.5", // Better spacing
+          }}
         />
-        <div className="w-full flex justify-end pr-5 pb-3">
-          <Button onClick={resetControl}>Reset</Button>
+        <div className="w-full flex justify-end pr-5 pb-3 gap-2">
+          <Button
+            onClick={resetControl}
+            variant="ghost"
+            size={isMobile ? "sm" : "default"}
+          >
+            Reset
+          </Button>
+          {isMobile && (
+            <Button onClick={() => setDateRangePopoverOpen(false)} size="sm">
+              Close
+            </Button>
+          )}
         </div>
       </PopoverContent>
     </Popover>
