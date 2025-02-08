@@ -48,6 +48,10 @@ export const CreditsDrawerWithDialog = () => {
 };
 
 export const GeneratePlanDrawerWithDialog = () => {
+  const user = useQuery(api.users.currentUser);
+  const boughtCredits = user?.credits ?? 0;
+  const freeCredits = user?.freeCredits ?? 0;
+  const totalCredits = freeCredits + boughtCredits;
   const dialogTriggerBtn = (
     <Button
       aria-label={`open dialog button for Create Travel Plan`}
@@ -61,10 +65,20 @@ export const GeneratePlanDrawerWithDialog = () => {
     <DrawerWithDialog dialogTriggerBtn={dialogTriggerBtn}>
       {({ setOpen }) => (
         <>
-          <DialogHeader>
-            <DialogTitle>Create Travel Plan</DialogTitle>
-          </DialogHeader>
-          <NewPlanForm closeModal={setOpen} />
+          {totalCredits > 0 ? (
+            <>
+              <DialogHeader>
+                <DialogTitle>Create Travel Plan</DialogTitle>
+              </DialogHeader>
+              <NewPlanForm closeModal={setOpen} />
+            </>
+          ) : (
+            <CreditContent
+              boughtCredits={boughtCredits}
+              freeCredits={freeCredits}
+              email={user?.email}
+            />
+          )}
         </>
       )}
     </DrawerWithDialog>

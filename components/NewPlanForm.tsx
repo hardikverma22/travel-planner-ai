@@ -85,6 +85,7 @@ const NewPlanForm = ({
           title: "Error",
           description: "Error received from server action",
         });
+        console.log({ planId });
       }
     });
   }
@@ -103,6 +104,10 @@ const NewPlanForm = ({
       closeModal(false);
       if (planId === null) {
         console.log("Error received from server action");
+        toast({
+          title: "Error",
+          description: "Error received from server action",
+        });
       }
     });
   }

@@ -1,6 +1,6 @@
 "use server";
 import { formSchemaType } from "@/components/NewPlanForm";
-import { fetchMutation } from "convex/nextjs";
+import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { getAuthToken } from "@/app/auth";
 import { redirect } from "next/navigation";
@@ -10,6 +10,14 @@ export async function generatePlanAction(formData: formSchemaType) {
   const token = await getAuthToken();
   const { placeName, activityPreferences, datesOfTravel, companion } = formData;
 
+  const userData = await fetchQuery(api.users.currentUser, {}, { token });
+  const totalCredits = (userData?.credits ?? 0) + (userData?.freeCredits ?? 0);
+  if (totalCredits <= 0) {
+    console.log(
+      `unable to create ai travel plan due to low credits user:${userData?.userId}`
+    );
+    return null;
+  }
   const planId = await fetchMutation(
     api.plan.createEmptyPlan,
     {
