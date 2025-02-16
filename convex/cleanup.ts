@@ -1,4 +1,5 @@
 import { api } from "./_generated/api";
+import { Id } from "./_generated/dataModel";
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -18,6 +19,15 @@ export const fixImages = mutation({
           planId: plan._id,
         });
       }
+    });
+  },
+});
+export const fixImageForAPlan = mutation({
+  args: { planId: v.string(), placeName: v.string() },
+  handler: async (ctx, { placeName, planId }) => {
+    await ctx.scheduler.runAfter(0, api.images.generateAndStore, {
+      prompt: placeName,
+      planId: planId as Id<"plan">,
     });
   },
 });
