@@ -5,6 +5,7 @@ import {
   Dispatch,
   MouseEvent,
   SetStateAction,
+  useEffect,
   useState,
 } from "react";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
@@ -26,6 +27,7 @@ const PlacesAutoComplete = ({
   setSelectedFromList,
 }: PlacesAutoCompleteProps) => {
   const [showReults, setShowResults] = useState(false);
+  const isEnglish = (text: string) => /^[A-Za-z0-9\s,.-]+$/.test(text);
 
   const {
     placesService,
@@ -54,6 +56,18 @@ const PlacesAutoComplete = ({
   };
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.value) {
+      field.onChange(e.target.value);
+      return;
+    }
+    if (!isEnglish(e.target.value)) {
+      form.setError("placeName", {
+        message: "This tool supports only english as input as of now.",
+        type: "custom",
+      });
+      return;
+    }
+
     if (selectedFromList) {
       form.setError("placeName", {
         message: "Place should be selected from the list",

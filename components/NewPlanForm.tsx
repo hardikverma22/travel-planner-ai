@@ -21,19 +21,23 @@ import PlacesAutoComplete from "@/components/PlacesAutoComplete";
 
 import { generateEmptyPlanAction } from "@/lib/actions/generateEmptyPlanAction";
 import { useToast } from "@/components/ui/use-toast";
-import { ACTIVITY_PREFERENCES, COMPANION_PREFERENCES } from "@/lib/constants";
-import DateRangeSelector from "@/components/common/DateRangeSelector";
 import CompanionControl from "@/components/plan/CompanionControl";
 import ActivityPreferences from "@/components/plan/ActivityPreferences";
+import DateRangeSelector from "@/components/common/DateRangeSelector";
 
 const formSchema = z.object({
   placeName: z
     .string({ required_error: "Please select a place" })
     .min(3, "Place name should be at least 3 character long"),
-  datesOfTravel: z.object({
-    from: z.date(),
-    to: z.date(),
-  }),
+  datesOfTravel: z
+    .object({
+      from: z.date(),
+      to: z.date(),
+    })
+    .refine((data) => data.to >= data.from, {
+      message: "End date cannot be before start date",
+      path: ["to"], // Associates the error with the 'to' field
+    }),
   activityPreferences: z.array(z.string()),
   companion: z.optional(z.string()),
 });

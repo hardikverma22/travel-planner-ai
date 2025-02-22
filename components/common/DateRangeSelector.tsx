@@ -71,6 +71,7 @@ const DateRangeSelector = ({
           selected={value}
           onSelect={(e) => {
             onChange(e);
+            console.log(e);
             if (!isMobile && e?.from && e.to) {
               setDateRangePopoverOpen(false);
             }

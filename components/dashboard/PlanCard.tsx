@@ -44,7 +44,7 @@ const PlanCard = ({ plan, isPublic = false }: PlanCardProps) => {
               fill={true}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="relative -z-1 object-cover rounded-t-lg w-full group-hover/card:scale-105 transition ease-in-out duration-500"
-              priority={false}
+              priority={plan.imageUrl ? false : true}
             />
             {plan.isSharedPlan && (
               <TooltipContainer text="This plan had been shared to you">

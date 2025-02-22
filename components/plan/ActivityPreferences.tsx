@@ -12,7 +12,6 @@ const ActivityPreferences = ({
   className?: string;
   activityClassName?: string;
 }) => {
-  console.log({ values });
   return (
     <div className={cn("flex gap-2 flex-wrap", className)}>
       {ACTIVITY_PREFERENCES.map((activity) => (
