@@ -24,6 +24,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { COMPANION_PREFERENCES } from "@/lib/constants";
 import { cn, getFormattedDateRange } from "@/lib/utils";
 import { useMutation } from "convex/react";
+import { ConvexError } from "convex/values";
 import { Calendar, Eye, Send, Settings2, Users2 } from "lucide-react";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -175,14 +176,26 @@ const PublishPlan = ({
   const [open, setOpen] = useState(false);
 
   const onClickChangePrivacy = async () => {
-    await updatePlanPrivacy({
-      planId: planId as Id<"plan">,
-      isPublished: !isPublished,
-    });
-    toast({
-      title: `Your plan has been ${isPublished ? "Unpublished" : "published"}`,
-    });
-    setOpen(false);
+    try {
+      await updatePlanPrivacy({
+        planId: planId as Id<"plan">,
+        isPublished: !isPublished,
+      });
+      toast({
+        title: `Your plan has been ${isPublished ? "Unpublished" : "published"}`,
+      });
+    } catch (error) {
+      if (error instanceof ConvexError) {
+        const msg = error.data as string;
+        console.log(msg);
+        toast({
+          title: "Incomplete Travel Plan",
+          description: msg,
+        });
+      }
+    } finally {
+      setOpen(false);
+    }
   };
 
   const publishStatusContent = isPublished ? (
