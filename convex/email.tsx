@@ -46,11 +46,10 @@ export const sendInvite = action({
       email: args.email,
     });
 
-    const BASE_URL =
-      process.env.HOSTING_URL ?? "https://travelplannerai.online";
+    const BASE_URL = process.env.HOSTING_URL ?? "https://travelplannerai.site";
 
     const { data, error } = await resend.emails.send({
-      from: "Travel Planner AI <support@travelplannerai.online>",
+      from: "Travel Planner AI <support@travelplannerai.site>",
       to: args.email,
       subject: `You've been invited to join a travel plan`,
       react: (

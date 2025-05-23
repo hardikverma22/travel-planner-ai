@@ -1,5 +1,5 @@
 import Dashboard from "@/components/dashboard/Dashboard";
-import {Metadata} from "next";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -12,12 +12,12 @@ export const metadata: Metadata = {
     title: "Travel Planner AI - Your Smart Travel Planner",
     description:
       "Travel Planner AI provides intelligent travel suggestions, personalized itineraries, and seamless trip planning. Plan your perfect trip with ease.",
-    url: "https://www.travelplannerai.online",
+    url: "https://www.travelplannerai.site",
     type: "website",
     siteName: "TravelPlannerAI",
     images: [
       {
-        url: "https://www.travelplannerai.online/images/og-image.jpg",
+        url: "https://www.travelplannerai.site/images/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Travel Planner AI",

@@ -1,18 +1,18 @@
-import type {Metadata} from "next";
-import {Montserrat_Alternates} from "next/font/google";
-import {Analytics} from "@vercel/analytics/react";
+import type { Metadata } from "next";
+import { Montserrat_Alternates } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import ConvexClientProvider from "@/app/ConvexClientProvider";
-import {ThemeProvider} from "@/contexts/ThemeProvider";
+import { ThemeProvider } from "@/contexts/ThemeProvider";
 
 import Progress from "@/components/Progress";
-import {Toaster} from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
 
-const inter = Montserrat_Alternates({weight: "500", subsets: ["cyrillic"]});
+const inter = Montserrat_Alternates({ weight: "500", subsets: ["cyrillic"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.travelplannerai.online"),
+  metadataBase: new URL("https://www.travelplannerai.site"),
   title: {
     default: "Travel Planner AI - Your Smart Travel Planner",
     template: "%s | Travel Planner AI - Your Smart Travel Planner",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Travel Planner AI - Your Smart Travel Planner",
     description:
       "Travel Planner AI provides intelligent travel suggestions, personalized itineraries, and seamless trip planning. Plan your perfect trip with ease.",
-    url: "https://www.travelplannerai.online",
+    url: "https://www.travelplannerai.site",
     type: "website",
     siteName: "TravelPlannerAI",
     images: [
@@ -39,7 +39,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>

@@ -3,7 +3,7 @@ import Progress from "@/components/Progress";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.travelplannerai.online"),
+  metadataBase: new URL("https://www.travelplannerai.site"),
   title: {
     default: "Community Plans",
     template: "%s | Travel Planner AI - Your Smart Travel Planner",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Travel Planner AI - Your Smart Travel Planner",
     description:
       "Travel Planner AI provides intelligent travel suggestions, personalized itineraries, and seamless trip planning. Plan your perfect trip with ease.",
-    url: "https://www.travelplannerai.online",
+    url: "https://www.travelplannerai.site",
     type: "website",
     siteName: "TravelPlannerAI",
     images: [
