@@ -1,17 +1,17 @@
 "use client";
 
-import {Button} from "@/components/ui/button";
-import {useEffect, useRef, useState} from "react";
-import {AiOutlineClose, AiOutlineMenu} from "react-icons/ai";
+import { Button } from "@/components/ui/button";
+import { useEffect, useRef, useState } from "react";
+import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import Link from "next/link";
-import {cn} from "@/lib/utils";
-import {useParams} from "next/navigation";
+import { cn } from "@/lib/utils";
+import { useParams } from "next/navigation";
 import MenuItems from "@/components/home/MenuItems";
 
 const MobileMenu = () => {
   const [open, setOpen] = useState(false);
   const asideRef = useRef<HTMLDivElement>(null);
-  const {planId} = useParams<{planId: string}>();
+  const { planId } = useParams<{ planId: string }>();
 
   const handleClickOutside = (event: MouseEvent) => {
     if (asideRef.current && !asideRef.current.contains(event.target as Node)) {
@@ -32,9 +32,18 @@ const MobileMenu = () => {
         aria-label="open side menu"
         onClick={() => setOpen(!open)}
         variant="link"
-        className="text-xl"
+        className="text-lg"
       >
-        <AiOutlineMenu />
+        <div
+          className="flex flex-col leading-5
+                             font-bold text-md text-left"
+        >
+          <span>Travel</span>
+          <span>
+            Planner
+            <span className="text-blue-500 ml-0.5">AI</span>
+          </span>
+        </div>
       </Button>
       <aside
         ref={asideRef}
@@ -66,7 +75,7 @@ const MobileMenu = () => {
             <AiOutlineClose />
           </Button>
         </div>
-        <ul
+        {/* <ul
           className="w-full flex flex-col gap-7 justify-center items-start
                       p-5  text-sm font-medium"
           onClick={(e) => {
@@ -75,7 +84,7 @@ const MobileMenu = () => {
           }}
         >
           <MenuItems />
-        </ul>
+        </ul> */}
       </aside>
     </>
   );

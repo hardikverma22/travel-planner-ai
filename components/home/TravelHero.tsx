@@ -1,3 +1,4 @@
+import { SparklesText } from "@/components/magicui/sparkles-text";
 import React from "react";
 
 const TravelHero = () => {
@@ -378,6 +379,23 @@ const TravelHero = () => {
           transform="translate(-167.21357 -120.72534)"
           fill="#3f3d56"
         />
+        <foreignObject x="420" y="120" width="250" height="220">
+          <div className="rounded-lg bg-blue-500/50" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", height: "100%" }}>
+            <h1 className="text-2xl md:text-4xl font-semibold text-center tracking-wide leading-tight">
+
+              Travel Planner <span className="text-white">AI</span> is now
+              <br />
+              <SparklesText sparklesCount={10} className="w-full text-white"
+                colors={{
+                  first: "#000000",
+                  second: "#ffffff",
+                }}
+              >
+                Rutugo
+              </SparklesText>
+            </h1>
+          </div>
+        </foreignObject>
       </g>
       <path
         d="M606.53371,608.95319a1.01829,1.01829,0,0,1-1.01475-.947,35.99077,35.99077,0,0,0-35.7969-33.34945c-1.08561,0-2.226.05519-3.38984.16409a1.018,1.018,0,0,1-.97858-.50769,42.76517,42.76517,0,0,0-78.20491,9.30121,1.01364,1.01364,0,0,1-1.00145.73468l-.27075-.00821c-.14084-.00472-.28156-.00969-.42352-.00969a30.16126,30.16126,0,0,0-29.39139,23.81379,1.01836,1.01836,0,0,1-.99648.80827H386.8408a1.01836,1.01836,0,1,1,0-2.03671h67.40935a32.21612,32.21612,0,0,1,31.16768-24.62207,44.80149,44.80149,0,0,1,81.375-9.557c1.0017-.07807,1.98438-.11735,2.92927-.11735a38.03415,38.03415,0,0,1,37.82864,35.24346,1.01828,1.01828,0,0,1-.94464,1.08723C606.58182,608.95245,606.5577,608.95319,606.53371,608.95319Z"
