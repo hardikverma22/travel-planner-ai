@@ -1,5 +1,43 @@
 <p><a target="_blank" href="https://app.eraser.io/workspace/ITHfX2CmBRfVZimKKniY" id="edit-in-eraser-github-link"><img alt="Edit in Eraser" src="https://firebasestorage.googleapis.com/v0/b/second-petal-295822.appspot.com/o/images%2Fgithub%2FOpen%20in%20Eraser.svg?alt=media&amp;token=968381c8-a7e7-472a-8ed6-4a6626da5501"></a></p>
 
+---
+
+## 🚀 **Exciting News: Travel Planner AI is now Rutugo!** ✈️
+
+> **The Journey Continues with a New Name and Enhanced Experience**
+
+We're thrilled to announce that **Travel Planner AI** has evolved into **[Rutugo](https://rutugo.com)** - a more powerful, intuitive, and comprehensive travel planning platform! 🌟
+
+### 🎯 **What's Changed?**
+
+- **🎨 Fresh Brand Identity**: Rutugo represents our commitment to smarter, more personalized travel experiences
+- **🗺️ Tailored Itineraries**: AI-powered personalized trip plans crafted specifically for your preferences and travel style
+- **📍 Top Spots Unveiled**: Advanced discovery system for must-see attractions and hidden gems at every destination
+- **🍜 Foodie Hotspots**: Curated local dining recommendations from culinary experts and fellow travelers
+- **👥 Community Plans**: Explore and get inspired by travel plans from a vibrant community of fellow travelers
+- **✉️ Enhanced Collaboration**: Seamless email invite system to plan together with friends, family, and colleagues in real-time
+- **🌍 Comprehensive City & Country Guides**: Expert insights and insider tips for every destination worldwide
+- **🔗 Meta-searched Booking Integration**: Aggregated booking links for flights (Skyscanner), hotels (Kayak), and activities (Viator, GetYourGuide)
+- **🔄 Smart Plan Refinement**: Dynamically adjust travel dates, budget, and stops in seconds with AI-powered optimization
+- **✅ Feasibility Check System**: Advanced validation ensures your travel plans are realistic and achievable before booking
+- **🎯 Multi-Step Plan Creation**: Enhanced 4-step guided process - "Set Your Course" → "Plan Your Comfort Zone" → "Fine-Tune Your Adventure" → "Feasibility Check"
+- **🤖 Enhanced LLM Integration**: Improved AI algorithms for more accurate, contextual, and personalized travel recommendations
+- **📱 Seamless User Experience**: Redesigned interface with improved navigation, responsive design, and intuitive workflows
+
+### 🌍 **Why Rutugo?**
+
+The name "Rutugo" embodies the spirit of exploration and discovery - "_Ru_" (journey) + "_tu_" (you) + "_go_" = **Your journey, your way, let's go!**
+
+### 🔗 **Experience the Evolution**
+
+**[Visit Rutugo.com →](https://rutugo.com)** to explore the next generation of AI-powered travel planning
+
+---
+
+_This repository showcases the original Travel Planner AI codebase and serves as a foundation for the enhanced Rutugo platform._
+
+---
+
 # Travel Planner AI - Gateway to Seamless Smart Travel Plan
 
 Welcome to Travel Planner AI, your ultimate travel companion designed to simplify the process of planning your next adventure.
